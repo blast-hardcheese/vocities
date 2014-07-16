@@ -1,0 +1,22 @@
+{
+  "name": "vocities",
+  "version": "0.0.1",
+  "authors": [
+    "Devon Stewart <blast@hardchee.se>"
+  ],
+  "description": "Frontend for VOCities",
+  "main": [
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
