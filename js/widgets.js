@@ -56,6 +56,9 @@ var ContactInfo = React.createClass({
 
         var phone = this.props.phone ? <p>phone <a href={"tel://" + this.props.phone.replace(/[^\d+]/g, '')}>{this.props.phone}</a></p> : null;
         var email = this.props.email ? <p>email <a href={"mailto:" + this.props.email}>{this.props.email}</a></p> : null;
+        var skype = this.props.skype ? <p>skype <a href={"skype:" + this.props.skype + "?call"}>{this.props.skype}</a></p> : null;
+        var isdn = this.props.isdn ? <p>isdn {this.props.isdn}</p> : null;
+        var sourceConnect = this.props.sourceConnect ? <p>source connect {this.props.sourceConnect}</p> : null;
 
         var twitter = this.props.twitter ? <a href={"https://twitter.com/#!/" + this.props.twitter} target="_blank">Twitter</a> : null;
         var facebook = this.props.facebook ? <a href={this.props.facebook} target="_blank">Facebook</a> : this.props.facebook;
@@ -70,7 +73,10 @@ var ContactInfo = React.createClass({
             r = <div>
                 {label}
                 {phone}
+                {isdn}
+                {sourceConnect}
                 {email}
+                {skype}
                 {social}
                 {locale}
             </div>
