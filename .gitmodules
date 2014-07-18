@@ -1,0 +1,3 @@
+[submodule "soundcloud"]
+	path = soundcloud
+	url = https://github.com/soundcloud/soundcloud-custom-player
