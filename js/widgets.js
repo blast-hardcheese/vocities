@@ -61,7 +61,7 @@ var ContactInfo = React.createClass({
         var facebook = this.props.facebook ? <a href={this.props.facebook} target="_blank">Facebook</a> : this.props.facebook;
         var social = [twitter, facebook].filter(function(e) { return e !== null; }) || null;
         if(social !== null) {
-            social = <p>contact {social}</p>
+            social = <p>contact {social[0]}{social[1]}{social[2]}</p>
         }
 
         var locale = this.props.locale ? <p>locale {this.props.locale}</p> : null;
