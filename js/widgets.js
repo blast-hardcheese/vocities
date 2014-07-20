@@ -110,6 +110,76 @@ var HTML5Audio = React.createClass({
     },
 });
 
+var SoundCloudCommon = {
+    extend: function(id, extra) {
+        return jQuery.extend({}, this[id], extra || {});
+    },
+    extendFunc: function(id, extra) {
+        return (function() {
+            return jQuery.extend({}, SoundCloudCommon[id](), extra || {});
+        });
+    },
+    getInitialState: function() {
+        return {
+            api: new SoundCloud(),
+            hasData: false,
+            tracks: [],
+        }
+    },
+    propTypes: {
+        user: React.PropTypes.string.isRequired,
+        id: React.PropTypes.string.isRequired, // ID of clip
+        label: React.PropTypes.string.isRequired,
+    },
+    gotTracks: function(tracks) {
+        this.setState({ tracks: tracks, hasData: true });
+    },
+}
+
+var SoundCloudLogo = React.createClass({
+    propTypes: {
+        url: React.PropTypes.string.isRequired,
+    },
+    render: function() {
+        var style = {
+            display: "inline-block",
+            backgroundImage: "url(" + this.props.url + ");",
+            backgroundRepeat: "no-repeat",
+            width: "100px",
+            height: "100px",
+        }
+        return <div style={style}></div>
+    },
+})
+
+var SoundCloudClip = React.createClass({
+    getInitialState: SoundCloudCommon.extendFunc('getInitialState', {}),
+    propTypes: SoundCloudCommon.extend('propTypes', {}),
+    gotTracks: SoundCloudCommon.gotTracks,
+    render: function() {
+        if(! this.state.hasData) {
+            var url = "https://soundcloud.com/" + this.props.user + "/" + this.props.id;
+            this.state.api.loadTracksFromUrl({url: url}, this.gotTracks);
+        }
+
+        var tracks = this.state.tracks.map(function(track, i, tracks) {
+            return <div key={track.id}>
+                <SoundCloudLogo url={track.artwork_url} />
+                <span>{track.title}</span>
+                <audio controls>
+                    <source src={this.state.api.streamUrlFromTrack(track)} type='audio/mpeg; codecs="mp3"' />;
+                </audio>
+            </div>;
+        }.bind(this));
+
+        return (
+            <div>
+                {tracks}
+            </div>
+        );
+    },
+});
+
 var SlideOutDiv = React.createClass({
     mixins: [ReadyComponent()],
 
