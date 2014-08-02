@@ -121,7 +121,7 @@ var SoundCloudCommon = {
     },
     getInitialState: function() {
         return {
-            api: new SoundCloud(),
+            api: new SoundCloud({apiKey: "htuiRd1JP11Ww0X72T1C3g"}),
             hasData: false,
             tracks: [],
         }
