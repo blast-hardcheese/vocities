@@ -34,12 +34,12 @@ var SoundCloud = (function () {
         return arr;
     };
 
-    SoundCloud.prototype.loadTracksFromUrl = function (link, callback, tracks) {
+    SoundCloud.prototype.loadTracksFromLink = function (link, callback, tracks) {
         if (typeof tracks === "undefined") { tracks = []; }
-        this.loadTracksFromUrls([link], callback, tracks);
+        this.loadTracksFromLinks([link], callback, tracks);
     };
 
-    SoundCloud.prototype.loadTracksFromUrls = function (links, callback, tracks) {
+    SoundCloud.prototype.loadTracksFromLinks = function (links, callback, tracks) {
         if (typeof tracks === "undefined") { tracks = []; }
         var tracks = [];
 

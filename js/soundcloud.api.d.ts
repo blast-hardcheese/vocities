@@ -89,7 +89,7 @@ declare class SoundCloud {
     static shuffleArray<T>(arr: T[]): T[];
     constructor();
     public apiUrl: (url: string, apiKey?: string) => string;
-    public loadTracksFromUrl(link: Link, callback: (tracks: Track[]) => void, tracks?: Track[]): void;
-    public loadTracksFromUrls(links: Link[], callback: (tracks: Track[]) => void, tracks?: Track[]): void;
+    public loadTracksFromLink(link: Link, callback: (tracks: Track[]) => void, tracks?: Track[]): void;
+    public loadTracksFromLinks(links: Link[], callback: (tracks: Track[]) => void, tracks?: Track[]): void;
     public streamUrlFromTrack(track: Track, apiKey?: string): string;
 }

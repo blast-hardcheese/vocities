@@ -159,7 +159,7 @@ var SoundCloudClip = React.createClass({
     render: function() {
         if(! this.state.hasData) {
             var url = "https://soundcloud.com/" + this.props.user + "/" + this.props.id;
-            this.state.api.loadTracksFromUrl({url: url}, this.gotTracks);
+            this.state.api.loadTracksFromLink({url: url}, this.gotTracks);
         }
 
         var tracks = this.state.tracks.map(function(track, i, tracks) {

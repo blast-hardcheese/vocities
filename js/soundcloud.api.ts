@@ -122,11 +122,11 @@ class SoundCloud {
         }
     };
 
-    loadTracksFromUrl(link: Link, callback: (tracks: Track[]) => void, tracks: Track[] = []) {
-        this.loadTracksFromUrls([link], callback, tracks);
+    loadTracksFromLink(link: Link, callback: (tracks: Track[]) => void, tracks: Track[] = []) {
+        this.loadTracksFromLinks([link], callback, tracks);
     }
 
-    loadTracksFromUrls(links: Link[], callback: (tracks: Track[]) => void, tracks: Track[] = []): void {
+    loadTracksFromLinks(links: Link[], callback: (tracks: Track[]) => void, tracks: Track[] = []): void {
         var tracks: Track[] = [];
 
         var forks = 0;
