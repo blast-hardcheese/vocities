@@ -197,6 +197,7 @@ var SoundCloudScrubber = React.createClass({
         updatePosition: React.PropTypes.func.isRequired,
         playbackPosition: React.PropTypes.number.isRequired,
         playbackTimecode: React.PropTypes.number.isRequired,
+        adjustVolume: React.PropTypes.func.isRequired,
     },
     getInitialState: function() {
         return {
@@ -225,10 +226,12 @@ var SoundCloudScrubber = React.createClass({
     render: function() {
         return (
             <div className="sc-scrubber">
-                <div className="sc-volume-slider">
-                    <span className="sc-volume-status"></span>
+                <div className="sc-volume-slider" onMouseDown={ this.mouseWrapper("volMouseDown", this.props.adjustVolume) } onMouseUp={ this.stateProxy("volMouseDown", false) } onMouseLeave={ this.stateProxy("volMouseDown", false) } onMouseMove={ this.state.volMouseDown ? this.mouseWrapper("volMouseDown", this.props.adjustVolume) : null }>
+                    <span style={{
+                       width: Math.floor(this.props.volume * 100) + '%',
+                    }} className="sc-volume-status"></span>
                 </div>
-                <div ref="timespan" className="sc-time-span" onMouseDown={ this.mouseWrapper("mouseDown", this.props.updatePosition) } onMouseUp={ this.stateProxy("mouseDown", false) } onMouseMove={ this.state.mouseDown ? this.mouseWrapper("mouseDown", this.props.updatePosition) : null }>
+                <div ref="timespan" className="sc-time-span" onMouseDown={ this.mouseWrapper("mouseDown", this.props.updatePosition) } onMouseUp={ this.stateProxy("mouseDown", false) } onMouseLeave={ this.stateProxy("mouseDown", false) } onMouseMove={ this.state.mouseDown ? this.mouseWrapper("mouseDown", this.props.updatePosition) : null }>
                     <div className="sc-waveform-container">
                         <img src={this.props.waveformUrl} />
                     </div>
@@ -295,6 +298,7 @@ var SoundCloudPlayer = React.createClass({
             playing: false,
 
             playbackPosition: 0,
+            volume: 1,
         };
     },
     componentDidMount: function() {
@@ -317,7 +321,7 @@ var SoundCloudPlayer = React.createClass({
             "onended", "onerror", "onloadeddata", "onloadedmetadata", "onloadstart",
             "onpause", "onplay", "onplaying", "onprogress", "onratechange",
             "onreadystatechange", "onseeked", "onseeking", "onstalled", "onsuspend",
-            "onvolumechange", "onwaiting"
+            "onwaiting"
         ];
         for(var i in properties) {
             var key = properties[i];
@@ -364,6 +368,12 @@ var SoundCloudPlayer = React.createClass({
             });
         }
 
+        audioHandlers['volumechange'] = function(event) {
+            _this.setState({
+                volume: this.volume,
+            });
+        }
+
         var keys = Object.keys(audioHandlers);
         for(var i in keys) {
             var key = keys[i];
@@ -395,6 +405,10 @@ var SoundCloudPlayer = React.createClass({
     updatePosition: function(percentage) {
         var audio = this.refs.audio.getDOMNode();
         audio.currentTime = percentage * audio.duration;
+    },
+    adjustVolume: function(percentage) {
+        var audio = this.refs.audio.getDOMNode();
+        audio.volume = percentage;
     },
     render: function() {
         var api = this.state.api;
@@ -457,6 +471,8 @@ var SoundCloudPlayer = React.createClass({
                     playbackPosition={ this.state.playbackPosition || 0 }
                     playbackTimecode={ this.state.playbackTimecode || 0 }
                     bufferPosition={ this.state.bufferPosition || 0 }
+                    volume={ this.state.volume }
+                    adjustVolume={ this.adjustVolume }
                 />
             </div>
         );
