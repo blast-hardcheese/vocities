@@ -113,7 +113,13 @@ var HTML5Audio = React.createClass({
 var SoundCloudUtils = {
     formatDuration: function(duration) {
         duration = Number.parseInt(duration);
-        return (duration / 60) + '.' + (duration % 60);
+        var seconds = (duration % 60);
+        if(seconds < 10) {
+            seconds = '0' + seconds;
+        } else {
+            seconds = String(seconds);
+        }
+        return String(Math.floor(duration / 60)) + '.' + seconds;
     },
 };
 
