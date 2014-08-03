@@ -310,8 +310,6 @@ var SoundCloudPlayer = React.createClass({
             }.bind(this));
         }
 
-        console.log("tracks:", this.state.tracks);
-
         var selectedTrack = null;
         if(this.state.selectedTrack !== null && this.state.tracks !== null && this.state.tracks.length > 0) {
             selectedTrack = this.state.tracks[this.state.selectedTrack];
@@ -329,8 +327,6 @@ var SoundCloudPlayer = React.createClass({
         var whichButton = (this.state.playing) ? 'pause' : 'play';
 
         var trackElements = (this.state.tracks || []).map(function(track, i) {
-            console.log('track', track);
-
             return <SoundCloudTracksListElement key={ track.id } trackName={ track.title } trackUrl={ track.permalink_url } trackDuration={ track.duration / 1000 } />
         });
 
