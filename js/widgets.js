@@ -327,65 +327,51 @@ var SoundCloudPlayer = React.createClass({
             });
         }
 
+        var audioHandlers = {
+            'suspend': function(event) {
+                _this.setState({ bufferPosition: this.buffered.length === 1 ? (this.buffered.end(0) / this.duration) : 0 });
+            },
+
+            'progress': function(event) {
+                _this.setState({ bufferPosition: this.buffered.length === 1 ? (this.buffered.end(0) / this.duration) : 0 });
+            },
+
+            'timeupdate': function(event) {
+                _this.setState({
+                    bufferPosition: this.buffered.length === 1 ? (this.buffered.end(0) / this.duration) : 0,
+                    playbackPosition: this.currentTime / this.duration,
+                    playbackTimecode: this.currentTime,
+                });
+            },
+
+            'play': function(event) {
+                _this.setState({
+                    playing: true,
+                });
+            },
+
+            'pause': function(event) {
+                _this.setState({
+                    playing: false,
+                });
+            },
+
+            'abort': function(event) {
+                _this.setState({
+                    playing: false,
+                    bufferPosition: 0,
+                    playbackPosition: 0,
+                    playbackTimecode: 0,
+                });
+            },
+
+            'volumechange': function(event) {
+                _this.setState({
+                    volume: this.volume,
+                });
+            },
+        }
         var audio = this.refs.audio.getDOMNode();
-        var properties = [
-            "onabort", "oncanplay", "oncanplaythrough", "ondurationchange", "onemptied",
-            "onended", "onerror", "onloadeddata", "onloadedmetadata", "onloadstart",
-            "onpause", "onplay", "onplaying", "onprogress", "onratechange",
-            "onreadystatechange", "onseeked", "onseeking", "onstalled", "onsuspend",
-            "onwaiting"
-        ];
-        for(var i in properties) {
-            var key = properties[i];
-            audio[key] = (function(key) {
-                return function(event) {
-                    console.log('got', key, event);
-                }
-            })(key);
-        }
-
-        var audioHandlers = {};
-
-        audioHandlers['suspend'] = function(event) {
-            _this.setState({ bufferPosition: this.buffered.length === 1 ? (this.buffered.end(0) / this.duration) : 0 });
-        }
-        audioHandlers['progress'] = function(event) {
-            _this.setState({ bufferPosition: this.buffered.length === 1 ? (this.buffered.end(0) / this.duration) : 0 });
-        }
-        audioHandlers['timeupdate'] = function(event) {
-            _this.setState({
-                bufferPosition: this.buffered.length === 1 ? (this.buffered.end(0) / this.duration) : 0,
-                playbackPosition: this.currentTime / this.duration,
-                playbackTimecode: this.currentTime,
-            });
-        }
-        audioHandlers['play'] = function(event) {
-            _this.setState({
-                playing: true,
-            });
-        }
-
-        audioHandlers['pause'] = function(event) {
-            _this.setState({
-                playing: false,
-            });
-        }
-
-        audioHandlers['abort'] = function(event) {
-            _this.setState({
-                playing: false,
-                bufferPosition: 0,
-                playbackPosition: 0,
-                playbackTimecode: 0,
-            });
-        }
-
-        audioHandlers['volumechange'] = function(event) {
-            _this.setState({
-                volume: this.volume,
-            });
-        }
-
         var keys = Object.keys(audioHandlers);
         for(var i in keys) {
             var key = keys[i];
