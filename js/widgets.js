@@ -158,8 +158,8 @@ var SoundCloudControls = React.createClass({
         var showPlay = this.props.which == 'play';
         return (
             <div className="sc-controls">
-                <a href="#play" className="sc-play" style={{'display': showPlay ? 'inherit':'none'}}>Play</a>
-                <a href="#pause" className="sc-pause" style={{'display': !showPlay ? 'inherit':'none'}}>Pause</a>
+                <a href="#play" className="sc-play" style={{'display': showPlay ? 'inherit':'none'}} onClick={ this.props.toggle }>Play</a>
+                <a href="#pause" className="sc-pause" style={{'display': !showPlay ? 'inherit':'none'}} onClick={ this.props.toggle }>Pause</a>
             </div>
         );
     }
