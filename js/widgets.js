@@ -388,6 +388,8 @@ var SoundCloudPlayer = React.createClass({
         });
     },
     componentWillUnmount: function() {
+        this.state.api.cancel();
+
         var audioHandlers = this.state.audioHandlers;
 
         var audio = this.refs.audio.getDOMNode();
