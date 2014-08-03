@@ -416,6 +416,7 @@ var SoundCloudPlayer = React.createClass({
         } else {
             this.refs.audio.getDOMNode().play();
         }
+        return false;
     },
     stateProxy: function(key, value) {
         return function() {
@@ -433,6 +434,19 @@ var SoundCloudPlayer = React.createClass({
     adjustVolume: function(percentage) {
         var audio = this.refs.audio.getDOMNode();
         audio.volume = percentage;
+    },
+    selectTrack: function(idx) {
+        return function() {
+            var audio = this.refs.audio.getDOMNode();
+            if(audio.buffered.length > 0) {
+                audio.currentTime = 0;
+            }
+            this.setState({
+                "selectedTrack": idx,
+                "autoplay": "autoplay",
+            });
+            return false;
+        }.bind(this);
     },
     render: function() {
 
@@ -453,7 +467,7 @@ var SoundCloudPlayer = React.createClass({
         var whichButton = (this.state.playing) ? 'pause' : 'play';
 
         var trackElements = (this.state.tracks || []).map(function(track, i) {
-            return <SoundCloudTracksListElement key={ track.id } trackName={ track.title } trackUrl={ track.permalink_url } trackDuration={ track.duration / 1000 } selectTrack={ this.stateProxy("selectedTrack", i) } />
+            return <SoundCloudTracksListElement key={ track.id } trackName={ track.title } trackUrl={ track.permalink_url } trackDuration={ track.duration / 1000 } selectTrack={ this.selectTrack(i) } />
         }.bind(this));
 
         var artworkElements = (this.state.tracks || []).map(function(track, i) {
