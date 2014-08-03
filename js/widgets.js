@@ -100,8 +100,8 @@ var HTML5Audio = React.createClass({
         var mp3 = this.props.mp3;
         var ogg = this.props.ogg;
 
-        var mp3Source = mp3 ? <source src={mp3} type='audio/mpeg; codecs="mp3"' /> : null;
-        var oggSource = ogg ? <source src={ogg} type='audio/ogg; codecs="vorbis"' /> : null;
+        var mp3Source = mp3 ? <source src={mp3} type="audio/mp3" /> : null;
+        var oggSource = ogg ? <source src={ogg} type="audio/ogg" /> : null;
         return (
             <audio style={this.props.style} controls={this.props.controls}>
                 {mp3Source}
