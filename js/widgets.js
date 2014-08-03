@@ -629,7 +629,7 @@ var YouTube = React.createClass({
         };
     },
     render: function() {
-        var src = "//www.youtube.com/embed/" + this.props.videoId + "?fs=1";
+        var src = "//www.youtube.com/embed/" + this.props.videoId + "?html5=1";
 
         return <iframe
             width={this.props.width}
