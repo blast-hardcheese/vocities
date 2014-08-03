@@ -387,7 +387,7 @@ var SoundCloudPlayer = React.createClass({
             audioHandlers: audioHandlers,
         });
     },
-    componentDidUnmount: function() {
+    componentWillUnmount: function() {
         var audioHandlers = this.state.audioHandlers;
 
         var audio = this.refs.audio.getDOMNode();
@@ -396,10 +396,6 @@ var SoundCloudPlayer = React.createClass({
             var key = keys[i];
             audio.removeEventListener(key, audioHandlers[key], false);
         }
-
-        this.setState({
-            audioHandlers: null,
-        });
     },
     togglePlayback: function() {
         if(this.state.playing) {
