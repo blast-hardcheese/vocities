@@ -386,6 +386,20 @@ var SoundCloudPlayer = React.createClass({
             audioHandlers: audioHandlers,
         });
     },
+    componentDidUnmount: function() {
+        var audioHandlers = this.state.audioHandlers;
+
+        var audio = this.refs.audio.getDOMNode();
+        var keys = Object.keys(audioHandlers);
+        for(var i in keys) {
+            var key = keys[i];
+            audio.removeEventListener(key, audioHandlers[key]);
+        }
+
+        this.setState({
+            audioHandlers: null,
+        });
+    },
     togglePlayback: function() {
         if(this.state.playing) {
             this.refs.audio.getDOMNode().pause();
