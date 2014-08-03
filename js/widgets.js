@@ -22,11 +22,8 @@ var ReadyComponent = function(timeout) {
                 });
             }).bind(this), timeout);
         },
-        componentDidUnmount: function() {
+        componentWillUnmount: function() {
             clearTimeout(readyProps.timer);
-            this.setState({
-                ready: false,
-            });
         }
     };
 }
