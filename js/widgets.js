@@ -377,6 +377,19 @@ var SoundCloudPlayer = React.createClass({
                     volume: this.volume,
                 });
             },
+
+            'ended': function(event) {
+                var audio = _this.refs.audio.getDOMNode();
+                var selectedTrack = _this.state.selectedTrack + 1;
+                if(selectedTrack < _this.state.tracks.length) {
+                    _this.setState({
+                        selectedTrack: selectedTrack,
+                        autoplay: true,
+                    });
+                } else {
+                    // Playlist ended!
+                }
+            }
         }
         var audio = this.refs.audio.getDOMNode();
         var keys = Object.keys(audioHandlers);
