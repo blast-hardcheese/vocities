@@ -378,6 +378,17 @@ var SoundCloudPlayer = React.createClass({
             audio.addEventListener(key, audioHandlers[key], false);
         }
 
+        var link = {
+            title: this.props.title || "Loading...",
+            url: this.props.url,
+        };
+        api.loadTracksFromLink(link, function(tracks) {
+            this.setState({
+                tracks: tracks,
+                selectedTrack: (this.state.selectedTrack || 0),
+            });
+        }.bind(this));
+
         this.setState({
             apiKey: this.props.apiKey,
             api: api,
@@ -421,19 +432,6 @@ var SoundCloudPlayer = React.createClass({
         audio.volume = percentage;
     },
     render: function() {
-        var api = this.state.api;
-        if(api !== null && this.state.tracks === null) {
-            var link = {
-                title: this.props.title || "Loading...",
-                url: this.props.url,
-            };
-            api.loadTracksFromLink(link, function(tracks) {
-                this.setState({
-                    tracks: tracks,
-                    selectedTrack: (this.state.selectedTrack || 0),
-                });
-            }.bind(this));
-        }
 
         var selectedTrack = null;
         if(this.state.selectedTrack !== null && this.state.tracks !== null && this.state.tracks.length > 0) {
