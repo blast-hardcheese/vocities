@@ -110,74 +110,148 @@ var HTML5Audio = React.createClass({
     },
 });
 
-var SoundCloudCommon = {
-    extend: function(id, extra) {
-        return jQuery.extend({}, this[id], extra || {});
+var SoundCloudUtils = {
+    formatDuration: function(duration) {
+        duration = Number.parseInt(duration);
+        return (duration / 60) + '.' + (duration % 60);
     },
-    extendFunc: function(id, extra) {
-        return (function() {
-            return jQuery.extend({}, SoundCloudCommon[id](), extra || {});
-        });
-    },
-    getInitialState: function() {
-        return {
-            api: new SoundCloud({apiKey: "htuiRd1JP11Ww0X72T1C3g"}),
-            hasData: false,
-            tracks: [],
-        }
-    },
-    propTypes: {
-        user: React.PropTypes.string.isRequired,
-        id: React.PropTypes.string.isRequired, // ID of clip
-        label: React.PropTypes.string.isRequired,
-    },
-    gotTracks: function(tracks) {
-        this.setState({ tracks: tracks, hasData: true });
-    },
-}
+};
 
-var SoundCloudLogo = React.createClass({
+var SoundCloudInfo = React.createClass({
     propTypes: {
-        url: React.PropTypes.string.isRequired,
+        trackUrl: React.PropTypes.string.isRequired,
+        trackName: React.PropTypes.string.isRequired,
+        artistUrl: React.PropTypes.string.isRequired,
+        artistName: React.PropTypes.string.isRequired,
     },
     render: function() {
-        var style = {
-            display: "inline-block",
-            backgroundImage: "url(" + this.props.url + ");",
-            backgroundRepeat: "no-repeat",
-            width: "100px",
-            height: "100px",
-        }
-        return <div style={style}></div>
-    },
-})
-
-var SoundCloudClip = React.createClass({
-    getInitialState: SoundCloudCommon.extendFunc('getInitialState', {}),
-    propTypes: SoundCloudCommon.extend('propTypes', {}),
-    gotTracks: SoundCloudCommon.gotTracks,
-    render: function() {
-        if(! this.state.hasData) {
-            var url = "https://soundcloud.com/" + this.props.user + "/" + this.props.id;
-            this.state.api.loadTracksFromLink({url: url}, this.gotTracks);
-        }
-
-        var tracks = this.state.tracks.map(function(track, i, tracks) {
-            return <div key={track.id}>
-                <SoundCloudLogo url={track.artwork_url} />
-                <span>{track.title}</span>
-                <audio controls>
-                    <source src={this.state.api.streamUrlFromTrack(track)} type='audio/mpeg; codecs="mp3"' />;
-                </audio>
-            </div>;
-        }.bind(this));
-
         return (
-            <div>
-                {tracks}
+            <div className="sc-info">
+                <h3><a href={this.props.trackUrl}>{this.props.trackName}</a></h3>
+                <h4>by <a href={this.props.artistUrl}>{this.props.artistName}</a></h4>
+                <p>{this.props.children}</p>
+                <a href="#" className="sc-info-close">X</a>
             </div>
         );
     },
+})
+
+var SoundCloudControls = React.createClass({
+    getDefaultProps: function() {
+        return {
+            which: 'play',
+        };
+    },
+    render: function() {
+        var showPlay = this.props.which == 'play';
+        return (
+            <div className="sc-controls">
+                <a href="#play" className="sc-play" style={{'display': showPlay ? 'inherit':'none'}}>Play</a>
+                <a href="#pause" className="sc-pause" style={{'display': !showPlay ? 'inherit':'none'}}>Pause</a>
+            </div>
+        );
+    }
+});
+
+var SoundCloudTracksListElement = React.createClass({
+    propTypes: {
+        trackDuration: React.PropTypes.number.isRequired,
+    },
+    render: function() {
+        <li className="active">
+            <a href={this.props.trackUrl}>{this.props.trackName}</a>
+            <span className="sc-track-duration">{SoundCloudUtils.formatDuration(this.props.trackDuration)}</span>
+        </li>
+    }
+});
+
+var SoundCloudTracksList = React.createClass({
+    render: function() {
+        React.Children.map(this.props.children, function() {
+            console.log('child:', arguments);
+        });
+        return (
+            <ol className="sc-trackslist">
+            </ol>
+        );
+    },
+});
+
+var SoundCloudScrubber = React.createClass({
+    propTypes: {
+        waveformUrl: React.PropTypes.string.isRequired,
+        trackDuration: React.PropTypes.number.isRequired,
+    },
+    getInitialState: function() {
+        return {
+            position: 0,
+        };
+    },
+    render: function() {
+        return (
+            <div className="sc-scrubber">
+                <div className="sc-volume-slider">
+                    <span className="sc-volume-status" style={{width:'60%'}}></span>
+                </div>
+                <div className="sc-time-span">
+                    <div className="sc-waveform-container">
+                        <img src={this.props.waveformUrl} />
+                    </div>
+                    <div className="sc-buffer"></div>
+                    <div className="sc-played"></div>
+                </div>
+                <div className="sc-time-indicators">
+                    <span className="sc-position">{SoundCloudUtils.formatDuration(this.state.position)}</span> | <span className="sc-duration">{SoundCloudUtils.formatDuration(this.props.trackDuration)}</span>
+                </div>
+            </div>
+        );
+    },
+});
+
+var SoundCloudPlayer = React.createClass({
+    getDefaultProps: function() {
+        return {
+            apiKey: "htuiRd1JP11Ww0X72T1C3g",
+        };
+    },
+    getInitialState: function() {
+        return {
+            playing: false,
+        };
+    },
+    componentDidMount: function() {
+        var api = this.state.api;
+        if(this.props.apiKey != this.state.apiKey) {
+            api = new SoundCloud({
+                apiKey: this.props.apiKey
+            });
+        }
+        this.setState({
+            apiKey: this.props.apiKey,
+            api: api
+        })
+    },
+    render: function() {
+        var whichButton = (this.state.playing) ? 'pause' : 'play';
+
+        return (
+            <div className="sc-player">
+                <ol className="sc-artwork-list">
+                    <li className="active"><img src="https://i1.sndcdn.com/artworks-000000103093-941e7e-t300x300.jpg?e76cf77" /></li>
+                    <li><img src="https://i1.sndcdn.com/artworks-000000103093-941e7e-t300x300.jpg?e76cf77" /></li>
+                </ol>
+                <SoundCloudInfo trackUrl="http://soundcloud.com/matas/hobnotropic" trackName="Hobnotropic" artistUrl="http://soundcloud.com/matas" artistName="matas">
+                    Kinda of an experiment in search for my own sound. I've produced this track from 2 loops I've made using Hobnox Audiotool ( http://www.hobnox.com/audiotool.1046.en.html ). Imported into Ableton LIve! and tweaked some FX afterwards.
+                </SoundCloudInfo>
+                <SoundCloudControls which={whichButton}/>
+                <SoundCloudTracksList>
+                    <SoundCloudTracksListElement trackName="Hobnotropic" trackUrl="http://soundcloud.com/matas/hobnotropic" trackDuration="8.09" />
+                </SoundCloudTracksList>
+                <a href="#info" className="sc-info-toggle">Info</a>
+                <SoundCloudScrubber />
+            </div>
+        );
+    }
 });
 
 var SlideOutDiv = React.createClass({
