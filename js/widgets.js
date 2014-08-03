@@ -129,14 +129,20 @@ var SoundCloudInfo = React.createClass({
         trackName: React.PropTypes.string.isRequired,
         artistUrl: React.PropTypes.string.isRequired,
         artistName: React.PropTypes.string.isRequired,
+        close: React.PropTypes.func.isRequired,
+        active: React.PropTypes.bool.isRequired,
     },
     render: function() {
+        var className = classSet({
+            "sc-info": true,
+            "active": this.props.active,
+        });
         return (
-            <div className="sc-info">
+            <div className={ className }>
                 <h3><a href={this.props.trackUrl}>{this.props.trackName}</a></h3>
                 <h4>by <a href={this.props.artistUrl}>{this.props.artistName}</a></h4>
                 <p>{this.props.children}</p>
-                <a href="#" className="sc-info-close">X</a>
+                <a href="#" className="sc-info-close" onClick={ this.props.close }>X</a>
             </div>
         );
     },
@@ -444,6 +450,14 @@ var SoundCloudPlayer = React.createClass({
             return false;
         }.bind(this);
     },
+    stateProxyToggle: function(key) {
+        return function() {
+            var state = {};
+            state[key] = !this.state[key];
+            this.setState(state);
+            return false;
+        }.bind(this);
+    },
     updatePosition: function(percentage) {
         var audio = this.refs.audio.getDOMNode();
         audio.currentTime = percentage * audio.duration;
@@ -473,9 +487,9 @@ var SoundCloudPlayer = React.createClass({
         }
 
         var selectedTrackInfo = null;
-        if(selectedTrack !== null) {
+        if(selectedTrack !== null && this.state.showInfo) {
             selectedTrackInfo = (
-                <SoundCloudInfo trackUrl={ selectedTrack.permalink_url } trackName={ selectedTrack.title } artistUrl={ selectedTrack.user.permalink_url } artistName={ selectedTrack.user.username }>
+                <SoundCloudInfo trackUrl={ selectedTrack.permalink_url } trackName={ selectedTrack.title } artistUrl={ selectedTrack.user.permalink_url } artistName={ selectedTrack.user.username } close={ this.stateProxy("showInfo", false) } active={ this.state.showInfo }>
                     { selectedTrack.description }
                 </SoundCloudInfo>
             );
@@ -508,7 +522,7 @@ var SoundCloudPlayer = React.createClass({
                 <SoundCloudTracksList>
                     { trackElements }
                 </SoundCloudTracksList>
-                <a href="#info" className="sc-info-toggle">Info</a>
+                <a href="#info" className="sc-info-toggle" onClick={ this.stateProxyToggle("showInfo") }>Info</a>
                 <SoundCloudScrubber
                     waveformUrl={ selectedTrack === null ? "https://w1.sndcdn.com/IqSLUxN7arjs_m.png" : selectedTrack.waveform_url }
                     trackDuration={ selectedTrack === null ? 0 : selectedTrack.duration / 1000 }
