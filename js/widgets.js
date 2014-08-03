@@ -234,8 +234,6 @@ var SoundCloudArtworkListElement = React.createClass({
             <li className={className}>
                 <div style={{
                     display: 'inline-block',
-                    width: 150,
-                    height: 150,
                     backgroundSize: 'cover',
                     backgroundImage: 'url(' + this.props.src + ')',
                     backgroundPosition: 'center',
