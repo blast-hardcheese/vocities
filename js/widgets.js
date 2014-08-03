@@ -226,12 +226,24 @@ var SoundCloudScrubber = React.createClass({
     render: function() {
         return (
             <div className="sc-scrubber">
-                <div ref="volume" className="sc-volume-slider" onMouseDown={ this.mouseWrapper("volMouseDown", this.props.adjustVolume, 'volume') } onMouseUp={ this.stateProxy("volMouseDown", false) } onMouseLeave={ this.stateProxy("volMouseDown", false) } onMouseMove={ this.state.volMouseDown ? this.mouseWrapper("volMouseDown", this.props.adjustVolume, 'volume') : null }>
-                    <span style={{
-                       width: Math.floor(this.props.volume * 100) + '%',
-                    }} className="sc-volume-status"></span>
+                <div
+                    ref="volume"
+                    className="sc-volume-slider"
+                    onMouseDown={ this.mouseWrapper("volMouseDown", this.props.adjustVolume, 'volume') }
+                    onMouseLeave={ this.stateProxy("volMouseDown", false) }
+                    onMouseMove={ this.state.volMouseDown ? this.mouseWrapper("volMouseDown", this.props.adjustVolume, 'volume') : null }
+                    onMouseUp={ this.stateProxy("volMouseDown", false) }
+                >
+                    <span style={{ width: Math.floor(this.props.volume * 100) + '%' }} className="sc-volume-status"></span>
                 </div>
-                <div ref="timespan" className="sc-time-span" onMouseDown={ this.mouseWrapper("mouseDown", this.props.updatePosition, 'timespan') } onMouseUp={ this.stateProxy("mouseDown", false) } onMouseLeave={ this.stateProxy("mouseDown", false) } onMouseMove={ this.state.mouseDown ? this.mouseWrapper("mouseDown", this.props.updatePosition, 'timespan') : null }>
+                <div
+                    ref="timespan"
+                    className="sc-time-span"
+                    onMouseDown={ this.mouseWrapper("mouseDown", this.props.updatePosition, 'timespan') }
+                    onMouseLeave={ this.stateProxy("mouseDown", false) }
+                    onMouseMove={ this.state.mouseDown ? this.mouseWrapper("mouseDown", this.props.updatePosition, 'timespan') : null }
+                    onMouseUp={ this.stateProxy("mouseDown", false) }
+                >
                     <div className="sc-waveform-container">
                         <img src={this.props.waveformUrl} />
                     </div>
