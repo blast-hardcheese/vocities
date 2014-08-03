@@ -378,7 +378,7 @@ var SoundCloudPlayer = React.createClass({
         var keys = Object.keys(audioHandlers);
         for(var i in keys) {
             var key = keys[i];
-            audio.addEventListener(key, audioHandlers[key]);
+            audio.addEventListener(key, audioHandlers[key], false);
         }
 
         this.setState({
@@ -394,7 +394,7 @@ var SoundCloudPlayer = React.createClass({
         var keys = Object.keys(audioHandlers);
         for(var i in keys) {
             var key = keys[i];
-            audio.removeEventListener(key, audioHandlers[key]);
+            audio.removeEventListener(key, audioHandlers[key], false);
         }
 
         this.setState({
