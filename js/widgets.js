@@ -294,10 +294,12 @@ var SoundCloudPlayer = React.createClass({
     propTypes: {
         apiKey: React.PropTypes.string.isRequired,
         url: React.PropTypes.string.isRequired,
+        autoplay: React.PropTypes.string,
     },
     getDefaultProps: function() {
         return {
             apiKey: "htuiRd1JP11Ww0X72T1C3g",
+            autoplay: null,
         };
     },
     getInitialState: function() {
@@ -452,7 +454,7 @@ var SoundCloudPlayer = React.createClass({
                 "sc-player": true,
                 "playing": this.state.playing,
             })}>
-                <audio ref="audio" style={{ display: 'none' }} src={ selectedTrack === null ? null : this.state.api.apiUrl(selectedTrack.stream_url) } autoplay="autoplay" />
+                <audio ref="audio" style={{ display: 'none' }} src={ selectedTrack === null ? null : this.state.api.apiUrl(selectedTrack.stream_url) } autoPlay={ this.props.autoplay } />
                 <SoundCloudArtworkList>
                     {artworkElements}
                 </SoundCloudArtworkList>
