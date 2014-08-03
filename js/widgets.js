@@ -293,6 +293,7 @@ var SoundCloudPlayer = React.createClass({
         apiKey: React.PropTypes.string.isRequired,
         url: React.PropTypes.string.isRequired,
         autoplay: React.PropTypes.string,
+        preload: React.PropTypes.string,
     },
     getDefaultProps: function() {
         return {
@@ -311,6 +312,8 @@ var SoundCloudPlayer = React.createClass({
 
             playbackPosition: 0,
             volume: 1,
+
+            autoplay: null,
         };
     },
     componentDidMount: function() {
@@ -457,12 +460,15 @@ var SoundCloudPlayer = React.createClass({
             return <SoundCloudArtworkListElement key={track.id} active={ this.state.selectedTrack == i } src={ track.artwork_url || "http://fc09.deviantart.net/fs70/i/2012/278/7/7/soundcloud_icon_by_tinylab-d48mjy9.png" } />
         }.bind(this));
 
+        var autoplay = this.state.autoplay || this.props.autoplay;
+        var preload = autoplay == null ? "none" : null;
+
         return (
             <div className={classSet({
                 "sc-player": true,
                 "playing": this.state.playing,
             })}>
-                <audio ref="audio" style={{ display: 'none' }} src={ selectedTrack === null ? null : this.state.api.apiUrl(selectedTrack.stream_url) } autoPlay={ this.props.autoplay } />
+                <audio ref="audio" style={{ display: 'none' }} src={ selectedTrack === null ? null : this.state.api.apiUrl(selectedTrack.stream_url) } autoPlay={ autoplay } preload={ preload } />
                 <SoundCloudArtworkList>
                     {artworkElements}
                 </SoundCloudArtworkList>
