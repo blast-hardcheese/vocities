@@ -297,6 +297,7 @@ var SoundCloudPlayer = React.createClass({
         };
     },
     componentDidMount: function() {
+        var _this = this;
         var api = this.state.api;
 
         if(this.props.apiKey != this.state.apiKey) {
@@ -309,13 +310,77 @@ var SoundCloudPlayer = React.createClass({
             });
         }
 
+        var audio = this.refs.audio.getDOMNode();
+        var properties = [
+            "onabort", "oncanplay", "oncanplaythrough", "ondurationchange", "onemptied",
+            "onended", "onerror", "onloadeddata", "onloadedmetadata", "onloadstart",
+            "onpause", "onplay", "onplaying", "onprogress", "onratechange",
+            "onreadystatechange", "onseeked", "onseeking", "onstalled", "onsuspend",
+            "onvolumechange", "onwaiting"
+        ];
+        for(var i in properties) {
+            var key = properties[i];
+            audio[key] = (function(key) {
+                return function(event) {
+                    console.log('got', key, event);
+                }
+            })(key);
+        }
+
+        var audioHandlers = {};
+
+        audioHandlers['suspend'] = function(event) {
+            _this.setState({ bufferPosition: this.buffered.end(0) / this.duration });
+        }
+        audioHandlers['progress'] = function(event) {
+            _this.setState({ bufferPosition: this.buffered.end(0) / this.duration });
+        }
+        audioHandlers['timeupdate'] = function(event) {
+            _this.setState({
+                bufferPosition: this.buffered.end(0) / this.duration,
+                playbackPosition: this.currentTime / this.duration,
+                playbackTimecode: this.currentTime,
+            });
+        }
+        audioHandlers['play'] = function(event) {
+            _this.setState({
+                playing: true,
+            });
+        }
+
+        audioHandlers['pause'] = function(event) {
+            _this.setState({
+                playing: false,
+            });
+        }
+
+        audioHandlers['abort'] = function(event) {
+            _this.setState({
+                playing: false,
+                bufferPosition: 0,
+                playbackPosition: 0,
+                playbackTimecode: 0,
+            });
+        }
+
+        var keys = Object.keys(audioHandlers);
+        for(var i in keys) {
+            var key = keys[i];
+            audio.addEventListener(key, audioHandlers[key]);
+        }
+
         this.setState({
             apiKey: this.props.apiKey,
             api: api,
+            audioHandlers: audioHandlers,
         });
     },
     togglePlayback: function() {
-        console.log('Toggle!');
+        if(this.state.playing) {
+            this.refs.audio.getDOMNode().pause();
+        } else {
+            this.refs.audio.getDOMNode().play();
+        }
     },
     stateProxy: function(key, value) {
         return function() {
@@ -327,9 +392,8 @@ var SoundCloudPlayer = React.createClass({
         }.bind(this);
     },
     updatePosition: function(percentage) {
-        this.setState({
-            playbackPosition: percentage,
-        });
+        var audio = this.refs.audio.getDOMNode();
+        audio.currentTime = percentage * audio.duration;
     },
     render: function() {
         var api = this.state.api;
@@ -371,7 +435,11 @@ var SoundCloudPlayer = React.createClass({
         }.bind(this));
 
         return (
-            <div className="sc-player">
+            <div className={classSet({
+                "sc-player": true,
+                "playing": this.state.playing,
+            })}>
+                <audio ref="audio" style={{ display: 'none' }} src={ selectedTrack === null ? null : this.state.api.apiUrl(selectedTrack.stream_url) } autoplay="autoplay" />
                 <SoundCloudArtworkList>
                     {artworkElements}
                 </SoundCloudArtworkList>
@@ -385,9 +453,9 @@ var SoundCloudPlayer = React.createClass({
                     waveformUrl={ selectedTrack === null ? "https://w1.sndcdn.com/IqSLUxN7arjs_m.png" : selectedTrack.waveform_url }
                     trackDuration={ selectedTrack === null ? 0 : selectedTrack.duration / 1000 }
                     updatePosition={ this.updatePosition }
-                    playbackPosition={ 0.25 }
-                    playbackTimecode={ 234 }
-                    bufferPosition={ 0.5 }
+                    playbackPosition={ this.state.playbackPosition || 0 }
+                    playbackTimecode={ this.state.playbackTimecode || 0 }
+                    bufferPosition={ this.state.bufferPosition || 0 }
                 />
             </div>
         );
