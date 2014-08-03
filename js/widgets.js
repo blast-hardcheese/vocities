@@ -1,5 +1,7 @@
 /** @jsx React.DOM */
 
+var classSet = React.addons.classSet;
+
 // Components
 var ReadyComponent = function(timeout) {
     if(timeout === undefined) {
@@ -296,15 +298,30 @@ var SoundCloudPlayer = React.createClass({
 
         console.log("tracks:", this.state.tracks);
 
+        var selectedTrack = null;
+        if(this.state.selectedTrack !== null && this.state.tracks !== null && this.state.tracks.length > 0) {
+            selectedTrack = this.state.tracks[this.state.selectedTrack];
+        }
+
+        var selectedTrackInfo = null;
+        if(selectedTrack !== null) {
+            selectedTrackInfo = (
+                <SoundCloudInfo trackUrl={ selectedTrack.permalink_url } trackName={ selectedTrack.name } artistUrl={ selectedTrack.user.permalink_url } artistName={ selectedTrack.user.username }>
+                    { selectedTrack.description }
+                </SoundCloudInfo>
+            );
+        }
+
         var whichButton = (this.state.playing) ? 'pause' : 'play';
 
         var trackElements = (this.state.tracks || []).map(function(track, i) {
             console.log('track', track);
 
+            return <SoundCloudTracksListElement key={ track.id } trackName={ track.title } trackUrl={ track.permalink_url } trackDuration={ track.duration / 1000 } />
         });
 
         var artworkElements = (this.state.tracks || []).map(function(track, i) {
-            return <SoundCloudArtworkListElement key={track.id} active={ this.state.selectedTrack == i } src="https://i1.sndcdn.com/artworks-000000103093-941e7e-t300x300.jpg?e76cf77" />
+            return <SoundCloudArtworkListElement key={track.id} active={ this.state.selectedTrack == i } src={ track.artwork_url } />
         }.bind(this));
 
         return (
@@ -312,15 +329,13 @@ var SoundCloudPlayer = React.createClass({
                 <SoundCloudArtworkList>
                     {artworkElements}
                 </SoundCloudArtworkList>
-                <SoundCloudInfo trackUrl="http://soundcloud.com/matas/hobnotropic" trackName="Hobnotropic" artistUrl="http://soundcloud.com/matas" artistName="matas">
-                    Kinda of an experiment in search for my own sound. I've produced this track from 2 loops I've made using Hobnox Audiotool ( http://www.hobnox.com/audiotool.1046.en.html ). Imported into Ableton LIve! and tweaked some FX afterwards.
-                </SoundCloudInfo>
+                { selectedTrackInfo }
                 <SoundCloudControls which={whichButton}/>
                 <SoundCloudTracksList>
-                    <SoundCloudTracksListElement trackName="Hobnotropic" trackUrl="http://soundcloud.com/matas/hobnotropic" trackDuration={ 486 } />
+                    { trackElements }
                 </SoundCloudTracksList>
                 <a href="#info" className="sc-info-toggle">Info</a>
-                <SoundCloudScrubber waveformUrl="https://w1.sndcdn.com/IqSLUxN7arjs_m.png" trackDuration={ 486 } />
+                <SoundCloudScrubber waveformUrl={ selectedTrack === null ? "https://w1.sndcdn.com/IqSLUxN7arjs_m.png" : selectedTrack.waveform_url } trackDuration={ 486 } />
             </div>
         );
     }
