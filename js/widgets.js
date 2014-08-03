@@ -225,7 +225,7 @@ var SoundCloudScrubber = React.createClass({
         return (
             <div className="sc-scrubber">
                 <div className="sc-volume-slider">
-                    <span className="sc-volume-status" style={{width:'60%'}}></span>
+                    <span className="sc-volume-status"></span>
                 </div>
                 <div ref="timespan" className="sc-time-span" onMouseDown={ this.mouseDown } onMouseUp={ this.stateProxy("mouseDown", false) } onMouseMove={ this.state.mouseDown ? this.mouseMove : null }>
                     <div className="sc-waveform-container">
