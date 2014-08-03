@@ -168,10 +168,11 @@ var SoundCloudControls = React.createClass({
 var SoundCloudTracksListElement = React.createClass({
     propTypes: {
         trackDuration: React.PropTypes.number.isRequired,
+        selectTrack: React.PropTypes.func.isRequired,
     },
     render: function() {
         return (
-            <li className="active">
+            <li className="active" onClick={ this.props.selectTrack }>
                 <a href={this.props.trackUrl}>{this.props.trackName}</a>
                 <span className="sc-track-duration">{SoundCloudUtils.formatDuration(this.props.trackDuration)}</span>
             </li>
@@ -293,7 +294,15 @@ var SoundCloudPlayer = React.createClass({
         });
     },
     togglePlayback: function() {
-
+    },
+    selectTrackWrapper: function(index) {
+        var _this = this;
+        return function() {
+            _this.setState({
+                selectedTrack: index,
+            });
+            return false;
+        };
     },
     render: function() {
         var api = this.state.api;
@@ -327,8 +336,8 @@ var SoundCloudPlayer = React.createClass({
         var whichButton = (this.state.playing) ? 'pause' : 'play';
 
         var trackElements = (this.state.tracks || []).map(function(track, i) {
-            return <SoundCloudTracksListElement key={ track.id } trackName={ track.title } trackUrl={ track.permalink_url } trackDuration={ track.duration / 1000 } />
-        });
+            return <SoundCloudTracksListElement key={ track.id } trackName={ track.title } trackUrl={ track.permalink_url } trackDuration={ track.duration / 1000 } selectTrack={ this.selectTrackWrapper(i) } />
+        }.bind(this));
 
         var artworkElements = (this.state.tracks || []).map(function(track, i) {
             return <SoundCloudArtworkListElement key={track.id} active={ this.state.selectedTrack == i } src={ track.artwork_url || "http://fc09.deviantart.net/fs70/i/2012/278/7/7/soundcloud_icon_by_tinylab-d48mjy9.png" } />
