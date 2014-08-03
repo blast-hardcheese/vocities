@@ -330,14 +330,14 @@ var SoundCloudPlayer = React.createClass({
         var audioHandlers = {};
 
         audioHandlers['suspend'] = function(event) {
-            _this.setState({ bufferPosition: this.buffered.end(0) / this.duration });
+            _this.setState({ bufferPosition: this.buffered.length === 1 ? (this.buffered.end(0) / this.duration) : 0 });
         }
         audioHandlers['progress'] = function(event) {
-            _this.setState({ bufferPosition: this.buffered.end(0) / this.duration });
+            _this.setState({ bufferPosition: this.buffered.length === 1 ? (this.buffered.end(0) / this.duration) : 0 });
         }
         audioHandlers['timeupdate'] = function(event) {
             _this.setState({
-                bufferPosition: this.buffered.end(0) / this.duration,
+                bufferPosition: this.buffered.length === 1 ? (this.buffered.end(0) / this.duration) : 0,
                 playbackPosition: this.currentTime / this.duration,
                 playbackTimecode: this.currentTime,
             });
