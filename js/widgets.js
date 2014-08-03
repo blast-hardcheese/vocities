@@ -194,11 +194,28 @@ var SoundCloudScrubber = React.createClass({
     propTypes: {
         waveformUrl: React.PropTypes.string.isRequired,
         trackDuration: React.PropTypes.number.isRequired,
+        updatePosition: React.PropTypes.func.isRequired,
+        playbackPosition: React.PropTypes.number.isRequired,
+        playbackTimecode: React.PropTypes.number.isRequired,
     },
     getInitialState: function() {
         return {
-            position: 0,
+            mouseDown: false,
         };
+    },
+    stateProxy: function(key, value) {
+        return function() {
+            var state = {};
+            state[key] = value;
+            this.setState(state);
+            return false;
+        }.bind(this);
+    },
+    mouseMove: function(event) {
+        var rect = this.refs.timespan.getDOMNode().getBoundingClientRect();
+        var percentage = (event.clientX - rect.left) / rect.width;
+        console.log("event:", percentage);
+        this.props.updatePosition(percentage);
     },
     render: function() {
         return (
@@ -206,15 +223,15 @@ var SoundCloudScrubber = React.createClass({
                 <div className="sc-volume-slider">
                     <span className="sc-volume-status" style={{width:'60%'}}></span>
                 </div>
-                <div className="sc-time-span">
+                <div ref="timespan" className="sc-time-span" onMouseDown={ this.stateProxy("mouseDown", true) } onMouseUp={ this.stateProxy("mouseDown", false) } onMouseMove={ this.state.mouseDown ? this.mouseMove : null }>
                     <div className="sc-waveform-container">
                         <img src={this.props.waveformUrl} />
                     </div>
-                    <div className="sc-buffer"></div>
-                    <div className="sc-played"></div>
+                    <div className="sc-buffer" style={{ width: (this.props.bufferPosition * 100) + '%' }}></div>
+                    <div className="sc-played" style={{ width: (this.props.playbackPosition * 100) + '%' }}></div>
                 </div>
                 <div className="sc-time-indicators">
-                    <span className="sc-position">{SoundCloudUtils.formatDuration(this.state.position)}</span> | <span className="sc-duration">{SoundCloudUtils.formatDuration(this.props.trackDuration)}</span>
+                    <span className="sc-position">{SoundCloudUtils.formatDuration(this.props.playbackTimecode)}</span> | <span className="sc-duration">{SoundCloudUtils.formatDuration(this.props.trackDuration)}</span>
                 </div>
             </div>
         );
@@ -271,6 +288,8 @@ var SoundCloudPlayer = React.createClass({
 
             loaded: false,
             playing: false,
+
+            playbackPosition: 0,
         };
     },
     componentDidMount: function() {
@@ -302,6 +321,11 @@ var SoundCloudPlayer = React.createClass({
             this.setState(state);
             return false;
         }.bind(this);
+    },
+    updatePosition: function(percentage) {
+        this.setState({
+            playbackPosition: percentage,
+        });
     },
     render: function() {
         var api = this.state.api;
@@ -353,7 +377,14 @@ var SoundCloudPlayer = React.createClass({
                     { trackElements }
                 </SoundCloudTracksList>
                 <a href="#info" className="sc-info-toggle">Info</a>
-                <SoundCloudScrubber waveformUrl={ selectedTrack === null ? "https://w1.sndcdn.com/IqSLUxN7arjs_m.png" : selectedTrack.waveform_url } trackDuration={ 486 } />
+                <SoundCloudScrubber
+                    waveformUrl={ selectedTrack === null ? "https://w1.sndcdn.com/IqSLUxN7arjs_m.png" : selectedTrack.waveform_url }
+                    trackDuration={ selectedTrack === null ? 0 : selectedTrack.duration / 1000 }
+                    updatePosition={ this.updatePosition }
+                    playbackPosition={ 0.25 }
+                    playbackTimecode={ 234 }
+                    bufferPosition={ 0.5 }
+                />
             </div>
         );
     }
