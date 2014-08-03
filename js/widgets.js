@@ -211,11 +211,13 @@ var SoundCloudScrubber = React.createClass({
             return false;
         }.bind(this);
     },
-    mouseWrapper: function(callback) {
+    mouseWrapper: function(stateKey, callback) {
         return function() {
             var rect = this.refs.timespan.getDOMNode().getBoundingClientRect();
             var percentage = (event.clientX - rect.left) / rect.width;
-            this.setState({ mouseDown: true });
+            var state = {};
+            state[stateKey] = true;
+            this.setState(state);
             callback(percentage);
             return false;
         }.bind(this);
@@ -226,7 +228,7 @@ var SoundCloudScrubber = React.createClass({
                 <div className="sc-volume-slider">
                     <span className="sc-volume-status"></span>
                 </div>
-                <div ref="timespan" className="sc-time-span" onMouseDown={ this.mouseWrapper(this.props.updatePosition) } onMouseUp={ this.stateProxy("mouseDown", false) } onMouseMove={ this.state.mouseDown ? this.mouseWrapper(this.props.updatePosition) : null }>
+                <div ref="timespan" className="sc-time-span" onMouseDown={ this.mouseWrapper("mouseDown", this.props.updatePosition) } onMouseUp={ this.stateProxy("mouseDown", false) } onMouseMove={ this.state.mouseDown ? this.mouseWrapper("mouseDown", this.props.updatePosition) : null }>
                     <div className="sc-waveform-container">
                         <img src={this.props.waveformUrl} />
                     </div>
