@@ -254,7 +254,7 @@ var SoundCloudPlayer = React.createClass({
                     <SoundCloudTracksListElement trackName="Hobnotropic" trackUrl="http://soundcloud.com/matas/hobnotropic" trackDuration="8.09" />
                 </SoundCloudTracksList>
                 <a href="#info" className="sc-info-toggle">Info</a>
-                <SoundCloudScrubber />
+                <SoundCloudScrubber waveformUrl="https://w1.sndcdn.com/IqSLUxN7arjs_m.png" trackDuration={ 486 } />
             </div>
         );
     }
