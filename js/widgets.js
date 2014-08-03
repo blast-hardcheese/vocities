@@ -164,20 +164,20 @@ var SoundCloudTracksListElement = React.createClass({
         trackDuration: React.PropTypes.number.isRequired,
     },
     render: function() {
-        <li className="active">
-            <a href={this.props.trackUrl}>{this.props.trackName}</a>
-            <span className="sc-track-duration">{SoundCloudUtils.formatDuration(this.props.trackDuration)}</span>
-        </li>
+        return (
+            <li className="active">
+                <a href={this.props.trackUrl}>{this.props.trackName}</a>
+                <span className="sc-track-duration">{SoundCloudUtils.formatDuration(this.props.trackDuration)}</span>
+            </li>
+        );
     }
 });
 
 var SoundCloudTracksList = React.createClass({
     render: function() {
-        React.Children.map(this.props.children, function() {
-            console.log('child:', arguments);
-        });
         return (
             <ol className="sc-trackslist">
+                {this.props.children}
             </ol>
         );
     },
@@ -214,7 +214,38 @@ var SoundCloudScrubber = React.createClass({
     },
 });
 
+var SoundCloudArtworkListElement = React.createClass({
+    propTypes: {
+        active: React.PropTypes.bool.isRequired,
+        src: React.PropTypes.string.isRequired,
+    },
+    render: function() {
+        var className = classSet({
+            "active": this.props.active,
+        });
+        return (
+            <li className={className}>
+                <img src={this.props.src} />
+            </li>
+        );
+    },
+});
+
+var SoundCloudArtworkList = React.createClass({
+    render: function() {
+        return (
+            <ol className="sc-artwork-list">
+                {this.props.children}
+            </ol>
+        );
+    },
+});
+
 var SoundCloudPlayer = React.createClass({
+    propTypes: {
+        apiKey: React.PropTypes.string.isRequired,
+        url: React.PropTypes.string.isRequired,
+    },
     getDefaultProps: function() {
         return {
             apiKey: "htuiRd1JP11Ww0X72T1C3g",
@@ -222,36 +253,71 @@ var SoundCloudPlayer = React.createClass({
     },
     getInitialState: function() {
         return {
+            api: null,
+            tracks: null,
+            selectedTrack: null,
+
+            loaded: false,
             playing: false,
         };
     },
     componentDidMount: function() {
         var api = this.state.api;
+
         if(this.props.apiKey != this.state.apiKey) {
+            if(api) {
+                api.cancel();
+            }
+
             api = new SoundCloud({
                 apiKey: this.props.apiKey
             });
         }
+
         this.setState({
             apiKey: this.props.apiKey,
-            api: api
-        })
+            api: api,
+        });
     },
     render: function() {
+        var api = this.state.api;
+        if(api !== null && this.state.tracks === null) {
+            var link = {
+                title: this.props.title || "Loading...",
+                url: this.props.url,
+            };
+            api.loadTracksFromLink(link, function(tracks) {
+                this.setState({
+                    tracks: tracks,
+                    selectedTrack: (this.state.selectedTrack || 0),
+                });
+            }.bind(this));
+        }
+
+        console.log("tracks:", this.state.tracks);
+
         var whichButton = (this.state.playing) ? 'pause' : 'play';
+
+        var trackElements = (this.state.tracks || []).map(function(track, i) {
+            console.log('track', track);
+
+        });
+
+        var artworkElements = (this.state.tracks || []).map(function(track, i) {
+            return <SoundCloudArtworkListElement key={track.id} active={ this.state.selectedTrack == i } src="https://i1.sndcdn.com/artworks-000000103093-941e7e-t300x300.jpg?e76cf77" />
+        }.bind(this));
 
         return (
             <div className="sc-player">
-                <ol className="sc-artwork-list">
-                    <li className="active"><img src="https://i1.sndcdn.com/artworks-000000103093-941e7e-t300x300.jpg?e76cf77" /></li>
-                    <li><img src="https://i1.sndcdn.com/artworks-000000103093-941e7e-t300x300.jpg?e76cf77" /></li>
-                </ol>
+                <SoundCloudArtworkList>
+                    {artworkElements}
+                </SoundCloudArtworkList>
                 <SoundCloudInfo trackUrl="http://soundcloud.com/matas/hobnotropic" trackName="Hobnotropic" artistUrl="http://soundcloud.com/matas" artistName="matas">
                     Kinda of an experiment in search for my own sound. I've produced this track from 2 loops I've made using Hobnox Audiotool ( http://www.hobnox.com/audiotool.1046.en.html ). Imported into Ableton LIve! and tweaked some FX afterwards.
                 </SoundCloudInfo>
                 <SoundCloudControls which={whichButton}/>
                 <SoundCloudTracksList>
-                    <SoundCloudTracksListElement trackName="Hobnotropic" trackUrl="http://soundcloud.com/matas/hobnotropic" trackDuration="8.09" />
+                    <SoundCloudTracksListElement trackName="Hobnotropic" trackUrl="http://soundcloud.com/matas/hobnotropic" trackDuration={ 486 } />
                 </SoundCloudTracksList>
                 <a href="#info" className="sc-info-toggle">Info</a>
                 <SoundCloudScrubber waveformUrl="https://w1.sndcdn.com/IqSLUxN7arjs_m.png" trackDuration={ 486 } />
