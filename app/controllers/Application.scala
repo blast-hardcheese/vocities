@@ -14,10 +14,11 @@ object Application extends Controller {
   def route(path: String) = BaseAction { request =>
     DB.withSession { implicit s =>
       models.Pages.lookup(request.domain, path) map { case (domainId, pageData, template) =>
-        pageData.map { data =>
-          Ok(s"$domainId, $data, $template")
-        } getOrElse {
-          BadRequest("404")
+        println(s"$domainId, $pageData, $template")
+        (pageData, template) match {
+          case (Some(data), Some(template)) => Ok(s"$domainId, $data, $template")
+          case (None, _)                    => BadRequest("404")
+          case (_, None)                    => InternalServerError("Can't find template!")
         }
       } getOrElse {
         BadRequest("unknown domain")
