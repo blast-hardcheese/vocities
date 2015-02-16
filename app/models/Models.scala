@@ -5,7 +5,7 @@ import scala.slick.driver.H2Driver.simple._
 case class Customer(id: Long, name: String)
 case class Domain(id: Long, customer_id: Long, domain: String)
 case class Template(id: Long, html: String)
-case class Page(customer_id: Long, domain_id: Long, path: Option[String], template_id: Long, data: String)
+case class Page(customer_id: Long, domain_id: Long, path: String, template_id: Long, data: String)
 
 class CustomerTable(tag: Tag) extends Table[Customer](tag, "customers") {
   def id = column[Long]("id", O.PrimaryKey)
@@ -56,7 +56,7 @@ object Templates {
 class PageTable(tag: Tag) extends Table[Page](tag, "pages") {
   def customer_id = column[Long]("customer_id")
   def domain_id = column[Long]("domain_id")
-  def path = column[Option[String]]("path")
+  def path = column[String]("path")
   def template_id = column[Long]("template_id")
   def data = column[String]("data")
 
@@ -107,10 +107,10 @@ object TestData {
   )
 
   val pages = Seq(
-    Page(1, 1, Some(""), 1, "{}"),
-    Page(2, 2, Some(""), 1, "{}"),
-    Page(3, 3, Some("hello/world"), 1, "{\"hello\": \"world\"}"),
-    Page(3, 3, Some("broken"), 90, "This is a broken page")
+    Page(1, 1, "", 1, "{}"),
+    Page(2, 2, "", 1, "{}"),
+    Page(3, 3, "hello/world", 1, "{\"hello\": \"world\"}"),
+    Page(3, 3, "broken", 90, "This is a broken page")
   )
 
   def create()(implicit session: Session) {
