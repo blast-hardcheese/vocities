@@ -19,11 +19,11 @@ object Application extends Controller {
     r.eval("var global = this;")
     r.eval("var console = {warn: function() { throw arguments[0]; }};")
     r.eval(new FileReader(new File("./target/web/public/main/lib/react/react-with-addons.js")))
-    r.eval(new FileReader(new File("public/javascripts/templates.js")))
     r
   }
 
   private[this] def render(templateId: String, data: String) = {
+    engine.eval(new FileReader(new File("./target/web/reactjs/main/javascripts/templates.js")))
     Ok(views.html.render(Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId], $data));").toString)))
   }
 
