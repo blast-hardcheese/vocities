@@ -3,7 +3,7 @@ package models
 import scala.slick.driver.H2Driver.simple._
 
 case class Customer(id: Long, name: String)
-case class Domain(id: Long, domain: String)
+case class Domain(id: Long, customer_id: Long, domain: String)
 case class Template(id: Long, html: String)
 case class Page(customer_id: Long, domain_id: Long, path: Option[String], template_id: Long, data: String)
 
@@ -24,9 +24,10 @@ object Customers {
 
 class DomainTable(tag: Tag) extends Table[Domain](tag, "domains") {
   def id = column[Long]("id", O.PrimaryKey)
+  def customer_id = column[Long]("customer_id", O.NotNull)
   def domain = column[String]("domain", O.NotNull)
 
-  def * = (id, domain) <> (Domain.tupled, Domain.unapply _)
+  def * = (id, customer_id, domain) <> (Domain.tupled, Domain.unapply _)
 }
 
 object Domains {
@@ -97,9 +98,9 @@ object TestData {
   )
 
   val domains = Seq(
-    Domain(1, "devonstewart.com"),
-    Domain(2, "amysnively.com"),
-    Domain(3, "ashleybarton.com")
+    Domain(1, 1, "devonstewart.com"),
+    Domain(2, 2, "amysnively.com"),
+    Domain(3, 3, "ashleybarton.com")
   )
 
   val templates = Seq(
