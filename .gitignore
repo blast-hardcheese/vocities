@@ -2,6 +2,7 @@
 .*
 # except for .gitignore
 !.gitignore
+!.flowconfig
 
 # Ignore Play! working directory #
 ######################
