@@ -22,5 +22,4 @@ object BaseAction extends ActionBuilder[BaseRequest] with Results {
 }
 
 class BaseRequest[A](val request: Request[A]) extends WrappedRequest[A](request) {
-  lazy val domainId: Option[Long] = None
 }
