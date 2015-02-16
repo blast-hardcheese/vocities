@@ -87,6 +87,13 @@ object Pages {
   def create(p: Page)(implicit s: Session): Unit = {
     pages.insert(p)
   }
+
+  def lookup(domainId: Long, path: String)(implicit s: Session): Option[Page] = {
+    pages
+      .filter(_.domain_id === domainId)
+      .filter(_.path === path)
+      .firstOption
+  }
 }
 
 object TestData {

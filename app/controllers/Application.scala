@@ -11,6 +11,20 @@ object Application extends Controller {
     Ok(request.domainId.toString)
   }
 
+  def route(path: String) = BaseAction { request =>
+    request.domainId.map { domainId =>
+      DB.withSession { implicit s =>
+        models.Pages.lookup(domainId, path) map { page =>
+          Ok(s"$page")
+        } getOrElse {
+          BadRequest("404")
+        }
+      }
+    } getOrElse {
+      MovedPermanently("http://devonstewart.com:9001/")
+    }
+  }
+
   def testData = BaseAction { request =>
     DB.withSession { implicit s =>
       models.TestData.create()
