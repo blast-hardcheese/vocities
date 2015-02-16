@@ -14,7 +14,7 @@ object Application extends Controller {
   def route(path: String) = BaseAction { request =>
     request.domainId.map { domainId =>
       DB.withSession { implicit s =>
-        models.Pages.lookup(domainId, path) map { page =>
+        models.Pages.lookup(request.domain, path) map { page =>
           Ok(s"$page")
         } getOrElse {
           BadRequest("404")

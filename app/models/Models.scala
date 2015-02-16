@@ -69,11 +69,22 @@ object Pages {
     pages.insert(p)
   }
 
-  def lookup(domainId: Long, path: String)(implicit s: Session): Option[Page] = {
-    pages
-      .filter(_.domain_id === domainId)
-      .filter(_.path === path)
-      .firstOption
+  def lookup(domain: String, path: String)(implicit s: Session): Option[(Page, Template)] = {
+    val components = domain.split('.')
+      .foldRight(Seq[Seq[String]](Seq.empty))({ (x, a) => (x +: a.head) +: a })
+      .map(_.mkString("."))
+
+    components.foldLeft[Option[(Page, Template)]](None)({ (a, x) =>
+      a.orElse(
+        Domains.domains
+          .filter(_.domain === x)
+          .join(pages).on({ case (d, p) => d.id === p.domain_id })
+          .join(Templates.templates).on({ case ((d, p), t) => t.id === p.template_id })
+          .filter({ case ((d, p), t) => p.path === path })
+          .map { case ((d, p), t) => (p, t) }
+          .firstOption
+        )
+    })
   }
 }
 
