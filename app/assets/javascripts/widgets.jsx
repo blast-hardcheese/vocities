@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var classSet = React.addons.classSet;
 
 // Components
