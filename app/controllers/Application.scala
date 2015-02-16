@@ -17,6 +17,7 @@ object Application extends Controller {
   lazy val engine = {
     val r = new ScriptEngineManager(null).getEngineByName("nashorn")
     r.eval("var global = this;")
+    r.eval("var console = {warn: function() { throw arguments[0]; }};")
     r.eval(new FileReader(new File("./target/web/public/main/lib/react/react-with-addons.js")))
     r.eval(new FileReader(new File("public/javascripts/templates.js")))
     r
