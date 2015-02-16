@@ -29,13 +29,12 @@ public/clients
 /out
 RUNNING_PID
 activator*
+node_modules/
 # except for activator.properties
 !activator.properties
 
 # Ignore Play Modules within Modules #
 modules/*/modules
-
-
 
 # Compiled source #
 ###################
@@ -72,9 +71,9 @@ ehthumbs.db
 Icon?
 Thumbs.db
 
-
 # general
 *~
+.*.sw*
 
 # Eclipse
 .settings
@@ -84,4 +83,3 @@ Thumbs.db
 # IDEA
 /.idea
 /.idea_modules
-
