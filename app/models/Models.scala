@@ -37,10 +37,6 @@ object Domains {
   }
 
   def idFromFQDN(d: String)(implicit s: Session): Option[Long] = {
-    println(s"d: $d")
-
-    println(s"${domains.list}")
-
     val components = d.split('.')
       .foldRight(Seq[Seq[String]](Seq.empty))({ (x, a) => (x +: a.head) +: a })
       .map(_.mkString("."))
