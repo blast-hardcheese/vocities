@@ -22,9 +22,5 @@ object BaseAction extends ActionBuilder[BaseRequest] with Results {
 }
 
 class BaseRequest[A](val request: Request[A]) extends WrappedRequest[A](request) {
-  lazy val domainId: Option[Long] = {
-    DB.withSession { implicit s =>
-      models.Domains.idFromFQDN(request.domain)
-    }
-  }
+  lazy val domainId: Option[Long] = None
 }

@@ -35,21 +35,6 @@ object Domains {
   def create(d: Domain)(implicit s: Session): Unit = {
     domains.insert(d)
   }
-
-  def idFromFQDN(d: String)(implicit s: Session): Option[Long] = {
-    val components = d.split('.')
-      .foldRight(Seq[Seq[String]](Seq.empty))({ (x, a) => (x +: a.head) +: a })
-      .map(_.mkString("."))
-
-    components.foldLeft[Option[Long]](None)({ (a, x) =>
-      a.orElse(
-        domains
-          .filter(_.domain === x)
-          .map(_.id)
-          .firstOption
-        )
-    })
-  }
 }
 
 class TemplateTable(tag: Tag) extends Table[Template](tag, "templates") {
