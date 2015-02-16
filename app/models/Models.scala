@@ -103,7 +103,7 @@ object TestData {
   )
 
   val templates = Seq(
-    Template(1, "<html>Hello, world!</html>")
+    Template(1, "0")
   )
 
   val pages = Seq(
