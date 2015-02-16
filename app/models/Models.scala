@@ -4,7 +4,7 @@ import scala.slick.driver.H2Driver.simple._
 
 case class Customer(id: Long, name: String)
 case class Domain(id: Long, customer_id: Long, domain: String)
-case class Template(id: Long, html: String)
+case class Template(id: Long, key: String)
 case class Page(customer_id: Long, domain_id: Long, path: String, template_id: Long, data: String)
 
 class CustomerTable(tag: Tag) extends Table[Customer](tag, "customers") {
@@ -40,9 +40,9 @@ object Domains {
 
 class TemplateTable(tag: Tag) extends Table[Template](tag, "templates") {
   def id = column[Long]("id", O.PrimaryKey)
-  def html = column[String]("html", O.NotNull)
+  def key = column[String]("key", O.NotNull)
 
-  def * = (id, html) <> (Template.tupled, Template.unapply _)
+  def * = (id, key) <> (Template.tupled, Template.unapply _)
 }
 
 object Templates {
@@ -82,7 +82,7 @@ object Pages {
           .filter(_.domain === x)
           .leftJoin(pages).on({ case (d, p) => d.id === p.domain_id && p.customer_id === d.customer_id && p.path === path })
           .leftJoin(Templates.templates).on({ case ((d, p), t) => t.id === p.template_id })
-          .map { case ((d, p), t) => (d.id, p.data.?, t.html.?) }
+          .map { case ((d, p), t) => (d.id, p.data.?, t.key.?) }
           .firstOption
         )
     })
