@@ -5,12 +5,9 @@ import play.api.mvc._
 import play.api.db.slick._
 import play.api.Play.current
 
+import models.{ Page, Template }
+
 object Application extends Controller {
-
-  def index = BaseAction { request =>
-    Ok
-  }
-
   def route(path: String) = BaseAction { request =>
     DB.withSession { implicit s =>
       models.Pages.lookup(request.domain, path) map { case (domainId, pageData, template) =>

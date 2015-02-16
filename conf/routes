@@ -2,7 +2,6 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET     /status                     controllers.Application.index
 GET     /td                         controllers.Application.testData
 
 GET     /edit                       controllers.Application.edit(path: String ?= "")
