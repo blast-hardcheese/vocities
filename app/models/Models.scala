@@ -107,11 +107,16 @@ object TestData {
   )
 
   val pages = Seq(
-    Page(1, 1, None, 1, "{}"),
-    Page(2, 2, None, 1, "{}")
+    Page(1, 1, Some("/"), 1, "{}"),
+    Page(2, 2, Some("/"), 1, "{}")
   )
 
   def create()(implicit session: Session) {
+    Customers.customers.delete
+    Domains.domains.delete
+    Templates.templates.delete
+    Pages.pages.delete
+
     customers.foreach(Customers.create)
     domains.foreach(Domains.create)
     templates.foreach(Templates.create)
