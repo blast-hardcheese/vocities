@@ -25,6 +25,10 @@ object Application extends Controller {
     }
   }
 
+  def edit(path: String) = BaseAction { request =>
+    Ok(s"edit: $path")
+  }
+
   def testData = BaseAction { request =>
     DB.withSession { implicit s =>
       models.TestData.create()
