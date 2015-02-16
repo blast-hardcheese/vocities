@@ -14,6 +14,10 @@ import play.twirl.api.Html
 import models.{ Page, Template }
 
 object Application extends Controller {
+  DB.withSession { implicit s =>
+    models.TestData.create
+  }
+
   lazy val engine = {
     val r = new ScriptEngineManager(null).getEngineByName("nashorn")
     r.eval("var global = this;")
