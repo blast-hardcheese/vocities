@@ -110,8 +110,9 @@ object TestData {
   )
 
   val pages = Seq(
-    Page(1, 1, Some("/"), 1, "{}"),
-    Page(2, 2, Some("/"), 1, "{}")
+    Page(1, 1, Some(""), 1, "{}"),
+    Page(2, 2, Some(""), 1, "{}"),
+    Page(3, 3, Some("hello/world"), 1, "{\"hello\": \"world\"}")
   )
 
   def create()(implicit session: Session) {
