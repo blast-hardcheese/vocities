@@ -9,6 +9,8 @@ import play.api.mvc._
 import play.api.db.slick._
 import play.api.Play.current
 
+import play.twirl.api.Html
+
 import models.{ Page, Template }
 
 object Application extends Controller {
@@ -21,7 +23,7 @@ object Application extends Controller {
   }
 
   private[this] def render(templateId: String, data: String) = {
-    Ok(play.twirl.api.Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId], $data));").toString))
+    Ok(views.html.render(Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId], $data));").toString)))
   }
 
   def route(path: String) = BaseAction { request =>
