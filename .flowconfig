@@ -1,6 +1,5 @@
 [ignore]
-deps/.*
-node_modules/.*
+.*/vocities/deps/.*
 .*/target/.*
 
 [include]
