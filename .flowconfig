@@ -1,4 +1,7 @@
 [ignore]
+deps/.*
+node_modules/.*
+.*/target/.*
 
 [include]
 
