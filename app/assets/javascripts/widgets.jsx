@@ -1,10 +1,20 @@
+/* @flow weak */
+
+declare class SoundCloud {
+    apiUrl(url: string): string;
+    abort(): void;
+    cancel(): void;
+    loadTracksFromLink(url: any, cb: (tracks: any[]) => void): void;
+}
+
+declare var initializePlayer: (options: any) => void;
+
+var React = require("react/addons");
+
 var classSet = React.addons.classSet;
 
 // Components
-var ReadyComponent = function(timeout) {
-    if(timeout === undefined) {
-        timeout = 250;
-    }
+var ReadyComponent = function(timeout: number = 250) {
     var readyProps = {timer: null};
     return {
         getInitialState: function() {
@@ -108,8 +118,8 @@ var HTML5Audio = React.createClass({
 });
 
 var SoundCloudUtils = {
-    formatDuration: function(duration) {
-        duration = SoundCloudUtils.parseInt(duration);
+    formatDuration: function(duration: any) {
+        duration = parseInt(duration);
         var seconds = (duration % 60);
         if(seconds < 10) {
             seconds = '0' + seconds;
@@ -118,7 +128,6 @@ var SoundCloudUtils = {
         }
         return String(Math.floor(duration / 60)) + '.' + seconds;
     },
-    parseInt: Number.parseInt || parseInt,
 };
 
 var SoundCloudInfo = React.createClass({
@@ -396,10 +405,10 @@ var SoundCloudPlayer = React.createClass({
             }
         }
         var audio = this.refs.audio.getDOMNode();
-        var keys = Object.keys(audioHandlers);
-        for(var i in keys) {
-            var key = keys[i];
-            audio.addEventListener(key, audioHandlers[key], false);
+        for(var key in audioHandlers) {
+            if (audioHandlers.hasOwnProperty(key)) {
+                audio.addEventListener(key, audioHandlers[key], false);
+            }
         }
 
         var link = {
@@ -425,10 +434,10 @@ var SoundCloudPlayer = React.createClass({
         var audioHandlers = this.state.audioHandlers;
 
         var audio = this.refs.audio.getDOMNode();
-        var keys = Object.keys(audioHandlers);
-        for(var i in keys) {
-            var key = keys[i];
-            audio.removeEventListener(key, audioHandlers[key], false);
+        for(var key in audioHandlers) {
+            if(audioHandlers.hasOwnProperty(key)) {
+                audio.removeEventListener(key, audioHandlers[key], false);
+            }
         }
     },
     togglePlayback: function() {
