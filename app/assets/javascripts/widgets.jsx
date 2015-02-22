@@ -9,12 +9,11 @@ declare class SoundCloud {
 
 declare var initializePlayer: (options: any) => void;
 
-var React = require("react/addons");
-
 var classSet = React.addons.classSet;
 
 // Components
-var ReadyComponent = function(timeout: number = 250) {
+var ReadyComponent = function(timeout): any {
+    if(timeout === null) { timeout = 250; }
     var readyProps = {timer: null};
     return {
         getInitialState: function() {
