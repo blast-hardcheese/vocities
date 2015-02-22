@@ -72,20 +72,12 @@ object Pages {
 
   type LookupResult = Option[(Long, Option[String], Option[String])]
   def lookup(domain: String, path: String)(implicit s: Session): LookupResult = {
-    val components = domain.split('.')
-      .foldRight(Seq[Seq[String]](Seq.empty))({ (x, a) => (x +: a.head) +: a })
-      .map(_.mkString("."))
-
-    components.foldLeft[LookupResult](None)({ (a, x) =>
-      a.orElse(
-        Domains.domains
-          .filter(_.domain === x)
-          .leftJoin(pages).on({ case (d, p) => d.id === p.domain_id && p.customer_id === d.customer_id && p.path === path })
-          .leftJoin(Templates.templates).on({ case ((d, p), t) => t.id === p.template_id })
-          .map { case ((d, p), t) => (d.id, p.data.?, t.key.?) }
-          .firstOption
-        )
-    })
+    Domains.domains
+      .filter(_.domain === domain)
+      .leftJoin(pages).on({ case (d, p) => d.id === p.domain_id && p.customer_id === d.customer_id && p.path === path })
+      .leftJoin(Templates.templates).on({ case ((d, p), t) => t.id === p.template_id })
+      .map { case ((d, p), t) => (d.id, p.data.?, t.key.?) }
+      .firstOption
   }
 }
 
