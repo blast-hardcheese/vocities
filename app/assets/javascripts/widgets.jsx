@@ -624,47 +624,47 @@ var SlideOutDiv = React.createClass({
     },
 })
 
-var VoiceZamPlayer = React.createClass({
-    statics: {
-        _nextId: 0,
-        nextId: function() {
-            var id = "vz-" + this._nextId;
-            this._nextId += 1;
-            return id;
-        },
-    },
-    getDefaultProps: function() {
-        var nextId = VoiceZamPlayer.nextId();
-        return {
-            ownerId: '9C932A93-5FFF-4416-B1FB-0CD7AA320DF5',
-            mode: 'large',
-            renderMode: 'inline',
-            talentId: '9C932A93-5FFF-4416-B1FB-0CD7AA320DF5',
-            talentDemo: 0,
-            portal: "Homepage for Joey Speakeasy",
-            autoPlay: false,
-            showContacts: true,
-            showClose: true,
-            containerId: nextId,
-        };
-    },
-    componentDidMount: function() {
-        initializePlayer(this.props);
-        setTimeout((function() {
-            var elem = $(this.refs.target.getDOMNode());
-            elem.find("> div")
-                .css("z-index", 0)
-                .css("display", "inline-block")
-        }).bind(this), 1000);
-    },
-    render: function() {
-        var style = {
-            border: 0,
-            margin: 0,
-        };
-        return <span id={this.props.containerId} style={style} ref="target" />
-    }
-});
+//var VoiceZamPlayer = React.createClass({
+//    statics: {
+//        _nextId: 0,
+//        nextId: function() {
+//            var id = "vz-" + this._nextId;
+//            this._nextId += 1;
+//            return id;
+//        },
+//    },
+//    getDefaultProps: function() {
+//        var nextId = VoiceZamPlayer.nextId();
+//        return {
+//            ownerId: '9C932A93-5FFF-4416-B1FB-0CD7AA320DF5',
+//            mode: 'large',
+//            renderMode: 'inline',
+//            talentId: '9C932A93-5FFF-4416-B1FB-0CD7AA320DF5',
+//            talentDemo: 0,
+//            portal: "Homepage for Joey Speakeasy",
+//            autoPlay: false,
+//            showContacts: true,
+//            showClose: true,
+//            containerId: nextId,
+//        };
+//    },
+//    componentDidMount: function() {
+//        initializePlayer(this.props);
+//        setTimeout((function() {
+//            var elem = $(this.refs.target.getDOMNode());
+//            elem.find("> div")
+//                .css("z-index", 0)
+//                .css("display", "inline-block")
+//        }).bind(this), 1000);
+//    },
+//    render: function() {
+//        var style = {
+//            border: 0,
+//            margin: 0,
+//        };
+//        return <span id={this.props.containerId} style={style} ref="target" />
+//    }
+//});
 
 var YouTube = React.createClass({
     getInitialState: function() {
