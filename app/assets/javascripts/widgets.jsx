@@ -38,6 +38,19 @@ var ReadyComponent = function(timeout: number = 250) {
 
 // Widgets
 
+var RootContainer = React.createClass({
+    render: function() {
+        var root_styles = {
+            'margin': '0',
+            'border': '0',
+            'width': '100%',
+            'height': '100%',
+            'backgroundColor': 'green',
+        };
+        return <div className="container" style={ root_styles }>{this.props.children}</div>;
+    },
+});
+
 var ContactInfo = React.createClass({
     getDefaultProps: function() {
         return {
