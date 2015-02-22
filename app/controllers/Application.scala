@@ -13,7 +13,7 @@ import play.twirl.api.Html
 
 import models.{ Page, Template }
 
-object Application extends Controller {
+object Application extends BaseController {
   DB.withSession { implicit s =>
     models.TestData.create
   }
