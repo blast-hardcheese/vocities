@@ -25,6 +25,7 @@ object Application extends BaseController {
     r.eval("var global = this;")
     r.eval("var console = {warn: function() { throw arguments[0]; }};")
     r.eval(new FileReader(new File("./target/web/public/main/lib/react/react-with-addons.js")))
+    r.eval(new FileReader(new File("./target/web/reactjs/main/javascripts/widgets.js")))
     r
   }
 
