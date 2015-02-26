@@ -15,3 +15,5 @@ libraryDependencies ++= Seq(
   cache,
   ws
 )
+
+ReactJsKeys.stripTypes := true
