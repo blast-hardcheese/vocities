@@ -15,6 +15,7 @@ import models.{ Page, Template }
 
 object Application extends BaseController {
   DB.withSession { implicit s =>
+    println(s"Seed test data")
     models.TestData.create
   }
 
@@ -50,12 +51,5 @@ object Application extends BaseController {
 
   def edit(path: String) = BaseAction { request =>
     Ok(s"edit: $path")
-  }
-
-  def testData = BaseAction { request =>
-    DB.withSession { implicit s =>
-      models.TestData.create()
-      Ok("Might have worked")
-    }
   }
 }
