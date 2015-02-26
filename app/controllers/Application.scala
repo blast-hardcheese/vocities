@@ -31,7 +31,7 @@ object Application extends BaseController {
 
   private[this] def render(templateId: String, data: String) = {
     engine.eval(new FileReader(new File("./target/web/reactjs/main/javascripts/templates.js")))
-    Ok(views.html.render(Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId], $data));").toString)))
+    Ok(views.html.render(templateId, data, Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId], $data));").toString)))
   }
 
   def route(path: String) = BaseAction { request =>

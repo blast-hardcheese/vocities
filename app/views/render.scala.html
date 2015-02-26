@@ -1,3 +1,13 @@
-@(content: Html)
+@(templateId: String, templateData: String, content: Html)
 
-@main("Welcome to Play")(content)
+@header = {
+        <script type="text/javascript">
+jQuery(function($) {
+    window.component = React.createFactory(Templates[@templateId])(@Html(templateData));
+    window.container = document.getElementsByTagName('body')[0];
+    React.render(component, container);
+});
+        </script>
+}
+
+@main("VOCities")(header)(content)
