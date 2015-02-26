@@ -232,22 +232,22 @@ var SoundCloudScrubber = React.createClass({
         };
     },
     stateProxy: function(key, value) {
-        return function() {
+        return function(e) {
+            e.stopPropagation();
             var state = {};
             state[key] = value;
             this.setState(state);
-            return false;
         }.bind(this);
     },
     mouseWrapper: function(stateKey, callback, ref) {
         return function(event) {
+            event.stopPropagation();
             var rect = this.refs[ref].getDOMNode().getBoundingClientRect();
             var percentage = (event.clientX - rect.left) / rect.width;
             var state = {};
             state[stateKey] = true;
             this.setState(state);
             callback(percentage);
-            return false;
         }.bind(this);
     },
     render: function() {
@@ -452,29 +452,29 @@ var SoundCloudPlayer = React.createClass({
             }
         }
     },
-    togglePlayback: function() {
+    togglePlayback: function(e) {
+        e.stopPropagation();
         if(this.state.playing) {
             this.refs.audio.getDOMNode().pause();
         } else {
             this.refs.audio.getDOMNode().play();
         }
-        return false;
     },
     stateProxy: function(key, value) {
-        return function() {
+        return function(e) {
+            e.stopPropagation();
             console.log(key, '->', value);
             var state = {};
             state[key] = value;
             this.setState(state);
-            return false;
         }.bind(this);
     },
     stateProxyToggle: function(key) {
-        return function() {
+        return function(e) {
+            e.stopPropagation();
             var state = {};
             state[key] = !this.state[key];
             this.setState(state);
-            return false;
         }.bind(this);
     },
     updatePosition: function(percentage) {
@@ -486,7 +486,8 @@ var SoundCloudPlayer = React.createClass({
         audio.volume = percentage;
     },
     selectTrack: function(idx) {
-        return function() {
+        return function(e) {
+            e.stopPropagation();
             var audio = this.refs.audio.getDOMNode();
             if(audio.buffered.length > 0) {
                 audio.currentTime = 0;
@@ -495,7 +496,6 @@ var SoundCloudPlayer = React.createClass({
                 "selectedTrack": idx,
                 "autoplay": "autoplay",
             });
-            return false;
         }.bind(this);
     },
     render: function() {
@@ -581,11 +581,11 @@ var SlideOutDiv = React.createClass({
         });
     },
 
-    toggleOpen: function() {
+    toggleOpen: function(e) {
+        e.stopPropagation();
         this.setState({
             open: !this.state.open,
         });
-        return false;
     },
 
     render: function() {
