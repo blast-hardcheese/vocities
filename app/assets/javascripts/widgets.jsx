@@ -194,13 +194,16 @@ var SoundCloudTracksListElement = React.createClass({
         selectTrack: React.PropTypes.func.isRequired,
         active: React.PropTypes.bool.isRequired,
     },
+    handleClick: function(e) {
+        e.preventDefault();
+    },
     render: function() {
         var className = classSet({
             "active": this.props.active,
         });
         return (
             <li className={ className } onClick={ this.props.selectTrack }>
-                <a href={this.props.trackUrl}>{this.props.trackName}</a>
+                <a href={this.props.trackUrl} onClick={ this.handleClick }>{this.props.trackName}</a>
                 <span className="sc-track-duration">{SoundCloudUtils.formatDuration(this.props.trackDuration)}</span>
             </li>
         );
