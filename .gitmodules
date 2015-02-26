@@ -1,6 +1,6 @@
-[submodule "soundcloud"]
-	path = soundcloud
-	url = https://github.com/soundcloud/soundcloud-custom-player
 [submodule "js/definitions"]
 	path = js/definitions
 	url = https://github.com/borisyankov/DefinitelyTyped
+[submodule "soundcloud"]
+	path = soundcloud
+	url = https://github.com/blast-hardcheese/soundcloud-custom-player
