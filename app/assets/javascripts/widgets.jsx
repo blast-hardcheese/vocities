@@ -524,7 +524,7 @@ var SoundCloudPlayer = React.createClass({
         }.bind(this));
 
         var artworkElements = (this.state.tracks || []).map(function(track, i) {
-            return <SoundCloudArtworkListElement key={track.id} active={ this.state.selectedTrack === i } src={ track.artwork_url || "http://fc09.deviantart.net/fs70/i/2012/278/7/7/soundcloud_icon_by_tinylab-d48mjy9.png" } />
+            return <SoundCloudArtworkListElement key={track.id} active={ this.state.selectedTrack === i } src={ track.artwork_url || "/assets/images/soundcloud_icon_by_tinylab-d48mjy9.png" } />
         }.bind(this));
 
         var autoplay = this.state.autoplay || this.props.autoplay;
