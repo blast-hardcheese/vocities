@@ -44,7 +44,7 @@ var RootContainer = React.createClass({
             'border': '0',
             'width': '100%',
             'height': '100%',
-            'backgroundColor': 'green',
+            'backgroundColor': this.props.bgColor || 'green',
         };
         return <div className="container" style={ root_styles }>{this.props.children}</div>;
     },

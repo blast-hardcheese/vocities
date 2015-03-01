@@ -99,9 +99,9 @@ object TestData {
   )
 
   val pages = Seq(
-    Page(1, 1, "", 1, "{}"),
+    Page(1, 1, "", 1, "{\"hello\": \"Devon\", \"sc-url\": \"https://soundcloud.com/shiroyukihime/sets/jpop-anime-ost\", \"youtube\": \"gN9cIlICDt4\", \"bgColor\":\"#f8f8ff\"}"),
     Page(2, 2, "", 1, "{}"),
-    Page(3, 3, "hello/world", 1, "{\"hello\": \"world\"}"),
+    Page(3, 3, "hello/world", 1, "{\"hello\": \"world\", \"sc-url\": \"https://soundcloud.com/joeljuliusbaer/sets/parov-stellar\", \"youtube\": \"04mfKJWDSzI\"}"),
     Page(3, 3, "broken", 90, "This is a broken page")
   )
 
