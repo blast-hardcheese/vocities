@@ -35,11 +35,11 @@ object Application extends BaseController {
     Ok(views.html.render(templateId, data, Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId], $data));").toString)))
   }
 
-  def route(path: String) = BaseAction { request =>
+  def lookup(request: BaseRequest[_], path: String)(handler: (String, String) => Result) = {
     DB.withSession { implicit s =>
       models.Pages.lookup(request.domain, path) map { case (domainId, pageData, templateId) =>
         (pageData, templateId) match {
-          case (Some(data), Some(templateId)) => render(templateId, data)
+          case (Some(data), Some(templateId)) => handler(templateId, data)
           case (None, _)                      => BadRequest("404")
           case (_, None)                      => InternalServerError("Can't find template!")
         }
@@ -47,6 +47,10 @@ object Application extends BaseController {
         BadRequest("unknown domain")
       }
     }
+  }
+
+  def route(path: String) = BaseAction { request =>
+    lookup(request, path)(render)
   }
 
   def edit(path: String) = BaseAction { request =>
