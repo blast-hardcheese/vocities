@@ -54,6 +54,13 @@ object Application extends BaseController {
   }
 
   def edit(path: String) = BaseAction { request =>
-    Ok(s"edit: $path")
+    lookup(request, path) { case (templateId, data) => {
+        Ok(s"edit: $path, $templateId, $data")
+      }
+    }
+  }
+
+  def save(path: String) = BaseAction { request =>
+    Redirect(routes.Application.edit(path))
   }
 }
