@@ -5,7 +5,7 @@ import scala.slick.driver.H2Driver.simple._
 case class Customer(id: Long, name: String)
 case class Domain(id: Long, customer_id: Long, domain: String)
 case class Template(id: Long, key: String)
-case class Page(customer_id: Long, domain_id: Long, path: String, template_id: Long, data: String)
+case class Page(customer_id: Long, domain_id: Long, path: String, template_id: Long, title: String, data: String)
 
 class CustomerTable(tag: Tag) extends Table[Customer](tag, "customers") {
   def id = column[Long]("id", O.PrimaryKey)
@@ -58,9 +58,10 @@ class PageTable(tag: Tag) extends Table[Page](tag, "pages") {
   def domain_id = column[Long]("domain_id")
   def path = column[String]("path")
   def template_id = column[Long]("template_id")
+  def title = column[String]("title")
   def data = column[String]("data")
 
-  def * = (customer_id, domain_id, path, template_id, data) <> (Page.tupled, Page.unapply _)
+  def * = (customer_id, domain_id, path, template_id, title, data) <> (Page.tupled, Page.unapply _)
 }
 
 object Pages {
@@ -99,10 +100,10 @@ object TestData {
   )
 
   val pages = Seq(
-    Page(1, 1, "", 1, "{\"hello\": \"Devon\", \"sc-url\": \"https://soundcloud.com/shiroyukihime/sets/jpop-anime-ost\", \"youtube\": \"gN9cIlICDt4\", \"bgColor\":\"#f8f8ff\"}"),
-    Page(2, 2, "", 1, "{}"),
-    Page(3, 3, "hello/world", 1, "{\"hello\": \"world\", \"sc-url\": \"https://soundcloud.com/joeljuliusbaer/sets/parov-stellar\", \"youtube\": \"04mfKJWDSzI\"}"),
-    Page(3, 3, "broken", 90, "This is a broken page")
+    Page(1, 1, "", 1, "index", "{\"hello\": \"Devon\", \"sc-url\": \"https://soundcloud.com/shiroyukihime/sets/jpop-anime-ost\", \"youtube\": \"gN9cIlICDt4\", \"bgColor\":\"#f8f8ff\"}"),
+    Page(2, 2, "", 1, "homepage", "{}"),
+    Page(3, 3, "hello/world", 1, "hello, world!", "{\"hello\": \"world\", \"sc-url\": \"https://soundcloud.com/joeljuliusbaer/sets/parov-stellar\", \"youtube\": \"04mfKJWDSzI\"}"),
+    Page(3, 3, "broken", 90, "broken", "This is a broken page")
   )
 
   def create()(implicit session: Session) {
