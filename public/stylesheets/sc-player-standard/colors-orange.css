@@ -124,6 +124,7 @@
 .sc-player .sc-info{
   background: #fff;
   opacity: 0.9;
+  overflow: auto;
 }
 
 .sc-player .sc-info-toggle{

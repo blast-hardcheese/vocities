@@ -139,6 +139,7 @@
   background: #333;
   opacity: 0.9;
   color: #fff;
+  overflow: auto;
 }
 
 .sc-player .sc-info a {
