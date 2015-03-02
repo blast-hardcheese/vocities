@@ -27,11 +27,11 @@ object Application extends BaseController {
     r.eval("var console = {warn: function() { throw arguments[0]; }};")
     r.eval(new FileReader(new File("./target/web/public/main/lib/react/react-with-addons.js")))
     r.eval(new FileReader(new File("./target/web/reactjs/main/javascripts/widgets.js")))
+    r.eval(new FileReader(new File("./target/web/public/main/javascripts/templates.js")))
     r
   }
 
   private[this] def render(templateId: String, data: String) = {
-    engine.eval(new FileReader(new File("./target/web/public/main/javascripts/templates.js")))
     Ok(views.html.render(templateId, data, Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId], $data));").toString)))
   }
 
