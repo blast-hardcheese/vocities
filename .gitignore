@@ -84,3 +84,9 @@ Thumbs.db
 # IDEA
 /.idea
 /.idea_modules
+
+# VOCities
+flow
+sbt-reactjs
+soundcloud-custom-player
+tags
