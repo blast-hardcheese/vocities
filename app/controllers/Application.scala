@@ -37,11 +37,11 @@ object Application extends BaseController {
 
   def lookup(request: BaseRequest[_], path: String)(handler: (String, String) => Result) = {
     DB.withSession { implicit s =>
-      models.Pages.lookup(request.domain, path) map { case (domainId, pageData, templateId) =>
-        (pageData, templateId) match {
-          case (Some(data), Some(templateId)) => handler(templateId, data)
-          case (None, _)                      => BadRequest("404")
-          case (_, None)                      => InternalServerError("Can't find template!")
+      models.Pages.lookup(request.domain, path) map { case (domainId, pageTitle, pageData, templateId) =>
+        (pageTitle, pageData, templateId) match {
+          case (Some(title), Some(data), Some(templateId)) => handler(templateId, data)
+          case (None, None, _)                             => BadRequest("404")
+          case (_, _, None)                                => InternalServerError("Can't find template!")
         }
       } getOrElse {
         BadRequest("unknown domain")

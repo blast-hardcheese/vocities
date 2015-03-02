@@ -71,13 +71,13 @@ object Pages {
     pages.insert(p)
   }
 
-  type LookupResult = Option[(Long, Option[String], Option[String])]
+  type LookupResult = Option[(Long, Option[String], Option[String], Option[String])]
   def lookup(domain: String, path: String)(implicit s: Session): LookupResult = {
     Domains.domains
       .filter(_.domain === domain)
       .leftJoin(pages).on({ case (d, p) => d.id === p.domain_id && p.customer_id === d.customer_id && p.path === path })
       .leftJoin(Templates.templates).on({ case ((d, p), t) => t.id === p.template_id })
-      .map { case ((d, p), t) => (d.id, p.data.?, t.key.?) }
+      .map { case ((d, p), t) => (d.id, p.title.?, p.data.?, t.key.?) }
       .firstOption
   }
 }
