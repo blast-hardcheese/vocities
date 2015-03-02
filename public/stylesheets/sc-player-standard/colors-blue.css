@@ -96,7 +96,6 @@
 
 .sc-player ol.sc-trackslist li.active, .sc-player ol.sc-trackslist li:hover {
   background-color: #fff;
-  padding: 4px;
   color: #003399;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -235,7 +234,6 @@
 
 .sc-player ol.sc-trackslist li.active, .sc-player ol.sc-trackslist li:hover {
   background-color: #fff;
-  padding: 4px;
   color: #003399;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;

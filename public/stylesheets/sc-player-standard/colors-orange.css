@@ -98,7 +98,6 @@
 }
 
 .sc-player ol.sc-trackslist li.active, .sc-player ol.sc-trackslist li:hover {
-  padding: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   -moz-box-shadow: 1px 1px 4px #ccc;
