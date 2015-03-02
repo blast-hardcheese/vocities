@@ -1,0 +1,13 @@
+@(title: String, templateId: String, templateData: String, content: Html)
+
+@header = {
+        <script type="text/javascript">
+jQuery(function($) {
+    window.component = React.createFactory(Templates[@templateId])(@Html(templateData));
+    window.container = document.getElementsByTagName('body')[0];
+    React.render(component, container);
+});
+        </script>
+}
+
+@main(title)(header)(content)

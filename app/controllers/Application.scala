@@ -55,7 +55,7 @@ object Application extends BaseController {
 
   def edit(path: String) = BaseAction { request =>
     lookup(request, path) { case (title, templateId, data) => {
-        Ok(s"edit: $path, $templateId, $title, $data")
+        Ok(views.html.editor(title, templateId, data, Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId], $data));").toString)))
       }
     }
   }
