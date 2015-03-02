@@ -1,4 +1,4 @@
-@(templateId: String, templateData: String, content: Html)
+@(title: String, templateId: String, templateData: String, content: Html)
 
 @header = {
         <script type="text/javascript">
@@ -10,4 +10,4 @@ jQuery(function($) {
         </script>
 }
 
-@main("VOCities")(header)(content)
+@main(title)(header)(content)

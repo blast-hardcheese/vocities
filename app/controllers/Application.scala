@@ -31,15 +31,15 @@ object Application extends BaseController {
     r
   }
 
-  private[this] def render(templateId: String, data: String) = {
-    Ok(views.html.render(templateId, data, Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId], $data));").toString)))
+  private[this] def render(title: String, templateId: String, data: String) = {
+    Ok(views.html.render(title, templateId, data, Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId], $data));").toString)))
   }
 
-  def lookup(request: BaseRequest[_], path: String)(handler: (String, String) => Result) = {
+  def lookup(request: BaseRequest[_], path: String)(handler: (String, String, String) => Result) = {
     DB.withSession { implicit s =>
       models.Pages.lookup(request.domain, path) map { case (domainId, pageTitle, pageData, templateId) =>
         (pageTitle, pageData, templateId) match {
-          case (Some(title), Some(data), Some(templateId)) => handler(templateId, data)
+          case (Some(title), Some(data), Some(templateId)) => handler(title, templateId, data)
           case (None, None, _)                             => BadRequest("404")
           case (_, _, None)                                => InternalServerError("Can't find template!")
         }
@@ -54,8 +54,8 @@ object Application extends BaseController {
   }
 
   def edit(path: String) = BaseAction { request =>
-    lookup(request, path) { case (templateId, data) => {
-        Ok(s"edit: $path, $templateId, $data")
+    lookup(request, path) { case (title, templateId, data) => {
+        Ok(s"edit: $path, $templateId, $title, $data")
       }
     }
   }
