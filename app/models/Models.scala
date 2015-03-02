@@ -92,7 +92,8 @@ object TestData {
   val domains = Seq(
     Domain(1, 1, "devonstewart.com"),
     Domain(2, 2, "amysnively.com"),
-    Domain(3, 3, "ashleybarton.com")
+    Domain(3, 3, "ashleybarton.com"),
+    Domain(4, 1, "hardchee.se")
   )
 
   val templates = Seq(
@@ -101,6 +102,7 @@ object TestData {
 
   val pages = Seq(
     Page(1, 1, "", 1, "index", "{\"hello\": \"Devon\", \"sc-url\": \"https://soundcloud.com/shiroyukihime/sets/jpop-anime-ost\", \"youtube\": \"gN9cIlICDt4\", \"bgColor\":\"#f8f8ff\"}"),
+    Page(1, 4, "", 1, "index", "{\"hello\": \"Devon\", \"sc-url\": \"https://soundcloud.com/shiroyukihime/sets/jpop-anime-ost\", \"youtube\": \"gN9cIlICDt4\", \"bgColor\":\"#f8f8ff\"}"),
     Page(2, 2, "", 1, "homepage", "{}"),
     Page(3, 3, "hello/world", 1, "hello, world!", "{\"hello\": \"world\", \"sc-url\": \"https://soundcloud.com/joeljuliusbaer/sets/parov-stellar\", \"youtube\": \"04mfKJWDSzI\"}"),
     Page(3, 3, "broken", 90, "broken", "This is a broken page")
