@@ -32,7 +32,7 @@ object Application extends BaseController {
   }
 
   private[this] def render(title: String, templateId: String, data: String) = {
-    Ok(views.html.render(title, templateId, data, Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId], $data));").toString)))
+    Ok(views.html.render(title, templateId, data, Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'], $data));").toString)))
   }
 
   def lookup(request: BaseRequest[_], path: String)(handler: (String, String, String) => Result) = {
@@ -55,7 +55,7 @@ object Application extends BaseController {
 
   def edit(path: String) = BaseAction { request =>
     lookup(request, path) { case (title, templateId, data) => {
-        Ok(views.html.editor(title, templateId, data, Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId], $data));").toString)))
+        Ok(views.html.editor(title, templateId, data, Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'], $data));").toString)))
       }
     }
   }
