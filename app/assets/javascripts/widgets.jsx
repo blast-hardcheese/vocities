@@ -348,6 +348,19 @@ var SoundCloudPlayer = React.createClass({
             autoplay: null,
         };
     },
+    loadUrl: function(url, title) {
+        var api = this.state.api;
+        var link = {
+            title: this.props.title || "Loading...",
+            url: url,
+        };
+        api.loadTracksFromLink(link, function(tracks) {
+            this.setState({
+                tracks: tracks,
+                selectedTrack: 0,
+            });
+        }.bind(this));
+    },
     componentDidMount: function() {
         var _this = this;
         var api = this.state.api;
@@ -426,22 +439,17 @@ var SoundCloudPlayer = React.createClass({
             }
         }
 
-        var link = {
-            title: this.props.title || "Loading...",
-            url: this.props.url,
-        };
-        api.loadTracksFromLink(link, function(tracks) {
-            this.setState({
-                tracks: tracks,
-                selectedTrack: (this.state.selectedTrack || 0),
-            });
-        }.bind(this));
-
         this.setState({
             apiKey: this.props.apiKey,
             api: api,
             audioHandlers: audioHandlers,
         });
+
+        // Must be done after API has been set!
+        this.loadUrl(this.props.url, this.props.title);
+    },
+    componentWillReceiveProps: function(newProps) {
+        this.loadUrl(newProps.url, newProps.title);
     },
     componentWillUnmount: function() {
         this.state.api.abort();
