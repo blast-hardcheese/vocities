@@ -330,7 +330,7 @@ var SoundCloudPlayer = React.createClass({
     getDefaultProps: function() {
         return {
             apiKey: "htuiRd1JP11Ww0X72T1C3g",
-            autoplay: "none",
+            autoplay: null,
         };
     },
     getInitialState: function() {
@@ -345,7 +345,7 @@ var SoundCloudPlayer = React.createClass({
             playbackPosition: 0,
             volume: 1,
 
-            autoplay: false,
+            autoplay: null,
         };
     },
     componentDidMount: function() {
