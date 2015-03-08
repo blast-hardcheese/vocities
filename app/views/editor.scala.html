@@ -10,6 +10,11 @@ jQuery(function($) {
     var body = $('body');
     var top = React.render(factory, body[0]);
 
+    var init = TemplateInits['@templateId'];
+    if (init !== undefined) {
+        init(data);
+    }
+
     var container = $('<div />', {
         'style': 'position: absolute; top: 20px; right: 20px;',
     });

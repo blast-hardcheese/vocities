@@ -1,3 +1,6 @@
+var TemplateInits = {
+};
+
 var Templates = {
     "0": React.createClass({
         render: function() {
