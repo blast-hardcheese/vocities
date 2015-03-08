@@ -33,6 +33,8 @@ object Application extends BaseController {
   }
 
   private[this] def render(title: String, templateId: String, data: String) = {
+    // Only here temporarily
+    engine.eval(new FileReader(new File("./target/web/public/main/javascripts/templates.js")))
     Ok(views.html.render(title, templateId, data, Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'], $data));").toString)))
   }
 
