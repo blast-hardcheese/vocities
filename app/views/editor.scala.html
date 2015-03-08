@@ -6,7 +6,7 @@ jQuery(function($) {
     console.info('wat');
     var data = @Html(templateData)
     window.data = data;
-    var factory = React.createFactory(Templates['@templateId'])(data);
+    var factory = React.createFactory(Templates['@templateId']())(data);
 
     var body = $('body');
     var top = React.render(factory, body[0]);
