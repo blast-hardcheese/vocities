@@ -97,11 +97,20 @@ object TestData {
   )
 
   val templates = Seq(
-    Template(1, "0")
+    Template(1, "html5up-read-only")
   )
 
   val pages = Seq(
-    Page(1, 1, "", 1, "index", "{\"hello\": \"Devon\", \"sc-url\": \"https://soundcloud.com/shiroyukihime/sets/jpop-anime-ost\", \"youtube\": \"gN9cIlICDt4\", \"bgColor\":\"#f8f8ff\"}"),
+    Page(1, 1, "", 1, "index", """
+{"hello": "Devon", "sc-url": "https://soundcloud.com/shiroyukihime/sets/jpop-anime-ost", "youtube": "gN9cIlICDt4", "bgColor":"#f8f8ff", "sections": [
+  {"tag": "first",  "title": "First section", "content": {"type": "soundcloud", "sc-url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}},
+  {"tag": "second", "title": "Second section", "content": {"type": "soundcloud", "sc-url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}},
+  {"tag": "third",  "title": "Third section", "content": {"type": "soundcloud", "sc-url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}},
+  {"tag": "fourth", "title": "Fourth section", "content": {"type": "soundcloud", "sc-url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}},
+  {"tag": "fifth",  "title": "Fifth section", "content": {"type": "soundcloud", "sc-url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}},
+  {"tag": "sixth",  "title": "Sixth section", "content": {"type": "soundcloud", "sc-url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}}
+]}
+"""),
     Page(1, 4, "", 1, "index", "{\"hello\": \"Devon\", \"sc-url\": \"https://soundcloud.com/shiroyukihime/sets/jpop-anime-ost\", \"youtube\": \"gN9cIlICDt4\", \"bgColor\":\"#f8f8ff\"}"),
     Page(2, 2, "", 1, "homepage", "{}"),
     Page(3, 3, "hello/world", 1, "hello, world!", "{\"hello\": \"world\", \"sc-url\": \"https://soundcloud.com/joeljuliusbaer/sets/parov-stellar\", \"youtube\": \"04mfKJWDSzI\"}"),
