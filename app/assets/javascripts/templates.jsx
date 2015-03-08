@@ -1,3 +1,16 @@
+var Widget = React.createClass({
+    render: function() {
+        var res = null;
+        switch (this.props.data.type) {
+            case 'soundcloud':
+                res = <SoundCloudPlayer url={this.props.data['sc-url']} />
+                break;
+        }
+
+        return res;
+    },
+});
+
 var TemplateInits = {
 };
 
