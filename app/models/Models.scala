@@ -102,14 +102,27 @@ object TestData {
 
   val pages = Seq(
     Page(1, 1, "", 1, "index", """
-{"hello": "Devon", "sc-url": "https://soundcloud.com/shiroyukihime/sets/jpop-anime-ost", "youtube": "gN9cIlICDt4", "bgColor":"#f8f8ff", "sections": [
-  {"tag": "first",  "title": "First section", "content": {"type": "soundcloud", "sc-url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}},
-  {"tag": "second", "title": "Second section", "content": {"type": "soundcloud", "sc-url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}},
-  {"tag": "third",  "title": "Third section", "content": {"type": "soundcloud", "sc-url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}},
-  {"tag": "fourth", "title": "Fourth section", "content": {"type": "soundcloud", "sc-url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}},
-  {"tag": "fifth",  "title": "Fifth section", "content": {"type": "soundcloud", "sc-url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}},
-  {"tag": "sixth",  "title": "Sixth section", "content": {"type": "soundcloud", "sc-url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}}
-]}
+{
+  "hello": "Devon",
+  "sc-url": "https://soundcloud.com/shiroyukihime/sets/jpop-anime-ost",
+  "youtube": "gN9cIlICDt4",
+  "bgColor":"#f8f8ff",
+  "sections": [
+    {"tag": "first",  "title": "First section", "content": {"type": "soundcloud", "url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}},
+    {"tag": "second", "title": "Second section", "content": {"type": "soundcloud", "url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}},
+    {"tag": "third",  "title": "Third section", "content": {"type": "soundcloud", "url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}},
+    {"tag": "fourth", "title": "Fourth section", "content": {"type": "soundcloud", "url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}},
+    {"tag": "fifth",  "title": "Fifth section", "content": {"type": "soundcloud", "url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}},
+    {"tag": "sixth",  "title": "Sixth section", "content": {"type": "soundcloud", "url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}}
+  ],
+  "social": {
+    "twitter": "https://twitter.com/blast_hardchese",
+    "facebook": "https://www.facebook.com/devon.stewart.982",
+    "instagram": "https://instagram.com/alfredyankovic",
+    "github": "https://github.com/blast-hardcheese",
+    "email": "mail://blast@hardchee.se"
+  }
+}
 """),
     Page(1, 4, "", 1, "index", "{\"hello\": \"Devon\", \"sc-url\": \"https://soundcloud.com/shiroyukihime/sets/jpop-anime-ost\", \"youtube\": \"gN9cIlICDt4\", \"bgColor\":\"#f8f8ff\"}"),
     Page(2, 2, "", 1, "homepage", "{}"),
