@@ -11,6 +11,18 @@ var Widget = React.createClass({
     },
 });
 
+var SocialIcon = React.createClass({
+    render: function() {
+        var icon = this.props.type;
+        switch (this.props.type) {
+            case 'email':
+                icon = 'envelope';
+                break;
+        }
+        return <li key={this.props.type}><a href={this.props.target} className={"icon fa-" + icon}><span className="label">{this.props.type}</span></a></li>;
+    },
+});
+
 var TemplateInits = {
     "html5up-read-only": function() {
         skel.init({
@@ -154,6 +166,10 @@ var Templates = {
                     </section>
                 ); });
 
+                var social = this.props.social;
+                var socialIcons = _.map(social, function(x, type) { return (
+                    <SocialIcon key={type} type={type} target={ social[type] } />
+                ); });
                 return (
                     <div id="wrapper">
                         <section id="header" className="skel-layers-fixed">
@@ -166,11 +182,7 @@ var Templates = {
                             </nav>
                             <footer>
                                 <ul className="icons">
-                                    <li><a href="#" className="icon fa-twitter"><span className="label">Twitter</span></a></li>
-                                    <li><a href="#" className="icon fa-facebook"><span className="label">Facebook</span></a></li>
-                                    <li><a href="#" className="icon fa-instagram"><span className="label">Instagram</span></a></li>
-                                    <li><a href="#" className="icon fa-github"><span className="label">Github</span></a></li>
-                                    <li><a href="#" className="icon fa-envelope"><span className="label">Email</span></a></li>
+                                    {socialIcons}
                                 </ul>
                             </footer>
                         </section>
