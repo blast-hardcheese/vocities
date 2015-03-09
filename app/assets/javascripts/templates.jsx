@@ -3,7 +3,7 @@ var Widget = React.createClass({
         var res = null;
         switch (this.props.data.type) {
             case 'soundcloud':
-                res = <SoundCloudPlayer url={this.props.data['sc-url']} />
+                res = React.createElement(SoundCloudPlayer, this.props.data);
                 break;
         }
 
