@@ -121,6 +121,11 @@ object TestData {
     "instagram": "https://instagram.com/alfredyankovic",
     "github": "https://github.com/blast-hardcheese",
     "email": "mail://blast@hardchee.se"
+  },
+  "header": {
+    "src": "https://s.gravatar.com/avatar/b92c6ab7d1f727643880c062d093d460?s=200",
+    "name": "Devon Stewart",
+    "flavortext": "Just some guy, you know?"
   }
 }
 """),
