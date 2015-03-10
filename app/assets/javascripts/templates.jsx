@@ -5,6 +5,9 @@ var Widget = React.createClass({
             case 'soundcloud':
                 res = React.createElement(SoundCloudPlayer, this.props.data);
                 break;
+            case 'paragraph':
+                res = React.createElement(Paragraph, this.props.data);
+                break;
         }
 
         return res;

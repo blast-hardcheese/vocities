@@ -714,3 +714,15 @@ var YouTube = React.createClass({
         />
     },
 });
+
+var Paragraph = React.createClass({
+    render: function() {
+        return (
+            <div>{
+                this.props.content.map(function(x) {
+                    return <p>{x}</p>;
+                })
+            }</div>
+        );
+    }
+});
