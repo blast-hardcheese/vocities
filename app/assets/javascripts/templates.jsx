@@ -8,6 +8,9 @@ var Widget = React.createClass({
             case 'paragraph':
                 res = React.createElement(Paragraph, this.props.data);
                 break;
+            case 'youtube':
+                res = React.createElement(YouTube, this.props.data);
+                break;
         }
 
         return res;
