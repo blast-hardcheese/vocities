@@ -719,8 +719,8 @@ var Paragraph = React.createClass({
     render: function() {
         return (
             <div>{
-                this.props.content.map(function(x) {
-                    return <p>{x}</p>;
+                this.props.content.map(function(x, i) {
+                    return <p key={i}>{x}</p>;
                 })
             }</div>
         );
