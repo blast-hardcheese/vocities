@@ -127,9 +127,13 @@ object TestData {
     "copyright": "Devon Stewart"
   },
   "css": {
-    "template": "div { background-color: <%= color %>; }",
+    "template": "#header { background: <%= primary_bg %>; color: <%= primary_color %>; }\n#header > nav ul li a.active { background: <%= nav_active_bg %>; color: <%= nav_active_color %> !important; }",
     "values": {
-      "color": "red"
+      "primary_bg": "#4acaa8",
+      "primary_color": "#d1f1e9",
+      "hilight_color": "#b6e9dc",
+      "nav_active_bg": "white",
+      "nav_active_color": "#4acaa8"
     }
   }
 }
