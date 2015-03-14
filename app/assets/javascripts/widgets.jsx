@@ -730,7 +730,7 @@ var Paragraph = React.createClass({
 var Widget = React.createClass({
     render: function() {
         var res = null;
-        switch (this.props.data.type) {
+        switch (this.props.type) {
             case 'soundcloud':
                 res = React.createElement(SoundCloudPlayer, this.props.data);
                 break;
@@ -741,7 +741,6 @@ var Widget = React.createClass({
                 res = React.createElement(YouTube, this.props.data);
                 break;
         }
-
         return res;
     },
 });
