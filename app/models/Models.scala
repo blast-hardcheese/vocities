@@ -131,6 +131,18 @@ object TestData {
   border-top: solid 2px <%= accent_color %>;
 }
 
+header.major h2 {
+  color: <%= primary_bg %>;
+}
+
+header.major h2 + p {
+  color: <%= dark_text %>;
+}
+
+body, input, select, textarea {
+  color: <%= normal_text %>;
+}
+
 .w-youtube { width: <%= youtube_width || "100%" %>; height: <%= youtube_height || "480px" %>; }
     """, """
 {
@@ -143,6 +155,9 @@ object TestData {
   "accent_color": "#5ccfb0",
   "nav_active_bg": "white",
   "nav_active_color": "#4acaa8",
+
+  "dark_text": "#777777",
+  "normal_text": "#888888",
   "section_banners": [
     {"url": "http://html5up.net/uploads/demos/read-only/images/banner.jpg", "section": "#first"}
   ]
