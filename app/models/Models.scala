@@ -4,7 +4,7 @@ import scala.slick.driver.H2Driver.simple._
 
 case class Customer(id: Long, name: String)
 case class Domain(id: Long, customer_id: Long, domain: String)
-case class Template(id: Long, key: String)
+case class Template(id: Long, key: String, css_values: String)
 case class Page(customer_id: Long, domain_id: Long, path: String, template_id: Long, title: String, data: String)
 
 class CustomerTable(tag: Tag) extends Table[Customer](tag, "customers") {
@@ -41,8 +41,9 @@ object Domains {
 class TemplateTable(tag: Tag) extends Table[Template](tag, "templates") {
   def id = column[Long]("id", O.PrimaryKey)
   def key = column[String]("key", O.NotNull)
+  def css_values = column[String]("css_value", O.NotNull)
 
-  def * = (id, key) <> (Template.tupled, Template.unapply _)
+  def * = (id, key, css_values) <> (Template.tupled, Template.unapply _)
 }
 
 object Templates {
@@ -97,8 +98,19 @@ object TestData {
   )
 
   val templates = Seq(
-    Template(1, "html5up-read-only"),
-    Template(2, "0")
+    Template(1, "html5up-read-only", """
+{
+  "primary_bg": "#3b5998",
+  "primary_color": "#ffffff",
+  "hilight_color": "#333333",
+  "nav_active_bg": "white",
+  "nav_active_color": "#3b5998",
+  "section_banners": [
+    {"url": "http://html5up.net/uploads/demos/read-only/images/banner.jpg", "section": "#first"},
+  ]
+}
+"""),
+    Template(2, "0", "{}")
   )
 
   val pages = Seq(
