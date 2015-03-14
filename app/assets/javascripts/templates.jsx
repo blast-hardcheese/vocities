@@ -1,10 +1,13 @@
-var TemplateInits = {
+initComponents = function(key, data) {
+    var components = Templates[key]().map(function(func) {
+	return func(data);
+    });
 };
 
-var ComplexTemplates = {
-    "html5up-read-only": [
-
-    ]
+refreshComponents = function(components, data) {
+    _.map(components, function(c) {
+	return c.setProps(data);
+    });
 };
 
 var Templates = {
@@ -134,15 +137,15 @@ var Templates = {
 
         var sequences = [
             function(vm) {
-                render('#header-wrapper', vm, Sidebar);
+                return render('#header-wrapper', vm, Sidebar);
             },
 
             function(vm) {
-                render('#main-wrapper', vm, Main);
+                return render('#main-wrapper', vm, Main);
             },
 
             function(vm) {
-                render('#footer', vm, Footer);
+                return render('#footer', vm, Footer);
             },
         ];
 
