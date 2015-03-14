@@ -2,10 +2,6 @@
 
 @import play.api.libs.json.Json
 
-@vm = @{
-    println(s"Found: $templateData")
-}
-
 @jsPath(path: String) = @{ routes.Assets.at("javascripts/html5up-read-only/" + path) }
 @cssPath(path: String) = @{ routes.Assets.at("stylesheets/html5up-read-only/" + path) }
 
