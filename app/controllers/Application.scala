@@ -33,19 +33,18 @@ object Application extends BaseController {
     r
   }
 
-  private[this] def render(title: String, templateId: String, data: String) = {
+  private[this] def render(title: String, templateId: String, data: String, css_template: String, css_values: String) = {
     // Only here temporarily
     engine.eval(new FileReader(new File("./target/web/public/main/javascripts/templates.js")))
-    //Ok(views.html.render(title, templateId, data, Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'](), $data));").toString)))
 
     val jsData = Json.parse(data)
-    Ok(views.html.templates.html5up_read_me(engine)(title, jsData))
+    Ok(views.html.templates.html5up_read_me(engine)(title, jsData, css_template, css_values))
   }
 
-  def lookup(request: BaseRequest[_], path: String)(handler: (String, String, String) => Result) = {
+  def lookup(request: BaseRequest[_], path: String)(handler: (String, String, String, String, String) => Result) = {
     DB.withSession { implicit s =>
       models.Pages.lookup(request.domain, path) map {
-          case (_, Some(title), Some(data), Some(templateId), Some(css_template), Some(css_values)) => handler(title, templateId, data)
+          case (_, Some(title), Some(data), Some(templateId), Some(css_template), Some(css_values)) => handler(title, templateId, data, css_template, css_values)
           case (_, None,        None,       _,                _,                  _               ) => BadRequest("404")
           case (_, _,           _,          None,             _,                  _               ) => InternalServerError("Can't find template!")
       } getOrElse {

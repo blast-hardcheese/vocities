@@ -1,4 +1,4 @@
-@(engine: javax.script.ScriptEngine)(title: String, pageData: play.api.libs.json.JsValue)
+@(engine: javax.script.ScriptEngine)(title: String, pageData: play.api.libs.json.JsValue, css_template: String, css_values: String)
 
 @templateId = @{ "html5up_read_only" }
 
@@ -28,32 +28,7 @@
 
 	<style id="dynamic" type="text/css"></style>
 	<style id="dynamic-tpl" type="text/underscore">
-<% for(i in section_banners) { %>
-#main section<%= section_banners[i].section %>::before {
-    background-image: url('<%= section_banners[i].url %>');
-    background-position: top right;
-    background-repeat: no-repeat;
-    background-size: cover;
-    content: 'This is some stuff';
-    display: block;
-    height: 15em;
-    width: 100%;
-}
-<% } %>
-
-#header {
-    background: <%= primary_bg %>;
-    color: <%= primary_color %>;
-}
-
-#header > nav ul li a.active {
-    background: <%= nav_active_bg %>;
-    color: <%= nav_active_color %> !important;
-}
-
-#header > footer .icons li a {
-    color: <%= hilight_color %>;
-}
+@Html(css_template)
 	</style>
 
     <script type="text/javascript">
