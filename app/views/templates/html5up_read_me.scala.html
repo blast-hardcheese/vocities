@@ -1,5 +1,7 @@
 @(engine: javax.script.ScriptEngine)(title: String, templateData: play.api.libs.json.JsValue)
 
+@templateId = @{ "html5up_read_only" }
+
 @import play.api.libs.json.Json
 
 @jsPath(path: String) = @{ routes.Assets.at("javascripts/html5up-read-only/" + path) }
@@ -30,7 +32,7 @@ var TemplateData = @Html(Json.stringify(templateData));
 
 jQuery(function($) {
 
-    initComponents('html5up_read_only', TemplateData);
+    initComponents('@templateId', TemplateData);
 
     skel.init({
 	reset: 'full',
