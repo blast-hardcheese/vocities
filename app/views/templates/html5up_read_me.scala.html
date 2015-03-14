@@ -1,4 +1,4 @@
-@(engine: javax.script.ScriptEngine)(title: String, pageData: play.api.libs.json.JsValue, css_template: String, css_values: String)
+@(engine: javax.script.ScriptEngine)(title: String, pageData: play.api.libs.json.JsValue, css_template: String, css_values: play.api.libs.json.JsValue)
 
 @templateId = @{ "html5up_read_only" }
 
@@ -33,6 +33,7 @@
 
     <script type="text/javascript">
 var PageData = @Html(Json.stringify(pageData));
+var DefaultTemplateValues = @Html(Json.stringify(css_values))
 
 jQuery(function($) {
 

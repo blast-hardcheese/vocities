@@ -33,11 +33,12 @@ object Application extends BaseController {
     r
   }
 
-  private[this] def render(title: String, templateId: String, data: String, css_template: String, css_values: String) = {
+  private[this] def render(title: String, templateId: String, data: String, css_template: String, _css_values: String) = {
     // Only here temporarily
     engine.eval(new FileReader(new File("./target/web/public/main/javascripts/templates.js")))
 
     val jsData = Json.parse(data)
+    val css_values = Json.parse(_css_values)
     Ok(views.html.templates.html5up_read_me(engine)(title, jsData, css_template, css_values))
   }
 

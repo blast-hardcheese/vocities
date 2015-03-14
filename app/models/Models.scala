@@ -134,7 +134,7 @@ object TestData {
   "nav_active_bg": "white",
   "nav_active_color": "#3b5998",
   "section_banners": [
-    {"url": "http://html5up.net/uploads/demos/read-only/images/banner.jpg", "section": "#first"},
+    {"url": "http://html5up.net/uploads/demos/read-only/images/banner.jpg", "section": "#first"}
   ]
 }
 """),
