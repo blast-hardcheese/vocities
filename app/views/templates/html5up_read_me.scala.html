@@ -30,6 +30,9 @@
 	<style id="dynamic-tpl" type="text/underscore">
 @Html(css_template)
 	</style>
+	<script id="dynamic-tpl-values" type="text/json">
+@Html(Json.stringify(css_values))
+	</script>
 
     <script type="text/javascript">
 var PageData = @Html(Json.stringify(pageData));
