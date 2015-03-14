@@ -96,14 +96,22 @@ var Templates = {
             },
         });
 
+        var Section = React.createClass({
+            render: function() {
+                return (
+                    <section key={this.props.tag} id={this.props.tag}>
+                        <div className="container">
+                            {React.createElement(Widget, this.props.content)}
+                        </div>
+                    </section>
+                );
+            }
+        });
+
         var Main = React.createClass({
             render: function() {
                 var sections = _.map(this.props.sections, function(s) {
-                    return <section key={s.tag} id={s.tag}>
-                        <div className="container">
-                            {React.createElement(Widget, s.content)}
-                        </div>
-                    </section>
+                    return React.createElement(Section , s);
                 });
                 return (
                     <div id="main">
