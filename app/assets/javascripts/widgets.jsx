@@ -726,3 +726,53 @@ var Paragraph = React.createClass({
         );
     }
 });
+
+var HeaderProfile = React.createClass({
+    propTypes: {
+        src: React.PropTypes.string.isRequired,
+        alt: React.PropTypes.string,
+        name: React.PropTypes.string.isRequired,
+        namehref: React.PropTypes.string,
+        flavortext: React.PropTypes.string
+    },
+    render: function() {
+        return (
+            <header>
+                <span className="image avatar"><img src={this.props.src} alt={this.props.alt} /></span>
+                <h1 id="logo"><a href={this.props.namehref}>{this.props.name}</a></h1>
+                <p>{this.props.flavortext}</p>
+            </header>
+        );
+    },
+});
+
+var Widget = React.createClass({
+    render: function() {
+        var res = null;
+        switch (this.props.data.type) {
+            case 'soundcloud':
+                res = React.createElement(SoundCloudPlayer, this.props.data);
+                break;
+            case 'paragraph':
+                res = React.createElement(Paragraph, this.props.data);
+                break;
+            case 'youtube':
+                res = React.createElement(YouTube, this.props.data);
+                break;
+        }
+
+        return res;
+    },
+});
+
+var SocialIcon = React.createClass({
+    render: function() {
+        var icon = this.props.type;
+        switch (this.props.type) {
+            case 'email':
+                icon = 'envelope';
+                break;
+        }
+        return <li key={this.props.type}><a href={this.props.target} className={"icon fa-" + icon}><span className="label">{this.props.type}</span></a></li>;
+    },
+});

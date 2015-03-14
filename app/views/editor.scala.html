@@ -1,6 +1,14 @@
 @(title: String, templateId: String, templateData: String, content: Html)
 
 @header = {
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/html5up-read-only/style.css")" />
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/html5up-read-only/style-xsmall.css")" />
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/html5up-read-only/style-small.css")" />
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/html5up-read-only/style-medium.css")" />
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/html5up-read-only/style-large.css")" />
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/html5up-read-only/style-xlarge.css")" />
+
+
         <script type="text/javascript">
 jQuery(function($) {
     console.info('wat');
@@ -18,12 +26,12 @@ jQuery(function($) {
     }
 
     var container = $('<div />', {
-        'style': 'position: absolute; top: 20px; right: 20px;',
+        'style': 'position: fixed; top: 20px; right: 20px;',
     });
 
     var textarea = jQuery('<textarea />', {
         html: JSON.stringify(data, null, '  '),
-        style: 'display: block; height: 80px; width: 600px;'
+        style: 'display: block; height: 160px; width: 600px;'
     });
 
     var saveButton = $('<button />', {

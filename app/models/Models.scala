@@ -97,7 +97,8 @@ object TestData {
   )
 
   val templates = Seq(
-    Template(1, "html5up-read-only")
+    Template(1, "html5up-read-only"),
+    Template(2, "0")
   )
 
   val pages = Seq(
@@ -110,7 +111,7 @@ object TestData {
   "sections": [
     {"tag": "first",  "title": "Soundcloud", "content": {"type": "soundcloud", "url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}},
     {"tag": "second", "title": "Bio", "content": {"type": "paragraph", "content": ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse magna metus, vehicula molestie vehicula quis, mattis non odio. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam velit elit, pulvinar eget hendrerit id, vulputate sit amet diam. Quisque eu dolor ut velit auctor maximus. Aenean condimentum mi et metus ornare, id consequat mauris ornare. Nulla eu ligula in tortor auctor sagittis. Donec sodales elit augue, a ullamcorper nibh ultricies nec. Nam quis egestas ipsum. Etiam eu libero eu magna feugiat mattis quis luctus lectus. Fusce mollis lorem libero, in viverra tellus lacinia ut.", "Cras pharetra est purus, non tincidunt augue dignissim nec. Fusce varius dapibus enim, placerat mattis lorem lobortis in. Nulla eu sodales eros. Donec libero justo, tincidunt ut consequat sit amet, mollis at elit. Pellentesque aliquam quis tortor sit amet pulvinar. Ut pulvinar augue in nunc semper gravida. Aliquam congue odio et ligula placerat lacinia. Maecenas venenatis, est at tempor blandit, dui mi consequat magna, eget dignissim risus orci sed metus. Etiam urna nisl, tristique id elementum id, feugiat et libero."]}},
-    {"tag": "third",  "title": "YouTube", "content": {"type": "youtube", "videoId": "gN9cIlICDt4", "width": 780, "height": 500}},
+    {"tag": "third",  "title": "YouTube", "content": {"type": "youtube", "videoId": "gN9cIlICDt4", "width": 780, "height": 500}}
   ],
   "social": {
     "twitter": "https://twitter.com/blast_hardchese",
@@ -126,7 +127,7 @@ object TestData {
   }
 }
 """),
-    Page(1, 4, "", 1, "index", "{\"hello\": \"Devon\", \"sc-url\": \"https://soundcloud.com/shiroyukihime/sets/jpop-anime-ost\", \"youtube\": \"gN9cIlICDt4\", \"bgColor\":\"#f8f8ff\"}"),
+    Page(1, 4, "", 2, "index", "{\"hello\": \"Devon\", \"sc-url\": \"https://soundcloud.com/shiroyukihime/sets/jpop-anime-ost\", \"youtube\": \"gN9cIlICDt4\", \"bgColor\":\"#f8f8ff\"}"),
     Page(2, 2, "", 1, "homepage", "{}"),
     Page(3, 3, "hello/world", 1, "hello, world!", "{\"hello\": \"world\", \"sc-url\": \"https://soundcloud.com/joeljuliusbaer/sets/parov-stellar\", \"youtube\": \"04mfKJWDSzI\"}"),
     Page(3, 3, "broken", 90, "broken", "This is a broken page")
