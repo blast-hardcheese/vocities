@@ -727,21 +727,27 @@ var Paragraph = React.createClass({
     }
 });
 
-var Widget = React.createClass({
-    render: function() {
-        var res = null;
-        switch (this.props.type) {
-            case 'soundcloud':
-                res = React.createElement(SoundCloudPlayer, this.props.data);
-                break;
-            case 'paragraph':
-                res = React.createElement(Paragraph, this.props.data);
-                break;
-            case 'youtube':
-                res = React.createElement(YouTube, this.props.data);
-                break;
-        }
-        return res;
-    },
-});
+var WidgetBuilder = function(extra) {
+    var builtins = {
+        'soundcloud': SoundCloudPlayer,
+        'paragraph': Paragraph,
+        'youtube': YouTube,
+    };
 
+    var widgets = _.extend({}, builtins, extra);
+
+    return React.createClass({
+        render: function() {
+            var res = null;
+
+            var widget = widgets[this.props.type];
+            if (widget !== undefined) {
+                res = React.createElement(widget, this.props.data);
+            }
+
+            return res;
+        }
+    });
+};
+
+var Widget = WidgetBuilder();
