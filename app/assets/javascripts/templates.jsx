@@ -110,6 +110,20 @@ var Templates = {
             },
         });
 
+        var Footer = React.createClass({
+            render: function() {
+                var copyright = this.props.footer.copyright;
+                return (
+					<div className="container">
+                        <ul className="copyright">
+                            <li>&copy; {copyright}. All rights reserved.</li>
+                            <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+                        </ul>
+					</div>
+                );
+            },
+        });
+
         var render = function(sel, data, clazz) {
             var factory = React.createFactory(clazz)(data);
             var target = $(sel)[0];
@@ -125,6 +139,10 @@ var Templates = {
 
             function(vm) {
                 render('#main-wrapper', vm, Main);
+            },
+
+            function(vm) {
+                render('#footer', vm, Footer);
             },
         ];
 

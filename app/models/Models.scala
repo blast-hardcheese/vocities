@@ -122,6 +122,9 @@ object TestData {
       "name": "Devon Stewart",
       "flavortext": "Just some guy, you know?"
     }
+  },
+  "footer": {
+    "copyright": "Devon Stewart"
   }
 }
 """),
