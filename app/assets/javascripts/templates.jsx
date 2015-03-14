@@ -151,6 +151,11 @@ var Templates = {
 
 	self.render = render;
 	self.sequences = sequences;
+	self.classes = {
+	    '#header-wrapper': Sidebar,
+	    '#main-wrapper': Main,
+	    '#footer': Footer,
+	};
 
 	return self;
     })({})
