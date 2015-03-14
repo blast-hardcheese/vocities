@@ -137,12 +137,12 @@ object TestData {
   "youtube_width": null,
   "youtube_height": null,
 
-  "primary_bg": "#3b5998",
-  "primary_color": "#ffffff",
-  "hilight_color": "#333333",
+  "primary_bg": "#4acaa8",
+  "primary_color": "#d1f1e9",
+  "hilight_color": "#b6e9dc",
   "accent_color": "#5ccfb0",
   "nav_active_bg": "white",
-  "nav_active_color": "#3b5998",
+  "nav_active_color": "#4acaa8",
   "section_banners": [
     {"url": "http://html5up.net/uploads/demos/read-only/images/banner.jpg", "section": "#first"}
   ]
@@ -179,11 +179,6 @@ object TestData {
   },
   "css": {
     "values": {
-      "primary_bg": "#4acaa8",
-      "primary_color": "#d1f1e9",
-      "hilight_color": "#b6e9dc",
-      "nav_active_bg": "white",
-      "nav_active_color": "#4acaa8"
     }
   }
 }
