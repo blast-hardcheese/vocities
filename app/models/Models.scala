@@ -126,8 +126,13 @@ object TestData {
 #header > footer .icons li a {
     color: <%= hilight_color %>;
 }
+
+.w-youtube { width: <%= youtube_width || "100%" %>; height: <%= youtube_height || "480px" %>; }
     """, """
 {
+  "youtube_width": null,
+  "youtube_height": null,
+
   "primary_bg": "#3b5998",
   "primary_color": "#ffffff",
   "hilight_color": "#333333",

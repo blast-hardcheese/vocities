@@ -706,6 +706,7 @@ var YouTube = React.createClass({
         var src = "//www.youtube.com/embed/" + this.props.videoId + "?html5=1";
 
         return <iframe
+            className="w-youtube"
             width={this.props.width}
             height={this.props.height}
             src={src}
