@@ -127,6 +127,10 @@ object TestData {
     color: <%= hilight_color %>;
 }
 
+#header > nav ul li {
+  border-top: solid 2px <%= accent_color %>;
+}
+
 .w-youtube { width: <%= youtube_width || "100%" %>; height: <%= youtube_height || "480px" %>; }
     """, """
 {
@@ -136,6 +140,7 @@ object TestData {
   "primary_bg": "#3b5998",
   "primary_color": "#ffffff",
   "hilight_color": "#333333",
+  "accent_color": "#5ccfb0",
   "nav_active_bg": "white",
   "nav_active_color": "#3b5998",
   "section_banners": [
