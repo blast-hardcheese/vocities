@@ -1,5 +1,5 @@
 initComponents = function(key, data) {
-    var components = Templates[key]().map(function(func) {
+    var components = _.map(Templates[key].sequences, function(func) {
 	return func(data);
     });
 };
@@ -24,7 +24,7 @@ var Templates = {
             },
         });
     },
-    "html5up_read_only": function() {
+    "html5up_read_only": (function(self) {
         var SidebarProfile = React.createClass({
             propTypes: {
                 src: React.PropTypes.string.isRequired,
@@ -149,6 +149,9 @@ var Templates = {
             },
         ];
 
-        return sequences;
-    }
+	self.render = render;
+	self.sequences = sequences;
+
+	return self;
+    })({})
 }
