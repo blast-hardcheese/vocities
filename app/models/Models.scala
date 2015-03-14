@@ -4,7 +4,7 @@ import scala.slick.driver.H2Driver.simple._
 
 case class Customer(id: Long, name: String)
 case class Domain(id: Long, customer_id: Long, domain: String)
-case class Template(id: Long, key: String, css_values: String)
+case class Template(id: Long, key: String, css_template: String, css_values: String)
 case class Page(customer_id: Long, domain_id: Long, path: String, template_id: Long, title: String, data: String)
 
 class CustomerTable(tag: Tag) extends Table[Customer](tag, "customers") {
@@ -41,9 +41,10 @@ object Domains {
 class TemplateTable(tag: Tag) extends Table[Template](tag, "templates") {
   def id = column[Long]("id", O.PrimaryKey)
   def key = column[String]("key", O.NotNull)
+  def css_template = column[String]("css_template", O.NotNull)
   def css_values = column[String]("css_value", O.NotNull)
 
-  def * = (id, key, css_values) <> (Template.tupled, Template.unapply _)
+  def * = (id, key, css_template, css_values) <> (Template.tupled, Template.unapply _)
 }
 
 object Templates {
@@ -72,13 +73,13 @@ object Pages {
     pages.insert(p)
   }
 
-  type LookupResult = Option[(Long, Option[String], Option[String], Option[String])]
+  type LookupResult = Option[(Long, Option[String], Option[String], Option[String], Option[String], Option[String])]
   def lookup(domain: String, path: String)(implicit s: Session): LookupResult = {
     Domains.domains
       .filter(_.domain === domain)
       .leftJoin(pages).on({ case (d, p) => d.id === p.domain_id && p.customer_id === d.customer_id && p.path === path })
       .leftJoin(Templates.templates).on({ case ((d, p), t) => t.id === p.template_id })
-      .map { case ((d, p), t) => (d.id, p.title.?, p.data.?, t.key.?) }
+      .map { case ((d, p), t) => (d.id, p.title.?, p.data.?, t.key.?, t.css_template.?, t.css_values.?) }
       .firstOption
   }
 }
@@ -99,6 +100,33 @@ object TestData {
 
   val templates = Seq(
     Template(1, "html5up-read-only", """
+<% for(i in section_banners) { %>
+#main section<%= section_banners[i].section %>::before {
+    background-image: url('<%= section_banners[i].url %>');
+    background-position: top right;
+    background-repeat: no-repeat;
+    background-size: cover;
+    content: '';
+    display: block;
+    height: 15em;
+    width: 100%;
+}
+<% } %>
+
+#header {
+    background: <%= primary_bg %>;
+    color: <%= primary_color %>;
+}
+
+#header > nav ul li a.active {
+    background: <%= nav_active_bg %>;
+    color: <%= nav_active_color %> !important;
+}
+
+#header > footer .icons li a {
+    color: <%= hilight_color %>;
+}
+    """, """
 {
   "primary_bg": "#3b5998",
   "primary_color": "#ffffff",
@@ -110,7 +138,7 @@ object TestData {
   ]
 }
 """),
-    Template(2, "0", "{}")
+    Template(2, "0", "", "{}")
   )
 
   val pages = Seq(

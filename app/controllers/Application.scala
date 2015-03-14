@@ -45,9 +45,9 @@ object Application extends BaseController {
   def lookup(request: BaseRequest[_], path: String)(handler: (String, String, String) => Result) = {
     DB.withSession { implicit s =>
       models.Pages.lookup(request.domain, path) map {
-          case (_, Some(title), Some(data), Some(templateId)) => handler(title, templateId, data)
-          case (_, None,        None,       _,              ) => BadRequest("404")
-          case (_, _,           _,          None,           ) => InternalServerError("Can't find template!")
+          case (_, Some(title), Some(data), Some(templateId), Some(css_template), Some(css_values)) => handler(title, templateId, data)
+          case (_, None,        None,       _,                _,                  _               ) => BadRequest("404")
+          case (_, _,           _,          None,             _,                  _               ) => InternalServerError("Can't find template!")
       } getOrElse {
         BadRequest("unknown domain")
       }
@@ -59,7 +59,7 @@ object Application extends BaseController {
   }
 
   def edit(path: String) = BaseAction { request =>
-    lookup(request, path) { case (title, templateId, data) => {
+    lookup(request, path) { case (title, templateId, data, css_template, css_values) => {
         Ok(views.html.editor(title, templateId, data, Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'](), $data));").toString)))
       }
     }
