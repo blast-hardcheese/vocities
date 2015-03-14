@@ -110,9 +110,7 @@ var Templates = {
 
         var Main = React.createClass({
             render: function() {
-                var sections = _.map(this.props.sections, function(s) {
-                    return React.createElement(Section , s);
-                });
+                var sections = _.map(this.props.sections, _.partial(React.createElement, Section));
                 return (
                     <div id="main">
                         {sections}
