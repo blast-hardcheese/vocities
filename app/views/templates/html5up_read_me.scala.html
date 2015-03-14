@@ -151,14 +151,17 @@ jQuery(function($) {
         <div id="wrapper">
             <!-- Header -->
                 <div id="header-wrapper">
+		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'].classes['#header-wrapper'], $templateData));").toString)
                 </div>
 
             <!-- Main -->
                 <div id="main-wrapper">
+		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'].classes['#main-wrapper'], $templateData));").toString)
                 </div>
 
             <!-- Footer -->
                 <section id="footer">
+		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'].classes['#footer'], $templateData));").toString)
                 </section>
         </div>
 }
