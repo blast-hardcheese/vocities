@@ -96,6 +96,25 @@ var Templates = {
             },
         });
 
+
+        var HeaderBlock = React.createClass({
+            render: function() {
+                return (
+                    <div>
+                        <header className="major">
+                            <h2>{this.props.title}</h2>
+                            <p dangerouslySetInnerHTML={{__html: this.props.subtitle}}></p>
+                        </header>
+                        <p>{this.props.text}</p>
+                    </div>
+                );
+            }
+        });
+
+        var Widget = WidgetBuilder({
+            'header': HeaderBlock,
+        });
+
         var Section = React.createClass({
             render: function() {
                 return (
