@@ -1,5 +1,7 @@
 @(engine: javax.script.ScriptEngine)(title: String, templateData: play.api.libs.json.JsValue)
 
+@import play.api.libs.json.Json
+
 @vm = @{
     println(s"Found: $templateData")
 }
@@ -21,21 +23,6 @@
 		</noscript>
         <!--[if lte IE 8]><link rel="stylesheet" href="@cssPath("ie/v8.css")" /><![endif]-->
 
-
-@*
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/html5up-read-only/style-large.css")" />
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/html5up-read-only/style-medium.css")" />
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/html5up-read-only/style-small.css")" />
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/html5up-read-only/style-xsmall.css")" />
-
-        <script type="text/javascript">
-jQuery(function($) {
-    window.component = React.createFactory(Templates['@templateId'])(@Html(templateData));
-    window.container = document.getElementsByTagName('body')[0];
-    React.render(component, container);
-});
-        </script>
-*@
 	<script type="text/javascript">
 	    jQuery(function($) {
 		skel.init({
@@ -78,37 +65,25 @@ jQuery(function($) {
 		});
 	});
 
-	</script>
+	var TemplateData = @Html(Json.stringify(templateData));
+
+jQuery(function($) {
+    Templates['html5up_read_only']().map(function(obj) {
+	console.info('Here:', obj);
+	var factory = React.createFactory(obj['class'])(TemplateData[obj.key]);
+	var target = $(obj.sel)[0];
+	var react = React.render(factory, target);
+	react.setProps(TemplateData[obj.key]);
+    });
+});
+        </script>
 }
 
 @main(title)(header) {
 		<div id="wrapper">
 			<!-- Header -->
-				<section id="header" class="skel-layers-fixed">
-					<header>
-						<span class="image avatar"><img src="images/avatar.jpg" alt="" /></span>
-						<h1 id="logo"><a href="#">Willis Corto</a></h1>
-						<p>I got reprogrammed by a rogue AI<br />
-						and now I'm totally cray</p>
-					</header>
-					<nav id="nav">
-						<ul>
-							<li><a href="#one" class="active">About</a></li>
-							<li><a href="#two">Things I Can Do</a></li>
-							<li><a href="#three">A Few Accomplishments</a></li>
-							<li><a href="#four">Contact</a></li>
-						</ul>
-					</nav>
-					<footer>
-						<ul class="icons">
-							<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
-							<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
-							<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
-							<li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>
-							<li><a href="#" class="icon fa-envelope"><span class="label">Email</span></a></li>
-						</ul>
-					</footer>
-				</section>
+				<div id="header-wrapper">
+				</div>
 
 			<!-- Main -->
 				<div id="main">
