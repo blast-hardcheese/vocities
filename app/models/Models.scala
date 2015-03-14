@@ -102,7 +102,7 @@ object TestData {
   )
 
   val pages = Seq(
-    Page(1, 1, "", 1, "index", """
+    Page(1, 1, "", 1, "Devon Stewart: Home", """
 {
   "sections": [
     {"tag": "first",  "title": "Soundcloud", "content": {"type": "soundcloud", "data": {"url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}}},
