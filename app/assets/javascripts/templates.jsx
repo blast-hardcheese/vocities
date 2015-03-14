@@ -99,7 +99,7 @@ var Templates = {
         var Section = React.createClass({
             render: function() {
                 return (
-                    <section key={this.props.tag} id={this.props.tag}>
+                    <section id={this.props.tag}>
                         <div className="container">
                             {React.createElement(Widget, this.props.content)}
                         </div>
@@ -110,7 +110,9 @@ var Templates = {
 
         var Main = React.createClass({
             render: function() {
-                var sections = _.map(this.props.sections, _.partial(React.createElement, Section));
+                var sections = _.map(this.props.sections, function(s) {
+                    return <Section key={s.tag} tag={s.tag} content={s.content} />
+                });
                 return (
                     <div id="main">
                         {sections}
