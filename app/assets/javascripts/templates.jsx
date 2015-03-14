@@ -153,6 +153,28 @@ var Templates = {
             function(vm) {
                 return render('#footer', vm, Footer);
             },
+
+            function(vm) {
+                var target = $('style#dynamic')
+                var setDynamicTemplate = function(template, values) {
+                    if (template !== undefined && values !== undefined) {
+                        var styleTpl = _.template(vm.css.template);
+                        target.text(styleTpl(values));
+                    }
+                };
+
+                var r = {
+                    setProps: function(newProps) {
+                        if(newProps.css !== undefined) {
+                            setDynamicTemplate(newProps.css.template, newProps.css.values);
+                        }
+                    },
+                };
+
+                r.setProps(vm);
+
+                return r;
+            },
         ];
 
         self.render = render;

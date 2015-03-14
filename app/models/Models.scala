@@ -125,6 +125,12 @@ object TestData {
   },
   "footer": {
     "copyright": "Devon Stewart"
+  },
+  "css": {
+    "template": "div { background-color: <%= color %>; }",
+    "values": {
+      "color": "red"
+    }
   }
 }
 """),
