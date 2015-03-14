@@ -93,23 +93,39 @@ var Templates = {
             },
         });
 
+        var Main = React.createClass({
+            render: function() {
+                var sections = _.map(this.props.sections, function(s) {
+                    return <section key={s.tag} id={s.tag}>
+                        <div className="container">
+                            {React.createElement(Widget, s.content)}
+                        </div>
+                    </section>
+                });
+                return (
+                    <div id="main">
+                        {sections}
+                    </div>
+                );
+            },
+        });
 
-        var build = function(selector, _class, dataKey) {
-            return {'sel': selector, 'class': _class, 'key': dataKey};
-        }
+        var render = function(sel, data, clazz) {
+            var factory = React.createFactory(clazz)(data);
+            var target = $(sel)[0];
+            var react = React.render(factory, target);
+            react.setProps(data);
+            return react;
+        };
 
         var sequences = [
             function(vm) {
-                var sel = '#header-wrapper';
-                var data = vm;
-                var clazz = Sidebar;
-                console.info('data:', data);
+                render('#header-wrapper', vm, Sidebar);
+            },
 
-                var factory = React.createFactory(clazz)(data);
-                var target = $(sel)[0];
-                var react = React.render(factory, target);
-                react.setProps(data);
-            }
+            function(vm) {
+                render('#main-wrapper', vm, Main);
+            },
         ];
 
         return sequences;
