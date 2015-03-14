@@ -70,9 +70,13 @@ var Templates = {
 
         var SidebarFooter = React.createClass({
             render: function() {
-                var each = [];
+                var each = _.map(this.props.social, function(value, key) {
+                    return <SocialIcon key={key} type={key} target={value} />;
+                });
                 return <footer>
-                    {each}
+                    <ul className="icons">
+                        {each}
+                    </ul>
                 </footer>
             },
         });
