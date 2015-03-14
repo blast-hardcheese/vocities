@@ -43,8 +43,8 @@ var Templates = {
 
         var SidebarNav = React.createClass({
             render: function() {
-                var sections = _.zip(this.props.keys, this.props.titles).map(function(kv) {
-                    return <li key={kv[0]}><a href={kv[0]}>{kv[1]}</a></li>;
+                var sections = _.map(this.props.sections, function(s) {
+                    return <li key={s.tag}><a href={'#' + s.tag}>{s.title}</a></li>;
                 });
                 return (
                     <nav id="nav">
@@ -81,9 +81,9 @@ var Templates = {
             render: function() {
                 return (
                     <section id="header" className="skel-layers-fixed">
-                        <SidebarProfile src="https://s.gravatar.com/avatar/b92c6ab7d1f727643880c062d093d460?s=200" name="Devon Stewart" namehref="http://hardchee.se/" flavortext="Hey" />
-                        <SidebarNav keys={[]} titles={[]} />
-                        <SidebarFooter />
+                        {React.createElement(SidebarProfile, this.props.sidebar.header)}
+                        <SidebarNav sections={this.props.sections} />
+                        <SidebarFooter social={this.props.social}/>
                     </section>
                 )
             },
@@ -95,7 +95,17 @@ var Templates = {
         }
 
         var sequences = [
-            build('#header-wrapper', Sidebar, 'sidebar'),
+            function(vm) {
+                var sel = '#header-wrapper';
+                var data = vm;
+                var clazz = Sidebar;
+                console.info('data:', data);
+
+                var factory = React.createFactory(clazz)(data);
+                var target = $(sel)[0];
+                var react = React.render(factory, target);
+                react.setProps(data);
+            }
         ];
 
         return sequences;

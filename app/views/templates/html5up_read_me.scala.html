@@ -68,12 +68,8 @@
 	var TemplateData = @Html(Json.stringify(templateData));
 
 jQuery(function($) {
-    Templates['html5up_read_only']().map(function(obj) {
-	console.info('Here:', obj);
-	var factory = React.createFactory(obj['class'])(TemplateData[obj.key]);
-	var target = $(obj.sel)[0];
-	var react = React.render(factory, target);
-	react.setProps(TemplateData[obj.key]);
+    Templates['html5up_read_only']().map(function(func) {
+	return func(TemplateData);
     });
 });
         </script>
