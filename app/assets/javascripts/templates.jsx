@@ -157,11 +157,14 @@ var Templates = {
             },
 
             function(vm) {
+                var dynamicCss = _.template($('#dynamic-tpl').text());
+
                 var target = $('style#dynamic')
+
                 var setDynamicTemplate = function(template, values) {
-                    if (template !== undefined && values !== undefined) {
-                        var styleTpl = _.template(vm.css.template);
-                        target.text(styleTpl(values));
+                    if (values !== undefined) {
+                        var overrides = vm.css.template === undefined ? "" : (_.template(vm.css.template)(values));
+                        target.text(dynamicCss(values) + overrides);
                     }
                 };
 
