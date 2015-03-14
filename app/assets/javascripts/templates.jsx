@@ -1,12 +1,12 @@
 initComponents = function(key, data) {
     var components = _.map(Templates[key].sequences, function(func) {
-	return func(data);
+        return func(data);
     });
 };
 
 refreshComponents = function(components, data) {
     _.map(components, function(c) {
-	return c.setProps(data);
+        return c.setProps(data);
     });
 };
 
@@ -117,12 +117,12 @@ var Templates = {
             render: function() {
                 var copyright = this.props.footer.copyright;
                 return (
-					<div className="container">
+                    <div className="container">
                         <ul className="copyright">
                             <li>&copy; {copyright}. All rights reserved.</li>
                             <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
                         </ul>
-					</div>
+                    </div>
                 );
             },
         });
@@ -149,14 +149,14 @@ var Templates = {
             },
         ];
 
-	self.render = render;
-	self.sequences = sequences;
-	self.classes = {
-	    '#header-wrapper': Sidebar,
-	    '#main-wrapper': Main,
-	    '#footer': Footer,
-	};
+        self.render = render;
+        self.sequences = sequences;
+        self.classes = {
+            '#header-wrapper': Sidebar,
+            '#main-wrapper': Main,
+            '#footer': Footer,
+        };
 
-	return self;
+        return self;
     })({})
 }
