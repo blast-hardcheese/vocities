@@ -70,7 +70,7 @@ class Application(override implicit val env: RuntimeEnvironment[DemoUser]) exten
 
   def edit(path: String) = Action { implicit request =>
     lookup(path) { case (title, templateId, data, css_template, css_values) => {
-        Ok(views.html.editor(title, templateId, data, Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'](), $data));").toString)))
+        Ok //(views.html.editor(title, templateId, data, Html("")))
       }
     }
   }
