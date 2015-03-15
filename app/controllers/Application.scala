@@ -43,6 +43,7 @@ object Application extends BaseController {
           case (_, Some(title), Some(data), Some(templateId), Some(css_template), Some(css_values)) => handler(title, templateId, data, css_template, css_values)
           case (_, None,        None,       _,                _,                  _               ) => BadRequest("404")
           case (_, _,           _,          None,             _,                  _               ) => InternalServerError("Can't find template!")
+          case (a, b,           c,          d,                e,                  f               ) => { log.error(s"Route match failure: $a $b $c $d $e $f"); InternalServerError("Unknown error") }
       } getOrElse {
         BadRequest("unknown domain")
       }
