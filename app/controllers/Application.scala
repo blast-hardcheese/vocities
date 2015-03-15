@@ -47,7 +47,7 @@ class Application(override implicit val env: RuntimeEnvironment[DemoUser]) exten
 
   private[this] def render(title: String, templateId: String, data: JsValue, css_template: String, css_values: JsValue) = {
     // Only here temporarily
-    engine.eval(new FileReader(new File("./target/web/public/main/javascripts/templates.js")))
+    new RichScriptEngine(engine).evalResource("public/javascripts/templates.js")
 
     Ok(views.html.templates.html5up_read_me(engine)(title, data, css_template, css_values))
   }
