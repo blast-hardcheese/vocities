@@ -84,6 +84,19 @@ object Pages {
   }
 }
 
+case class User(id: Long, username: String)
+
+class Users(tag: Tag) extends Table[User](tag, "user") {
+  def id = column[Long]("id")
+  def username = column[String]("username")
+
+  def * = (id, username) <> (User.tupled, User.unapply)
+}
+
+object Users {
+  val users = TableQuery[Users]
+}
+
 object TestData {
   val customers = Seq(
     Customer(1, "Hardchee.se"),
