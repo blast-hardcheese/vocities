@@ -63,6 +63,7 @@ modules/*/modules
 ######################
 *.log
 *.sql
+!conf/evolutions/default/*.sql
 *.sqlite
 
 # OS generated files #
