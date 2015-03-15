@@ -1,6 +1,6 @@
 package models
 
-import scala.slick.driver.H2Driver.simple._
+import utils.ExtendedPostgresDriver.simple._
 
 case class Customer(id: Long, name: String)
 case class Domain(id: Long, customer_id: Long, domain: String)
