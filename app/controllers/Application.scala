@@ -14,7 +14,10 @@ import play.twirl.api.Html
 
 import models.{ Page, Template }
 
-class Application extends BaseController {
+import securesocial.core.{ SecureSocial, RuntimeEnvironment }
+import service.DemoUser
+
+class Application(override implicit val env: RuntimeEnvironment[DemoUser]) extends BaseController with SecureSocial[DemoUser] {
   lazy val engine = {
     log.info("[Core] Starting Nashorn engine...")
     val r = new ScriptEngineManager(null).getEngineByName("nashorn")

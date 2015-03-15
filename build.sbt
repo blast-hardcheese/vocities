@@ -6,7 +6,10 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, SbtWeb)
 
 scalaVersion := "2.11.1"
 
+resolvers += Resolver.sonatypeRepo("releases")
+
 libraryDependencies ++= Seq(
+  "ws.securesocial" % "securesocial_2.11" % "3.0-M3",
   "org.postgresql" % "postgresql" % "9.3-1103-jdbc41",
   "org.webjars" % "jquery" % "2.1.3",
   "org.webjars" % "react" % "0.12.2",
@@ -19,3 +22,5 @@ libraryDependencies ++= Seq(
 )
 
 ReactJsKeys.stripTypes := true
+
+scalacOptions := Seq("-encoding", "UTF-8", "-Xlint", "-deprecation", "-unchecked", "-feature", "-language:reflectiveCalls")
