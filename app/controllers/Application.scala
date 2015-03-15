@@ -33,10 +33,11 @@ object Application extends BaseController {
     log.debug(s"[Core]: $r")
     r.eval("var global = this;")
     r.eval("var noop = function() {}; var console = { warn: noop, info: noop, log: noop };")
-    r.evalResource("META-INF/resources/webjars/underscorejs/1.8.2/underscore.js")
-    r.evalResource("META-INF/resources/webjars/react/0.12.2/react-with-addons.js")
-    r.eval(new FileReader(new File("./target/web/reactjs/main/javascripts/widgets.js")))
-    r.eval(new FileReader(new File("./target/web/public/main/javascripts/templates.js")))
+    r.evalResource("public/lib/underscorejs/underscore.js")
+    r.evalResource("public/lib/react/react-with-addons.js")
+    r.evalResource("public/javascripts/widgets.js")
+    r.evalResource("public/javascripts/templates.js")
+
     r
   }
 }
