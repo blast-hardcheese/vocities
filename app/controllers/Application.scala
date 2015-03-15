@@ -68,6 +68,7 @@ object Application extends BaseController {
     DB.withSession { implicit s =>
       println(s"Seed test data")
       models.TestData.create
+      Ok("Created")
     }
   }
 }

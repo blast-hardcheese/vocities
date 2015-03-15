@@ -2,7 +2,7 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET     /test-data                  controllers.Application.testData(path: String ?= "")
+GET     /test-data                  controllers.Application.testData
 GET     /edit                       controllers.Application.edit(path: String ?= "")
 POST    /edit                       controllers.Application.save(path: String ?= "")
 
