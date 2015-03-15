@@ -17,7 +17,7 @@ import models.{ Page, Template }
 import securesocial.core.{ SecureSocial, RuntimeEnvironment }
 import service.DemoUser
 
-class Application(override implicit val env: RuntimeEnvironment[DemoUser]) extends BaseController with SecureSocial[DemoUser] {
+object Application extends BaseController {
   lazy val engine = {
     log.info("[Core] Starting Nashorn engine...")
     val r = new ScriptEngineManager(null).getEngineByName("nashorn")
@@ -30,6 +30,10 @@ class Application(override implicit val env: RuntimeEnvironment[DemoUser]) exten
     r.eval(new FileReader(new File("./target/web/public/main/javascripts/templates.js")))
     r
   }
+}
+
+class Application(override implicit val env: RuntimeEnvironment[DemoUser]) extends BaseController with SecureSocial[DemoUser] {
+  val engine = Application.engine
 
   private[this] def render(title: String, templateId: String, data: String, css_template: String, _css_values: String) = {
     // Only here temporarily
