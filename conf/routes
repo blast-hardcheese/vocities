@@ -1,3 +1,4 @@
+GET     /current-user               @controllers.Application.currentUser
 GET     /test-data                  @controllers.Application.testData
 GET     /edit                       @controllers.Application.edit(path: String ?= "")
 POST    /edit                       @controllers.Application.save(path: String ?= "")
