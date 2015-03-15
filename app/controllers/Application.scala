@@ -15,11 +15,6 @@ import play.twirl.api.Html
 import models.{ Page, Template }
 
 object Application extends BaseController {
-  DB.withSession { implicit s =>
-    println(s"Seed test data")
-    models.TestData.create
-  }
-
   lazy val engine = {
     log.info("[Core] Starting Nashorn engine...")
     val r = new ScriptEngineManager(null).getEngineByName("nashorn")
@@ -67,5 +62,12 @@ object Application extends BaseController {
 
   def save(path: String) = BaseAction { request =>
     Redirect(routes.Application.edit(path))
+  }
+
+  def testData = BaseAction { request =>
+    DB.withSession { implicit s =>
+      println(s"Seed test data")
+      models.TestData.create
+    }
   }
 }
