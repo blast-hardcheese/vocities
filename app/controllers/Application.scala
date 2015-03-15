@@ -76,8 +76,8 @@ class Application(override implicit val env: RuntimeEnvironment[DemoUser]) exten
     }
   }
 
-  def currentUser = UserAwareAction { implicit request =>
-    val userId = request.user.map(_.main.userId).getOrElse("unknown")
-    Ok(s"Your id is $userId")
+
+  def currentUser = SecuredAction { implicit request =>
+    Ok(s"Your id is ${request.user}")
   }
 }
