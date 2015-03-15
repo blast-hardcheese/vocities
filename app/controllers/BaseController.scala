@@ -13,13 +13,3 @@ trait BaseController extends Controller {
   protected val log = Logger("application")
   protected lazy val classLogger = Logger(this.getClass)
 }
-
-object BaseAction extends ActionBuilder[BaseRequest] with Results {
-  def invokeBlock[A](request: Request[A], block: (BaseRequest[A]) => Future[Result]): Future[Result] = {
-    val baseRequest = new BaseRequest[A](request)
-    block(baseRequest)
-  }
-}
-
-class BaseRequest[A](val request: Request[A]) extends WrappedRequest[A](request) {
-}

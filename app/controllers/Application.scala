@@ -40,7 +40,7 @@ class Application(override implicit val env: RuntimeEnvironment[DemoUser]) exten
     Ok(views.html.templates.html5up_read_me(engine)(title, jsData, css_template, css_values))
   }
 
-  def lookup(request: BaseRequest[_], path: String)(handler: (String, String, String, String, String) => Result) = {
+  def lookup(path: String)(handler: (String, String, String, String, String) => Result)(implicit request: Request[_]) = {
     DB.withSession { implicit s =>
       models.Pages.lookup(request.domain, path) map {
           case (_, Some(title), Some(data), Some(templateId), Some(css_template), Some(css_values)) => handler(title, templateId, data, css_template, css_values)
@@ -53,22 +53,22 @@ class Application(override implicit val env: RuntimeEnvironment[DemoUser]) exten
     }
   }
 
-  def route(path: String) = BaseAction { request =>
-    lookup(request, path)(render)
+  def route(path: String) = Action { implicit request =>
+    lookup(path)(render)
   }
 
-  def edit(path: String) = BaseAction { request =>
-    lookup(request, path) { case (title, templateId, data, css_template, css_values) => {
+  def edit(path: String) = Action { implicit request =>
+    lookup(path) { case (title, templateId, data, css_template, css_values) => {
         Ok(views.html.editor(title, templateId, data, Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'](), $data));").toString)))
       }
     }
   }
 
-  def save(path: String) = BaseAction { request =>
+  def save(path: String) = Action { request =>
     Redirect(routes.Application.edit(path))
   }
 
-  def testData = BaseAction { request =>
+  def testData = Action { request =>
     DB.withSession { implicit s =>
       println(s"Seed test data")
       models.TestData.create
