@@ -14,7 +14,7 @@ import play.twirl.api.Html
 
 import models.{ Page, Template }
 
-object Application extends BaseController {
+class Application extends BaseController {
   lazy val engine = {
     log.info("[Core] Starting Nashorn engine...")
     val r = new ScriptEngineManager(null).getEngineByName("nashorn")
