@@ -1,6 +1,8 @@
 initComponents = function(key, data) {
     var components = _.map(Templates[key].sequences, function(func) {
-        return func(data);
+        var r = func(data);
+        r.setProps(data);
+        return r;
     });
 };
 
@@ -189,17 +191,13 @@ var Templates = {
                     }
                 };
 
-                var r = {
+                return {
                     setProps: function(newProps) {
                         if(newProps.css !== undefined) {
                             setDynamicTemplate(newProps.css.template, newProps.css.values);
                         }
                     },
                 };
-
-                r.setProps(vm);
-
-                return r;
             },
         ];
 
