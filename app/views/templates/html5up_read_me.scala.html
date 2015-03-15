@@ -1,6 +1,6 @@
 @(engine: javax.script.ScriptEngine)(title: String, pageData: JsValue, css_template: String, css_values: JsValue)
 
-@templateId = @{ "html5up_read_only" }
+@templateId = @{ Html(Json.stringify(JsString("html5up_read_only"))) }
 
 @import play.api.libs.json.Json
 
@@ -40,7 +40,7 @@ var DefaultTemplateValues = @Html(Json.stringify(css_values))
 
 jQuery(function($) {
 
-    initComponents('@templateId', PageData);
+    initComponents(@templateId, PageData);
 
     skel.init({
 	reset: 'full',
@@ -112,17 +112,17 @@ jQuery(function($) {
         <div id="wrapper">
             <!-- Header -->
                 <div id="header-wrapper">
-		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'].classes['#header-wrapper'], $pageData));").toString)
+		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#header-wrapper'], $pageData));").toString)
                 </div>
 
             <!-- Main -->
                 <div id="main-wrapper">
-		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'].classes['#main-wrapper'], $pageData));").toString)
+		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#main-wrapper'], $pageData));").toString)
                 </div>
 
             <!-- Footer -->
                 <section id="footer">
-		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'].classes['#footer'], $pageData));").toString)
+		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#footer'], $pageData));").toString)
                 </section>
         </div>
 }
