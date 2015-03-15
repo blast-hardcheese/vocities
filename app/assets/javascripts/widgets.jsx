@@ -1,14 +1,5 @@
 /* @flow weak */
 
-declare class SoundCloud {
-    apiUrl(url: string): string;
-    abort(): void;
-    cancel(): void;
-    loadTracksFromLink(url: any, cb: (tracks: any[]) => void): void;
-}
-
-declare var initializePlayer: (options: any) => void;
-
 var classSet = React.addons.classSet;
 
 // Components
