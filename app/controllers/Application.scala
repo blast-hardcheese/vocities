@@ -1,8 +1,8 @@
 package controllers
 
 import java.io.File
-import java.io.FileReader
-import javax.script.ScriptEngineManager
+import java.io.{ InputStreamReader, FileReader }
+import javax.script.{ ScriptEngineManager, ScriptEngine }
 
 import play.api._
 import play.api.mvc._
@@ -17,15 +17,24 @@ import models.{ Page, Template }
 import securesocial.core.{ SecureSocial, RuntimeEnvironment }
 import service.DemoUser
 
+class RichScriptEngine(val engine: ScriptEngine) {
+  def evalResource(path: String): Object = {
+    engine.eval(new InputStreamReader(Play.classloader.getResourceAsStream(path)))
+  }
+}
+
 object Application extends BaseController {
+  import scala.language.implicitConversions
+  implicit def liftEngine(e: ScriptEngine): RichScriptEngine = new RichScriptEngine(e)
+
   lazy val engine = {
     log.info("[Core] Starting Nashorn engine...")
     val r = new ScriptEngineManager(null).getEngineByName("nashorn")
     log.debug(s"[Core]: $r")
     r.eval("var global = this;")
     r.eval("var noop = function() {}; var console = { warn: noop, info: noop, log: noop };")
-    r.eval(new FileReader(new File("./target/web/public/main/lib/underscorejs/underscore.js")))
-    r.eval(new FileReader(new File("./target/web/public/main/lib/react/react-with-addons.js")))
+    r.evalResource("META-INF/resources/webjars/underscorejs/1.8.2/underscore.js")
+    r.evalResource("META-INF/resources/webjars/react/0.12.2/react-with-addons.js")
     r.eval(new FileReader(new File("./target/web/reactjs/main/javascripts/widgets.js")))
     r.eval(new FileReader(new File("./target/web/public/main/javascripts/templates.js")))
     r
