@@ -1,4 +1,4 @@
-@(title: String, templateId: String, templateData: String, content: Html)
+@(title: String, templateId: String, templateData: JsValue, content: Html)
 
 @header = {
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/html5up-read-only/style.css")" />
@@ -12,7 +12,7 @@
         <script type="text/javascript">
 jQuery(function($) {
     console.info('wat');
-    var data = @Html(templateData)
+    var data = @Html(Json.stringify(templateData))
     window.data = data;
     var factory = React.createFactory(Templates['@templateId']())(data);
 

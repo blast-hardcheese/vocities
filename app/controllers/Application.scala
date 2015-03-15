@@ -8,7 +8,7 @@ import play.api._
 import play.api.mvc._
 import play.api.db.slick._
 import play.api.Play.current
-import play.api.libs.json.Json
+import play.api.libs.json.{ Json, JsValue }
 
 import play.twirl.api.Html
 
@@ -35,19 +35,17 @@ object Application extends BaseController {
 class Application(override implicit val env: RuntimeEnvironment[DemoUser]) extends BaseController with SecureSocial[DemoUser] {
   val engine = Application.engine
 
-  private[this] def render(title: String, templateId: String, data: String, css_template: String, _css_values: String) = {
+  private[this] def render(title: String, templateId: String, data: JsValue, css_template: String, css_values: JsValue) = {
     // Only here temporarily
     engine.eval(new FileReader(new File("./target/web/public/main/javascripts/templates.js")))
 
-    val jsData = Json.parse(data)
-    val css_values = Json.parse(_css_values)
-    Ok(views.html.templates.html5up_read_me(engine)(title, jsData, css_template, css_values))
+    Ok(views.html.templates.html5up_read_me(engine)(title, data, css_template, css_values))
   }
 
-  def lookup(path: String)(handler: (String, String, String, String, String) => Result)(implicit request: Request[_]) = {
+  def lookup(path: String)(handler: (String, String, JsValue, String, JsValue) => Result)(implicit request: Request[_]) = {
     DB.withSession { implicit s =>
       models.Pages.lookup(request.domain, path) map {
-          case (_, Some(title), Some(data), Some(templateId), Some(css_template), Some(css_values)) => handler(title, templateId, data, css_template, css_values)
+          case (_, Some(title), Some(data), Some(templateId), Some(css_template), Some(css_values)) => handler(title, templateId, Json.parse(data), css_template, Json.parse(css_values))
           case (_, None,        None,       _,                _,                  _               ) => BadRequest("404")
           case (_, _,           _,          None,             _,                  _               ) => InternalServerError("Can't find template!")
           case (a, b,           c,          d,                e,                  f               ) => { log.error(s"Route match failure: $a $b $c $d $e $f"); InternalServerError("Unknown error") }
