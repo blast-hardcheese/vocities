@@ -10,7 +10,6 @@ trait ExtendedPostgresDriver extends PostgresDriver
                           with PgHStoreSupport
                           with PgPlayJsonSupport
                           with PgSearchSupport {
-  override val pgjson = "jsonb" //to keep back compatibility, pgjson's value was "json" by default
 
   override lazy val Implicit = new ImplicitsPlus {}
   override val simple = new SimpleQLPlus {}

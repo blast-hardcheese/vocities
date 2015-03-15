@@ -1,11 +1,12 @@
 package models
 
+import play.api.libs.json.{ Json, JsValue }
 import utils.ExtendedPostgresDriver.simple._
 
 case class Customer(id: Long, name: String)
 case class Domain(id: Long, customer_id: Long, domain: String)
-case class Template(id: Long, key: String, css_template: String, css_values: String)
-case class Page(customer_id: Long, domain_id: Long, path: String, template_id: Long, title: String, data: String)
+case class Template(id: Long, key: String, css_template: String, css_values: JsValue)
+case class Page(customer_id: Long, domain_id: Long, path: String, template_id: Long, title: String, data: JsValue)
 
 class CustomerTable(tag: Tag) extends Table[Customer](tag, "customers") {
   def id = column[Long]("id", O.PrimaryKey)
@@ -42,7 +43,7 @@ class TemplateTable(tag: Tag) extends Table[Template](tag, "templates") {
   def id = column[Long]("id", O.PrimaryKey)
   def key = column[String]("key", O.NotNull)
   def css_template = column[String]("css_template", O.NotNull)
-  def css_values = column[String]("css_value", O.NotNull)
+  def css_values = column[JsValue]("css_values", O.NotNull)
 
   def * = (id, key, css_template, css_values) <> (Template.tupled, Template.unapply _)
 }
@@ -61,7 +62,7 @@ class PageTable(tag: Tag) extends Table[Page](tag, "pages") {
   def path = column[String]("path")
   def template_id = column[Long]("template_id")
   def title = column[String]("title")
-  def data = column[String]("data")
+  def data = column[JsValue]("data")
 
   def * = (customer_id, domain_id, path, template_id, title, data) <> (Page.tupled, Page.unapply _)
 }
@@ -73,7 +74,7 @@ object Pages {
     pages.insert(p)
   }
 
-  type LookupResult = Option[(Long, Option[String], Option[String], Option[String], Option[String], Option[String])]
+  type LookupResult = Option[(Long, Option[String], Option[JsValue], Option[String], Option[String], Option[JsValue])]
   def lookup(domain: String, path: String)(implicit s: Session): LookupResult = {
     Domains.domains
       .filter(_.domain === domain)
@@ -158,7 +159,7 @@ body, input, select, textarea {
 }
 
 .w-youtube { width: <%= youtube_width || "100%" %>; height: <%= youtube_height || "480px" %>; }
-    """, """
+    """, Json.parse("""
 {
   "youtube_width": null,
   "youtube_height": null,
@@ -176,12 +177,12 @@ body, input, select, textarea {
     {"url": "http://html5up.net/uploads/demos/read-only/images/banner.jpg", "section": "#first"}
   ]
 }
-"""),
-    Template(2, "0", "", "{}")
+""")),
+    Template(2, "0", "", Json.parse("{}"))
   )
 
   val pages = Seq(
-    Page(1, 1, "", 1, "Devon Stewart: Home", """
+    Page(1, 1, "", 1, "Devon Stewart: Home", Json.parse("""
 {
   "sections": [
     {"tag": "first",  "title": "About", "content": {"type": "header", "data": {"title": "Read Only", "subtitle": "Just an incredibly simple responsive site template freebie by <a href=\"http://html5up.net/read-only\">HTML5 UP</a>.", "text": "Faucibus sed lobortis aliquam lorem blandit. Lorem eu nunc metus col. Commodo id in arcu ante lorem ipsum sed accumsan erat praesent faucibus commodo ac mi lacus. Adipiscing mi ac commodo. Vis aliquet tortor ultricies non ante erat nunc integer eu ante ornare amet commetus vestibulum blandit integer in curae ac faucibus integer non. Adipiscing cubilia elementum."}}},
@@ -211,12 +212,11 @@ body, input, select, textarea {
     }
   }
 }
-"""),
-    Page(1, 4, "", 2, "index", "{\"hello\": \"Devon\", \"sc-url\": \"https://soundcloud.com/shiroyukihime/sets/jpop-anime-ost\", \"youtube\": \"gN9cIlICDt4\", \"bgColor\":\"#f8f8ff\"}"),
-    Page(2, 2, "", 1, "homepage", "{}"),
-    Page(3, 3, "hello/world", 1, "hello, world!", "{\"hello\": \"world\", \"sc-url\": \"https://soundcloud.com/joeljuliusbaer/sets/parov-stellar\", \"youtube\": \"04mfKJWDSzI\"}"),
-    Page(3, 3, "broken", 90, "broken", "This is a broken page"),
-    Page(1, 5, "", 1, "VOCities", """
+""")),
+    Page(1, 4, "", 2, "index", Json.parse("{\"hello\": \"Devon\", \"sc-url\": \"https://soundcloud.com/shiroyukihime/sets/jpop-anime-ost\", \"youtube\": \"gN9cIlICDt4\", \"bgColor\":\"#f8f8ff\"}")),
+    Page(2, 2, "", 1, "homepage", Json.parse("{}")),
+    Page(3, 3, "hello/world", 1, "hello, world!", Json.parse("{\"hello\": \"world\", \"sc-url\": \"https://soundcloud.com/joeljuliusbaer/sets/parov-stellar\", \"youtube\": \"04mfKJWDSzI\"}")),
+    Page(1, 5, "", 1, "VOCities", Json.parse("""
 {
   "sections": [
     {"tag": "first",  "title": "About", "content": {"type": "header", "data": {"title": "Read Only", "subtitle": "Just an incredibly simple responsive site template freebie by <a href=\"http://html5up.net/read-only\">HTML5 UP</a>.", "text": "Faucibus sed lobortis aliquam lorem blandit. Lorem eu nunc metus col. Commodo id in arcu ante lorem ipsum sed accumsan erat praesent faucibus commodo ac mi lacus. Adipiscing mi ac commodo. Vis aliquet tortor ultricies non ante erat nunc integer eu ante ornare amet commetus vestibulum blandit integer in curae ac faucibus integer non. Adipiscing cubilia elementum."}}},
@@ -246,7 +246,7 @@ body, input, select, textarea {
     }
   }
 }
-""")
+"""))
   )
 
   def create()(implicit session: Session) {
