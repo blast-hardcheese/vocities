@@ -108,7 +108,8 @@ object TestData {
     Domain(1, 1, "devonstewart.com"),
     Domain(2, 2, "amysnively.com"),
     Domain(3, 3, "ashleybarton.com"),
-    Domain(4, 1, "hardchee.se")
+    Domain(4, 1, "hardchee.se"),
+    Domain(5, 1, "vocities.com")
   )
 
   val templates = Seq(
@@ -214,7 +215,38 @@ body, input, select, textarea {
     Page(1, 4, "", 2, "index", "{\"hello\": \"Devon\", \"sc-url\": \"https://soundcloud.com/shiroyukihime/sets/jpop-anime-ost\", \"youtube\": \"gN9cIlICDt4\", \"bgColor\":\"#f8f8ff\"}"),
     Page(2, 2, "", 1, "homepage", "{}"),
     Page(3, 3, "hello/world", 1, "hello, world!", "{\"hello\": \"world\", \"sc-url\": \"https://soundcloud.com/joeljuliusbaer/sets/parov-stellar\", \"youtube\": \"04mfKJWDSzI\"}"),
-    Page(3, 3, "broken", 90, "broken", "This is a broken page")
+    Page(3, 3, "broken", 90, "broken", "This is a broken page"),
+    Page(1, 5, "", 1, "VOCities", """
+{
+  "sections": [
+    {"tag": "first",  "title": "About", "content": {"type": "header", "data": {"title": "Read Only", "subtitle": "Just an incredibly simple responsive site template freebie by <a href=\"http://html5up.net/read-only\">HTML5 UP</a>.", "text": "Faucibus sed lobortis aliquam lorem blandit. Lorem eu nunc metus col. Commodo id in arcu ante lorem ipsum sed accumsan erat praesent faucibus commodo ac mi lacus. Adipiscing mi ac commodo. Vis aliquet tortor ultricies non ante erat nunc integer eu ante ornare amet commetus vestibulum blandit integer in curae ac faucibus integer non. Adipiscing cubilia elementum."}}},
+    {"tag": "soundcloud",  "title": "Soundcloud", "content": {"type": "soundcloud", "data": {"url": "https://soundcloud.com/joeljuliusbaer/sets/parov-stellar"}}},
+    {"tag": "second", "title": "Bio", "content": {"type": "paragraph", "data": {"content": ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse magna metus, vehicula molestie vehicula quis, mattis non odio. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam velit elit, pulvinar eget hendrerit id, vulputate sit amet diam. Quisque eu dolor ut velit auctor maximus. Aenean condimentum mi et metus ornare, id consequat mauris ornare. Nulla eu ligula in tortor auctor sagittis. Donec sodales elit augue, a ullamcorper nibh ultricies nec. Nam quis egestas ipsum. Etiam eu libero eu magna feugiat mattis quis luctus lectus. Fusce mollis lorem libero, in viverra tellus lacinia ut.", "Cras pharetra est purus, non tincidunt augue dignissim nec. Fusce varius dapibus enim, placerat mattis lorem lobortis in. Nulla eu sodales eros. Donec libero justo, tincidunt ut consequat sit amet, mollis at elit. Pellentesque aliquam quis tortor sit amet pulvinar. Ut pulvinar augue in nunc semper gravida. Aliquam congue odio et ligula placerat lacinia. Maecenas venenatis, est at tempor blandit, dui mi consequat magna, eget dignissim risus orci sed metus. Etiam urna nisl, tristique id elementum id, feugiat et libero."]}}},
+    {"tag": "third",  "title": "YouTube", "content": {"type": "youtube", "data": {"videoId": "gN9cIlICDt4"}}}
+  ],
+  "social": {
+    "twitter": "https://twitter.com/blast_hardchese",
+    "facebook": "https://www.facebook.com/devon.stewart.982",
+    "instagram": "https://instagram.com/alfredyankovic",
+    "github": "https://github.com/blast-hardcheese",
+    "email": "mail://blast@hardchee.se"
+  },
+  "sidebar": {
+    "header": {
+      "src": "https://s.gravatar.com/avatar/b92c6ab7d1f727643880c062d093d460?s=200",
+      "name": "Devon Stewart",
+      "flavortext": "Just some guy, you know?"
+    }
+  },
+  "footer": {
+    "copyright": "Devon Stewart"
+  },
+  "css": {
+    "values": {
+    }
+  }
+}
+""")
   )
 
   def create()(implicit session: Session) {
