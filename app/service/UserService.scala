@@ -14,7 +14,7 @@ class InMemoryUserService extends UserService[UserModel] {
   type ProviderId = String
   type ProviderUserId = String
 
-  val logger = Logger("application.services.UserService")
+  val log = Logger("application.services.UserService")
   var users = Map.empty[(ProviderId, ProviderUserId), UserModel]
 
   def find(providerId: String, userId: String): Future[Option[BasicProfile]] = {
@@ -42,10 +42,12 @@ class InMemoryUserService extends UserService[UserModel] {
     val profile = user
     mode match {
       case SaveMode.SignUp =>
+        log.info(s"Sign in for ${profile.fullName}")
         DB.withTransaction { implicit s =>
           Future.successful(models.AuthProfiles.newUser(profile))
         }
       case SaveMode.LoggedIn =>
+        log.info(s"Logged in for ${profile.fullName}")
         DB.withTransaction { implicit s =>
           Future.successful(
             models.AuthProfiles.modelForProfile(profile).getOrElse {
