@@ -3,32 +3,33 @@ package models
 import play.api.libs.json.{ Json, JsValue }
 import utils.ExtendedPostgresDriver.simple._
 
-case class Customer(id: Long, name: String)
-case class Domain(id: Long, customer_id: Long, domain: String)
+case class Account(id: Long, name: String, user_ids: List[Long])
+case class Domain(id: Long, account_id: Long, domain: String)
 case class Template(id: Long, key: String, css_template: String, css_values: JsValue)
-case class Page(customer_id: Long, domain_id: Long, path: String, template_id: Long, title: String, data: JsValue)
+case class Page(account_id: Long, domain_id: Long, path: String, template_id: Long, title: String, data: JsValue)
 
-class CustomerTable(tag: Tag) extends Table[Customer](tag, "customers") {
+class Accounts(tag: Tag) extends Table[Account](tag, "accounts") {
   def id = column[Long]("id", O.PrimaryKey)
   def name = column[String]("name")
+  def user_ids = column[List[Long]]("user_ids", O.NotNull)
 
-  def * = (id, name) <> (Customer.tupled, Customer.unapply _)
+  def * = (id, name, user_ids) <> (Account.tupled, Account.unapply _)
 }
 
-object Customers {
-  val customers = TableQuery[CustomerTable]
+object Accounts {
+  val accounts = TableQuery[Accounts]
 
-  def create(c: Customer)(implicit session: Session) = {
-    customers.insert(c)
+  def create(c: Account)(implicit session: Session) = {
+    accounts.insert(c)
   }
 }
 
 class DomainTable(tag: Tag) extends Table[Domain](tag, "domains") {
   def id = column[Long]("id", O.PrimaryKey)
-  def customer_id = column[Long]("customer_id", O.NotNull)
+  def account_id = column[Long]("account_id", O.NotNull)
   def domain = column[String]("domain", O.NotNull)
 
-  def * = (id, customer_id, domain) <> (Domain.tupled, Domain.unapply _)
+  def * = (id, account_id, domain) <> (Domain.tupled, Domain.unapply _)
 }
 
 object Domains {
@@ -57,14 +58,14 @@ object Templates {
 }
 
 class PageTable(tag: Tag) extends Table[Page](tag, "pages") {
-  def customer_id = column[Long]("customer_id")
+  def account_id = column[Long]("account_id")
   def domain_id = column[Long]("domain_id")
   def path = column[String]("path")
   def template_id = column[Long]("template_id")
   def title = column[String]("title")
   def data = column[JsValue]("data")
 
-  def * = (customer_id, domain_id, path, template_id, title, data) <> (Page.tupled, Page.unapply _)
+  def * = (account_id, domain_id, path, template_id, title, data) <> (Page.tupled, Page.unapply _)
 }
 
 object Pages {
@@ -78,7 +79,7 @@ object Pages {
   def lookup(domain: String, path: String)(implicit s: Session): LookupResult = {
     Domains.domains
       .filter(_.domain === domain)
-      .leftJoin(pages).on({ case (d, p) => d.id === p.domain_id && p.customer_id === d.customer_id && p.path === path })
+      .leftJoin(pages).on({ case (d, p) => d.id === p.domain_id && p.account_id === d.account_id && p.path === path })
       .leftJoin(Templates.templates).on({ case ((d, p), t) => t.id === p.template_id })
       .map { case ((d, p), t) => (d.id, p.title.?, p.data.?, t.key.?, t.css_template.?, t.css_values.?) }
       .firstOption
@@ -99,10 +100,10 @@ object Users {
 }
 
 object TestData {
-  val customers = Seq(
-    Customer(1, "Hardchee.se"),
-    Customer(2, "AmySnively"),
-    Customer(3, "Barton Inc.")
+  val accounts = Seq(
+    Account(1, "Hardchee.se", List.empty),
+    Account(2, "AmySnively", List.empty),
+    Account(3, "Barton Inc.", List.empty)
   )
 
   val domains = Seq(
@@ -250,12 +251,12 @@ body, input, select, textarea {
   )
 
   def create()(implicit session: Session) {
-    Customers.customers.delete
+    Accounts.accounts.delete
     Domains.domains.delete
     Templates.templates.delete
     Pages.pages.delete
 
-    customers.foreach(Customers.create)
+    accounts.foreach(Accounts.create)
     domains.foreach(Domains.create)
     templates.foreach(Templates.create)
     pages.foreach(Pages.create)
