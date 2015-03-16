@@ -11,7 +11,7 @@ trait AuthenticationMethodMixin {
   )
 }
 
-case class DemoUser(main: BasicProfile, identities: List[BasicProfile])
+case class UserModel(main: BasicProfile, identities: List[BasicProfile])
 
 case class AuthProfile(
   userId: Long,
@@ -52,7 +52,7 @@ class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "auth_profile") wit
 object AuthProfiles extends AuthProfileConverters {
   val basicProfiles = TableQuery[AuthProfiles]
 
-  def newUser(profile: BasicProfile)(implicit s: Session): DemoUser = {
+  def newUser(profile: BasicProfile)(implicit s: Session): UserModel = {
     val username = profile.fullName
       .orElse(profile.firstName)
       .orElse(profile.email)
@@ -66,7 +66,7 @@ object AuthProfiles extends AuthProfileConverters {
     basicProfiles
       .insert(basicToAuth(id)(profile))
 
-    DemoUser(profile, List(profile))
+    UserModel(profile, List(profile))
   }
 
   def save(userId: Long, p: BasicProfile)(implicit s: Session) {

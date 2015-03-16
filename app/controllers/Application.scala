@@ -15,7 +15,7 @@ import play.twirl.api.Html
 import models.{ Page, Template }
 
 import securesocial.core.{ SecureSocial, RuntimeEnvironment }
-import models.DemoUser
+import models.UserModel
 
 class RichScriptEngine(val engine: ScriptEngine) {
   def evalResource(path: String): Object = {
@@ -42,7 +42,7 @@ object Application extends BaseController {
   }
 }
 
-class Application(override implicit val env: RuntimeEnvironment[DemoUser]) extends BaseController with SecureSocial[DemoUser] {
+class Application(override implicit val env: RuntimeEnvironment[UserModel]) extends BaseController with SecureSocial[UserModel] {
   val engine = Application.engine
 
   private[this] def render(title: String, templateId: String, data: JsValue, css_template: String, css_values: JsValue) = {

@@ -10,7 +10,7 @@ import securesocial.core.providers.GoogleProvider
 import java.lang.reflect.Constructor
 import securesocial.core.{ RuntimeEnvironment, OAuth2Provider }
 import service.InMemoryUserService
-import models.DemoUser
+import models.UserModel
 
 object LiftedRequestFilter extends Filter {
   def apply(next: (RequestHeader) => Future[Result])(request: RequestHeader): Future[Result] = {
@@ -29,7 +29,7 @@ object Global extends WithFilters(LiftedRequestFilter) {
   /**
    * The runtime environment for this sample app.
    */
-  object MyRuntimeEnvironment extends RuntimeEnvironment.Default[DemoUser] {
+  object MyRuntimeEnvironment extends RuntimeEnvironment.Default[UserModel] {
     override implicit val executionContext = play.api.libs.concurrent.Execution.defaultContext
     override lazy val userService: InMemoryUserService = new InMemoryUserService()
 
@@ -45,7 +45,7 @@ object Global extends WithFilters(LiftedRequestFilter) {
   override def getControllerInstance[A](controllerClass: Class[A]): A = {
     val instance = controllerClass.getConstructors.find { c =>
       val params = c.getParameterTypes
-      params.length == 1 && params(0) == classOf[RuntimeEnvironment[DemoUser]]
+      params.length == 1 && params(0) == classOf[RuntimeEnvironment[UserModel]]
     }.map {
       _.asInstanceOf[Constructor[A]].newInstance(MyRuntimeEnvironment)
     }
