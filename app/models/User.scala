@@ -1,6 +1,6 @@
 package models
 
-import securesocial.core.{ BasicProfile, AuthenticationMethod, OAuth1Info, OAuth2Info, PasswordInfo }
+import securesocial.core.{ BasicProfile, AuthenticationMethod }
 
 import utils.ExtendedPostgresDriver.simple._
 
@@ -9,24 +9,22 @@ trait AuthenticationMethodMixin {
     { _.method },
     AuthenticationMethod.apply _
   )
-
-  implicit val oauth1mapper = MappedColumnType.base[OAuth1Info, String](
-    { _ => "dummy data" },
-    { _ => OAuth1Info("dummy", "data") }
-  )
-
-  implicit val oauth2mapper = MappedColumnType.base[OAuth2Info, String](
-    { _ => "dummy data" },
-    { _ => OAuth2Info("dummy data") }
-  )
-
-  implicit val passwordMapper = MappedColumnType.base[PasswordInfo, String](
-    { _ => "dummy data" },
-    { _ => PasswordInfo("dummy", "data") }
-  )
 }
 
-class BasicProfiles(tag: Tag) extends Table[BasicProfile](tag, "customers") with AuthenticationMethodMixin {
+case class AuthProfile(
+  userId: Long,
+  providerId: String,
+  providerUserId: String,
+  firstName: Option[String],
+  lastName: Option[String],
+  fullName: Option[String],
+  email: Option[String],
+  avatarUrl: Option[String],
+  authMethod: AuthenticationMethod
+)
+
+class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "customers") with AuthenticationMethodMixin {
+  def userId = column[Long]("userId", O.NotNull)
   def providerId = column[String]("providerId", O.NotNull)
   def providerUserId = column[String]("providerUserId", O.NotNull)
   def firstName = column[Option[String]]("firstName", O.Nullable)
@@ -35,11 +33,9 @@ class BasicProfiles(tag: Tag) extends Table[BasicProfile](tag, "customers") with
   def email = column[Option[String]]("email", O.Nullable)
   def avatarUrl = column[Option[String]]("avatarUrl", O.Nullable)
   def authMethod = column[AuthenticationMethod]("authMethod", O.NotNull)
-  def oAuth1Info = column[Option[OAuth1Info]]("oAuth1Info", O.Nullable)
-  def oAuth2Info = column[Option[OAuth2Info]]("oAuth2Info", O.Nullable)
-  def passwordInfo = column[Option[PasswordInfo]]("passwordInfo", O.Nullable)
 
   def * = (
+    userId,
     providerId,
     providerUserId,
     firstName,
@@ -47,18 +43,25 @@ class BasicProfiles(tag: Tag) extends Table[BasicProfile](tag, "customers") with
     fullName,
     email,
     avatarUrl,
-    authMethod,
-    oAuth1Info,
-    oAuth2Info,
-    passwordInfo
-  ) <> (BasicProfile.tupled, BasicProfile.unapply _)
+    authMethod
+  ) <> (AuthProfile.tupled, AuthProfile.unapply _)
 }
 
-object BasicProfiles {
-  val basicProfiles = TableQuery[BasicProfiles]
+object AuthProfiles {
+  val basicProfiles = TableQuery[AuthProfiles]
 
   def save(userId: Long, p: BasicProfile)(implicit s: Session) {
     basicProfiles
-      .insert(p)
+      .insert(AuthProfile(
+        userId = userId,
+        providerId = p.providerId,
+        providerUserId = p.userId,
+        firstName = p.firstName,
+        lastName = p.lastName,
+        fullName = p.fullName,
+        email = p.email,
+        avatarUrl = p.avatarUrl,
+        authMethod = p.authMethod
+      ))
   }
 }
