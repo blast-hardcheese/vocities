@@ -45,14 +45,9 @@ class InMemoryUserService extends UserService[UserModel] {
     }
   }
 
-  def link(current: UserModel, to: BasicProfile): Future[UserModel] = {
-    if (current.identities.exists(i => i.providerId == to.providerId && i.userId == to.userId)) {
-      Future.successful(current)
-    } else {
-      val added = to :: current.identities
-      val updatedUser = current.copy(identities = added)
-      users = users + ((current.main.providerId, current.main.userId) -> updatedUser)
-      Future.successful(updatedUser)
+  def link(currentUser: UserModel, to: BasicProfile): Future[UserModel] = {
+    DB.withTransaction { implicit s =>
+      Future.successful(models.AuthProfiles.associateProfile(currentUser, to))
     }
   }
 

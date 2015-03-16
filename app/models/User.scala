@@ -95,6 +95,12 @@ object AuthProfiles extends AuthProfileConverters {
       .headOption
       .map { userToUserModel(profile) }
   }
+
+  def associateProfile(user: UserModel, to: BasicProfile)(implicit s: Session): UserModel = {
+    basicProfiles
+      .insert(basicToAuth(user.userId)(to))
+    user.copy(identities = to +: user.identities)
+  }
 }
 
 trait AuthProfileConverters {
