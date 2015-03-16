@@ -90,6 +90,6 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
 
 
   def currentUser = SecuredAction { implicit request =>
-    Ok(s"Your id is ${request.user}")
+    Ok(s"Your id on ${request.user.main.providerId} is ${request.user.main.userId}")
   }
 }
