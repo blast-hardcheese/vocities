@@ -10,12 +10,8 @@ import securesocial.core.services.{ UserService, SaveMode }
 
 import models.UserModel
 
-class InMemoryUserService extends UserService[UserModel] {
-  type ProviderId = String
-  type ProviderUserId = String
-
+class PostgresUserService extends UserService[UserModel] {
   val log = Logger("application.services.UserService")
-  var users = Map.empty[(ProviderId, ProviderUserId), UserModel]
 
   def find(providerId: String, userId: String): Future[Option[BasicProfile]] = {
     DB.withSession { implicit s =>
@@ -51,6 +47,7 @@ class InMemoryUserService extends UserService[UserModel] {
     }
   }
 
+  // Since we're not using email authentication, let's keep these as stubs for now.
   def updatePasswordInfo(user: UserModel, info: PasswordInfo): Future[Option[BasicProfile]] = ???
   def passwordInfoFor(user: UserModel): Future[Option[PasswordInfo]] = ???
   def findByEmailAndProvider(email: String, providerId: String): Future[Option[BasicProfile]] = ???

@@ -9,7 +9,7 @@ import securesocial.core.providers.GoogleProvider
 
 import java.lang.reflect.Constructor
 import securesocial.core.{ RuntimeEnvironment, OAuth2Provider }
-import service.InMemoryUserService
+import service.PostgresUserService
 import models.UserModel
 
 object LiftedRequestFilter extends Filter {
@@ -31,7 +31,7 @@ object Global extends WithFilters(LiftedRequestFilter) {
    */
   object MyRuntimeEnvironment extends RuntimeEnvironment.Default[UserModel] {
     override implicit val executionContext = play.api.libs.concurrent.Execution.defaultContext
-    override lazy val userService: InMemoryUserService = new InMemoryUserService()
+    override lazy val userService: PostgresUserService = new PostgresUserService()
 
     override lazy val providers = ListMap(
       include(new GoogleProvider(routes, cacheService, oauth2ClientFor(GoogleProvider.Google)))
