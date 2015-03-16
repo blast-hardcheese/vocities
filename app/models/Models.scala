@@ -6,7 +6,9 @@ import utils.ExtendedPostgresDriver.simple._
 case class Account(id: Long, name: String, user_ids: List[Long])
 case class Domain(id: Long, account_id: Long, domain: String)
 case class Template(id: Long, key: String, css_template: String, css_values: JsValue)
+case class TemplateInfo(id: Long, key: String)
 case class Page(account_id: Long, domain_id: Long, path: String, template_id: Long, title: String, data: JsValue)
+case class PageInfo(account_id: Long, domain_id: Long, path: String, template_id: Long, title: String)
 
 class Accounts(tag: Tag) extends Table[Account](tag, "accounts") {
   def id = column[Long]("id", O.PrimaryKey)
@@ -47,6 +49,7 @@ class TemplateTable(tag: Tag) extends Table[Template](tag, "templates") {
   def css_values = column[JsValue]("css_values", O.NotNull)
 
   def * = (id, key, css_template, css_values) <> (Template.tupled, Template.unapply _)
+  def info = (id, key) <> (TemplateInfo.tupled, TemplateInfo.unapply)
 }
 
 object Templates {
@@ -66,6 +69,7 @@ class PageTable(tag: Tag) extends Table[Page](tag, "pages") {
   def data = column[JsValue]("data")
 
   def * = (account_id, domain_id, path, template_id, title, data) <> (Page.tupled, Page.unapply _)
+  def info = (account_id, domain_id, path, template_id, title) <> (PageInfo.tupled, PageInfo.unapply _)
 }
 
 object Pages {
