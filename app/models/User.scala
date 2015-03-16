@@ -47,21 +47,52 @@ class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "customers") with A
   ) <> (AuthProfile.tupled, AuthProfile.unapply _)
 }
 
-object AuthProfiles {
+object AuthProfiles extends AuthProfileConverters {
   val basicProfiles = TableQuery[AuthProfiles]
 
   def save(userId: Long, p: BasicProfile)(implicit s: Session) {
     basicProfiles
-      .insert(AuthProfile(
-        userId = userId,
-        providerId = p.providerId,
-        providerUserId = p.userId,
-        firstName = p.firstName,
-        lastName = p.lastName,
-        fullName = p.fullName,
-        email = p.email,
-        avatarUrl = p.avatarUrl,
-        authMethod = p.authMethod
-      ))
+      .insert(basicToAuth(userId)(p))
+  }
+
+  def lookupProfile(providerId: String, providerUserId: String)(implicit s: Session): Option[BasicProfile] = {
+    basicProfiles
+      .filter(r => r.providerId === providerId && r.providerUserId === providerUserId)
+      .take(1)
+      .list
+      .headOption
+      .map(authToBasic)
+      .map(_._2)
+  }
+}
+
+trait AuthProfileConverters {
+  def basicToAuth(userId: Long)(profile: BasicProfile): AuthProfile = {
+    AuthProfile(
+      userId = userId,
+      providerId = profile.providerId,
+      providerUserId = profile.userId,
+      firstName = profile.firstName,
+      lastName = profile.lastName,
+      fullName = profile.fullName,
+      email = profile.email,
+      avatarUrl = profile.avatarUrl,
+      authMethod = profile.authMethod
+    )
+  }
+
+  def authToBasic(ap: AuthProfile): (Long, BasicProfile) = {
+    (ap.userId,
+      BasicProfile(
+        providerId = ap.providerId,
+        userId = ap.providerUserId,
+        firstName = ap.firstName,
+        lastName = ap.lastName,
+        fullName = ap.fullName,
+        email = ap.email,
+        avatarUrl = ap.avatarUrl,
+        authMethod = ap.authMethod
+      )
+    )
   }
 }
