@@ -8,6 +8,8 @@ import securesocial.core.providers.{ UsernamePasswordProvider, MailToken }
 import scala.concurrent.Future
 import securesocial.core.services.{ UserService, SaveMode }
 
+import models.DemoUser
+
 class InMemoryUserService extends UserService[DemoUser] {
   type ProviderId = String
   type ProviderUserId = String
@@ -106,6 +108,3 @@ class InMemoryUserService extends UserService[DemoUser] {
   def findToken(token: String): scala.concurrent.Future[Option[securesocial.core.providers.MailToken]] = ???
   def saveToken(token: securesocial.core.providers.MailToken): scala.concurrent.Future[securesocial.core.providers.MailToken] = ???
 }
-
-// a simple User class that can have multiple identities
-case class DemoUser(main: BasicProfile, identities: List[BasicProfile])

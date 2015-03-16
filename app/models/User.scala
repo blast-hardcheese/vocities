@@ -11,6 +11,8 @@ trait AuthenticationMethodMixin {
   )
 }
 
+case class DemoUser(main: BasicProfile, identities: List[BasicProfile])
+
 case class AuthProfile(
   userId: Long,
   providerId: String,

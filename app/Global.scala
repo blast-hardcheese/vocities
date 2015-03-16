@@ -9,7 +9,8 @@ import securesocial.core.providers.GoogleProvider
 
 import java.lang.reflect.Constructor
 import securesocial.core.{ RuntimeEnvironment, OAuth2Provider }
-import service.{ DemoUser, InMemoryUserService }
+import service.InMemoryUserService
+import models.DemoUser
 
 object LiftedRequestFilter extends Filter {
   def apply(next: (RequestHeader) => Future[Result])(request: RequestHeader): Future[Result] = {

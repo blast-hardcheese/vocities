@@ -15,7 +15,7 @@ import play.twirl.api.Html
 import models.{ Page, Template }
 
 import securesocial.core.{ SecureSocial, RuntimeEnvironment }
-import service.DemoUser
+import models.DemoUser
 
 class RichScriptEngine(val engine: ScriptEngine) {
   def evalResource(path: String): Object = {
