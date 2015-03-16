@@ -1,46 +1,24 @@
 package service
 
 import play.api.Logger
+import play.api.Play.current
+import play.api.db.slick._
 import securesocial.core._
 import securesocial.core.providers.{ UsernamePasswordProvider, MailToken }
 import scala.concurrent.Future
 import securesocial.core.services.{ UserService, SaveMode }
 
-/**
- * A Sample In Memory user service in Scala
- *
- * IMPORTANT: This is just a sample and not suitable for a production environment since
- * it stores everything in memory.
- */
 class InMemoryUserService extends UserService[DemoUser] {
-  val logger = Logger("application.controllers.InMemoryUserService")
-  var users = Map[(String, String), DemoUser]()
+  type ProviderId = String
+  type ProviderUserId = String
+
+  val logger = Logger("application.services.UserService")
+  var users = Map.empty[(ProviderId, ProviderUserId), DemoUser]
 
   def find(providerId: String, userId: String): Future[Option[BasicProfile]] = {
-    if (logger.isDebugEnabled) {
-      logger.debug("users = %s".format(users))
+    DB.withSession { implicit s =>
+      Future.successful(models.AuthProfiles.lookupProfile(providerId, userId))
     }
-    val result = for (
-      user <- users.values;
-      basicProfile <- user.identities.find(su => su.providerId == providerId && su.userId == userId)
-    ) yield {
-      basicProfile
-    }
-    Future.successful(result.headOption)
-  }
-
-  def findByEmailAndProvider(email: String, providerId: String): Future[Option[BasicProfile]] = {
-    if (logger.isDebugEnabled) {
-      logger.debug("users = %s".format(users))
-    }
-    val someEmail = Some(email)
-    val result = for (
-      user <- users.values;
-      basicProfile <- user.identities.find(su => su.providerId == providerId && su.email == someEmail)
-    ) yield {
-      basicProfile
-    }
-    Future.successful(result.headOption)
   }
 
   private def findProfile(p: BasicProfile) = {
@@ -50,7 +28,7 @@ class InMemoryUserService extends UserService[DemoUser] {
     }
   }
 
-  private def updateProfile(user: BasicProfile, entry: ((String, String), DemoUser)): Future[DemoUser] = {
+  private def updateProfile(user: BasicProfile, entry: ((ProviderId, ProviderUserId), DemoUser)): Future[DemoUser] = {
     val identities = entry._2.identities
     val updatedList = identities.patch(identities.indexWhere(i => i.providerId == user.providerId && i.userId == user.userId), Seq(user), 1)
     val updatedUser = entry._2.copy(identities = updatedList)
@@ -122,6 +100,7 @@ class InMemoryUserService extends UserService[DemoUser] {
     }
   }
 
+  def findByEmailAndProvider(email: String, providerId: String): Future[Option[BasicProfile]] = ???
   def deleteExpiredTokens(): Unit = ???
   def deleteToken(uuid: String): scala.concurrent.Future[Option[securesocial.core.providers.MailToken]] = ???
   def findToken(token: String): scala.concurrent.Future[Option[securesocial.core.providers.MailToken]] = ???
