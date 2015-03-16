@@ -85,10 +85,10 @@ object Pages {
   }
 }
 
-case class User(id: Long, username: String)
+case class User(id: Long = -1, username: String)
 
 class Users(tag: Tag) extends Table[User](tag, "user") {
-  def id = column[Long]("id")
+  def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def username = column[String]("username")
 
   def * = (id, username) <> (User.tupled, User.unapply)
