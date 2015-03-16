@@ -46,22 +46,15 @@ class InMemoryUserService extends UserService[UserModel] {
           Future.successful(models.AuthProfiles.newUser(profile))
         }
       case SaveMode.LoggedIn =>
-        // first see if there is a user with this BasicProfile already.
-        findProfile(user) match {
-          case Some(existingUser) =>
-            updateProfile(user, existingUser)
-
-          case None =>
-            val newUser = UserModel(user, List(user))
-            users = users + ((user.providerId, user.userId) -> newUser)
-            Future.successful(newUser)
+        DB.withTransaction { implicit s =>
+          Future.successful(
+            models.AuthProfiles.modelForProfile(profile).getOrElse {
+              // If we couldn't find this auth, create a new user
+              models.AuthProfiles.newUser(profile)
+            }
+          )
         }
-
-      case SaveMode.PasswordChange =>
-        findProfile(user).map { entry => updateProfile(user, entry) }.getOrElse(
-          // this should not happen as the profile will be there
-          throw new Exception("missing profile)")
-        )
+      case SaveMode.PasswordChange => throw new Exception("Password changes unsupported")
     }
   }
 

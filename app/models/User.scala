@@ -83,6 +83,18 @@ object AuthProfiles extends AuthProfileConverters {
       .map(authToBasic)
       .map(_._2)
   }
+
+  def modelForProfile(profile: BasicProfile)(implicit s: Session): Option[UserModel] = {
+    basicProfiles
+      .innerJoin(Users.users)
+      .on { case (p, u) => p.userId === u.id }
+      .filter { case (p, _) => p.providerId === profile.providerId && p.providerUserId === profile.userId }
+      .map { case (_, u) => u }
+      .take(1)
+      .list
+      .headOption
+      .map { userToUserModel(profile) }
+  }
 }
 
 trait AuthProfileConverters {
@@ -113,5 +125,9 @@ trait AuthProfileConverters {
         authMethod = ap.authMethod
       )
     )
+  }
+
+  def userToUserModel(profile: BasicProfile)(user: User): UserModel = {
+    UserModel(profile, List(profile))
   }
 }
