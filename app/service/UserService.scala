@@ -14,11 +14,7 @@ import securesocial.core.services.{ UserService, SaveMode }
  */
 class InMemoryUserService extends UserService[DemoUser] {
   val logger = Logger("application.controllers.InMemoryUserService")
-
-  //
   var users = Map[(String, String), DemoUser]()
-  //private var identities = Map[String, BasicProfile]()
-  private var tokens = Map[String, MailToken]()
 
   def find(providerId: String, userId: String): Future[Option[BasicProfile]] = {
     if (logger.isDebugEnabled) {
@@ -99,36 +95,6 @@ class InMemoryUserService extends UserService[DemoUser] {
     }
   }
 
-  def saveToken(token: MailToken): Future[MailToken] = {
-    Future.successful {
-      tokens += (token.uuid -> token)
-      token
-    }
-  }
-
-  def findToken(token: String): Future[Option[MailToken]] = {
-    Future.successful { tokens.get(token) }
-  }
-
-  def deleteToken(uuid: String): Future[Option[MailToken]] = {
-    Future.successful {
-      tokens.get(uuid) match {
-        case Some(token) =>
-          tokens -= uuid
-          Some(token)
-        case None => None
-      }
-    }
-  }
-
-  //  def deleteTokens(): Future {
-  //    tokens = Map()
-  //  }
-
-  def deleteExpiredTokens() {
-    tokens = tokens.filter(!_._2.isExpired)
-  }
-
   override def updatePasswordInfo(user: DemoUser, info: PasswordInfo): Future[Option[BasicProfile]] = {
     Future.successful {
       for (
@@ -155,6 +121,11 @@ class InMemoryUserService extends UserService[DemoUser] {
       }
     }
   }
+
+  def deleteExpiredTokens(): Unit = ???
+  def deleteToken(uuid: String): scala.concurrent.Future[Option[securesocial.core.providers.MailToken]] = ???
+  def findToken(token: String): scala.concurrent.Future[Option[securesocial.core.providers.MailToken]] = ???
+  def saveToken(token: securesocial.core.providers.MailToken): scala.concurrent.Future[securesocial.core.providers.MailToken] = ???
 }
 
 // a simple User class that can have multiple identities
