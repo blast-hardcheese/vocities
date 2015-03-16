@@ -25,7 +25,7 @@ case class AuthProfile(
   authMethod: AuthenticationMethod
 )
 
-class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "customers") with AuthenticationMethodMixin {
+class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "auth_profile") with AuthenticationMethodMixin {
   def userId = column[Long]("userId", O.NotNull)
   def providerId = column[String]("providerId", O.NotNull)
   def providerUserId = column[String]("providerUserId", O.NotNull)
