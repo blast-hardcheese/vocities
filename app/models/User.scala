@@ -11,7 +11,7 @@ trait AuthenticationMethodMixin {
   )
 }
 
-case class UserModel(main: BasicProfile, identities: List[BasicProfile])
+case class UserModel(main: BasicProfile, identities: List[BasicProfile], userId: Long)
 
 case class AuthProfile(
   userId: Long,
@@ -66,7 +66,7 @@ object AuthProfiles extends AuthProfileConverters {
     basicProfiles
       .insert(basicToAuth(id)(profile))
 
-    UserModel(profile, List(profile))
+    UserModel(profile, List(profile), id)
   }
 
   def save(userId: Long, p: BasicProfile)(implicit s: Session) {
@@ -128,6 +128,9 @@ trait AuthProfileConverters {
   }
 
   def userToUserModel(profile: BasicProfile)(user: User): UserModel = {
-    UserModel(profile, List(profile))
+    UserModel(
+      main=profile,
+      identities=List(profile),
+      userId=user.id)
   }
 }
