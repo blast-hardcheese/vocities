@@ -52,6 +52,23 @@ class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "customers") with A
 object AuthProfiles extends AuthProfileConverters {
   val basicProfiles = TableQuery[AuthProfiles]
 
+  def newUser(profile: BasicProfile)(implicit s: Session): DemoUser = {
+    val username = profile.fullName
+      .orElse(profile.firstName)
+      .orElse(profile.email)
+      .getOrElse("New User")
+
+    val id = Users
+      .users
+      .returning(Users.users.map(_.id))
+      .insert(User(username=username))
+
+    basicProfiles
+      .insert(basicToAuth(id)(profile))
+
+    DemoUser(profile, List(profile))
+  }
+
   def save(userId: Long, p: BasicProfile)(implicit s: Session) {
     basicProfiles
       .insert(basicToAuth(userId)(p))

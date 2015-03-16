@@ -39,11 +39,12 @@ class InMemoryUserService extends UserService[DemoUser] {
   }
 
   def save(user: BasicProfile, mode: SaveMode): Future[DemoUser] = {
+    val profile = user
     mode match {
       case SaveMode.SignUp =>
-        val newUser = DemoUser(user, List(user))
-        users = users + ((user.providerId, user.userId) -> newUser)
-        Future.successful(newUser)
+        DB.withTransaction { implicit s =>
+          Future.successful(models.AuthProfiles.newUser(profile))
+        }
       case SaveMode.LoggedIn =>
         // first see if there is a user with this BasicProfile already.
         findProfile(user) match {
