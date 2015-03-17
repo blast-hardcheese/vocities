@@ -103,6 +103,38 @@ object Users {
   val users = TableQuery[Users]
 }
 
+case class AccountViewModel(accounts: Seq[Account], domains: Seq[Domain], pages: Seq[PageInfo], templates: Seq[TemplateInfo])
+
+object Queries {
+  def accountsIndex(user_id: Long)(implicit s: Session) = {
+    val accounts = Accounts.accounts
+      .filter(_.user_ids @> List(user_id))
+      .run
+
+    val accountIds = accounts.map { _.id }
+
+    val domains = Domains.domains
+      .filter(_.account_id inSetBind accountIds)
+      .run
+
+    val domainIds = domains.map { _.id }
+
+    val pages = Pages.pages
+      .filter(p => p.account_id.inSetBind(accountIds) && p.domain_id.inSetBind(domainIds))
+      .map(_.info)
+      .run
+
+    val templateIds = pages.map { _.template_id }
+
+    val templates = Templates.templates
+      .filter(_.id inSetBind(templateIds))
+      .map(_.info)
+      .run
+
+    AccountViewModel(accounts, domains, pages, templates)
+  }
+}
+
 object TestData {
   val accounts = Seq(
     Account(1, "Hardchee.se", List.empty),
