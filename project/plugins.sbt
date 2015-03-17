@@ -18,3 +18,5 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.0.0")
 addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.0.0")
 
 addSbtPlugin("com.github.ddispaltro" % "sbt-reactjs" % "0.4.0")
+
+addSbtPlugin("com.arpnetworking" % "sbt-typescript" % "0.1.4")
