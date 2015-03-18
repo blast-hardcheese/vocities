@@ -1,13 +1,13 @@
-GET     /current-user               @controllers.Application.currentUser
-GET     /test-data                  @controllers.Application.testData
-GET     /edit                       @controllers.Application.edit(path: String ?= "")
-POST    /edit                       @controllers.Application.save(path: String ?= "")
+GET     /current-user                                                @controllers.Application.currentUser
+GET     /test-data                                                   @controllers.Application.testData
+GET     /edit                                                        @controllers.Application.edit(path: String ?= "")
+POST    /edit                                                        @controllers.Application.save(path: String ?= "")
 
-GET     /account                    @controllers.Users.index
+GET     /account                                                     @controllers.Users.index
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
-->      /auth                       securesocial.Routes
+GET     /assets/*file                                                controllers.Assets.at(path="/public", file)
+->      /auth                                                        securesocial.Routes
 
-GET     /                           @controllers.Application.route(path = "")
-GET     /*path                      @controllers.Application.route(path: String)
+GET     /                                                            @controllers.Application.route(path = "")
+GET     /*path                                                       @controllers.Application.route(path: String)
