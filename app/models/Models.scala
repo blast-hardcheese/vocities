@@ -104,6 +104,7 @@ object Users {
 }
 
 case class AccountViewModel(accounts: Seq[Account], domains: Seq[Domain], pages: Seq[PageInfo], templates: Seq[TemplateInfo])
+case class PageEditViewModel(page: Page, css_values: JsValue)
 
 object Queries {
   def accountsIndex(user_id: Long)(implicit s: Session) = {
@@ -134,7 +135,7 @@ object Queries {
     AccountViewModel(accounts, domains, pages, templates)
   }
 
-  def pageEdit(user_id: Long, domain_id: Long, path: String)(implicit s: Session): Option[(Page, JsValue)] = {
+  def pageEdit(user_id: Long, domain_id: Long, path: String)(implicit s: Session): Option[PageEditViewModel] = {
     Accounts.accounts
       .innerJoin(Domains.domains)
       .innerJoin(Pages.pages)
@@ -154,6 +155,7 @@ object Queries {
       .take(1)
       .run
       .headOption
+      .map(PageEditViewModel.tupled)
   }
 }
 
