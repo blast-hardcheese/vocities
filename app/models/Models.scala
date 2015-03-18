@@ -104,7 +104,7 @@ object Users {
 }
 
 case class AccountViewModel(accounts: Seq[Account], domains: Seq[Domain], pages: Seq[PageInfo], templates: Seq[TemplateInfo])
-case class PageEditViewModel(page: Page, css_values: JsValue)
+case class PageEditViewModel(page: Page, template_key: String, css_values: JsValue)
 
 object Queries {
   def accountsIndex(user_id: Long)(implicit s: Session) = {
@@ -150,7 +150,7 @@ object Queries {
         p.template_id === t.id
       }
       .map { case (((a, d), p), t) =>
-        (p, t.css_values)
+        (p, t.key, t.css_values)
       }
       .take(1)
       .run
