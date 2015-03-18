@@ -133,6 +133,28 @@ object Queries {
 
     AccountViewModel(accounts, domains, pages, templates)
   }
+
+  def pageEdit(user_id: Long, domain_id: Long, path: String)(implicit s: Session): Option[(Page, JsValue)] = {
+    Accounts.accounts
+      .innerJoin(Domains.domains)
+      .innerJoin(Pages.pages)
+      .innerJoin(Templates.templates)
+      .on { case (((a, d), p), t) =>
+        a.user_ids @> List(user_id) &&
+        a.id === d.account_id &&
+        d.id === domain_id &&
+        p.account_id === a.id &&
+        p.domain_id === d.id &&
+        p.path === path &&
+        p.template_id === t.id
+      }
+      .map { case (((a, d), p), t) =>
+        (p, t.css_values)
+      }
+      .take(1)
+      .run
+      .headOption
+  }
 }
 
 object TestData {
