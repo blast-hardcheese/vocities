@@ -157,6 +157,35 @@ object Queries {
       .headOption
       .map(PageEditViewModel.tupled)
   }
+
+  def pageSave(user_id: Long, domain_id: Long, path: String)(title: String, data: JsValue)(implicit s: Session): Boolean = {
+    Accounts.accounts
+      .innerJoin(Domains.domains)
+      .innerJoin(Pages.pages)
+      .on { case ((a, d), p) =>
+        a.user_ids @> List(user_id) &&
+        a.id === d.account_id &&
+        d.id === domain_id &&
+        p.account_id === a.id &&
+        p.domain_id === d.id &&
+        p.path === path
+      }
+      .map { case ((a, d), p) => p }
+      .run
+      .headOption
+      .map { page =>
+        Pages.pages
+          .filter(p =>
+            p.account_id === page.account_id &&
+            p.domain_id === page.domain_id &&
+            p.path === page.path
+          )
+          .map { p => (p.title, p.data) }
+          .update((title, data))
+          .run == 1
+      }
+      .getOrElse(false)
+  }
 }
 
 object TestData {
