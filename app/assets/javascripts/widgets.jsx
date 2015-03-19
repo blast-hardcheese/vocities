@@ -831,12 +831,12 @@ var WidgetBuilder = function(extra) {
             var widget = widgets[this.props.type];
             if (widget !== undefined) {
                 var data = _.extend({}, {
-                    updated: function(newProps) {
+                    updated: (function(newProps) {
                         this.props.updated({
                             types: this.props.type,
                             data: newProps,
                         });
-                    }
+                    }).bind(this)
                 }, this.props.data);
                 res = React.createElement(widget, data);
             }
