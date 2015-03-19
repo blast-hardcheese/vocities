@@ -50,7 +50,7 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
     new RichScriptEngine(engine).evalResource("public/javascripts/templates.js")
 
     templateId match {
-      case "html5-read-only" => Ok(views.html.templates.html5up_read_only(engine)(title, data, css_template, css_values))
+      case "html5up-read-only" => Ok(views.html.templates.html5up_read_only(engine)(title, data, css_template, css_values))
       case _ => NotFound
     }
   }
