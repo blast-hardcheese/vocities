@@ -1,12 +1,11 @@
-/// <reference path="dt/node/node.d.ts" />
 /// <reference path="dt/jquery/jquery.d.ts" />
-
-var jQuery: JQueryStatic = require('jquery');
 
 interface PageInfo {
     domain_id: number;
     path: string;
 }
+
+console.log('Executing! Also, jQuery:', jQuery);
 
 declare var PageInfo: PageInfo;
 
