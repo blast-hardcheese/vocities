@@ -1,9 +1,23 @@
 package models
 
-import play.api.libs.json.{ Json, JsValue }
+import play.api.Logger
+import play.api.libs.json.{ Json, JsValue, Reads, Writes }
+
+trait ValidatableTemplateData {
+  val log = Logger("application")
+
+  def validate[T](data: JsValue)(implicit reads: Reads[T], writes: Writes[T]): Option[T] = {
+    data.validate[T].fold(
+      { e => log.error(s"Unable to unpack template body: $e"); None },
+      Some.apply _
+    )
+  }
+
+  def unpack[T](data: T): (String, JsValue)
+}
 
 object TemplateData {
-  object Html5Up_read_only {
+  object Html5Up_read_only extends ValidatableTemplateData {
     case class Header(src: String, name: String, flavortext: Option[String])
     case class Footer(copyright: String)
     case class Sidebar(header: Header)
@@ -24,6 +38,13 @@ object TemplateData {
 
     case class PostResult(title: String, data: PageData)
     implicit val jsonFormatPostResult = Json.format[PostResult]
+
+    def unpack[T](data: T): (String, JsValue) = data match {
+      case PostResult(title, data) => (title, Json.toJson(data))
+    }
+  }
+
+  def byName(x: String) = x match {
+    case "html5up-read-only" => Html5Up_read_only
   }
 }
-

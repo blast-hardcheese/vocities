@@ -34,16 +34,17 @@ class Users(override implicit val env: RuntimeEnvironment[UserModel]) extends Ba
   }
 
   def save(domain_id: Long, path: String) = SecuredAction(parse.json) { implicit request =>
-    import models.TemplateData.Html5Up_read_only._
+    val key = "html5up-read-only"
 
     DB.withSession { implicit s =>
       val userId = request.user.userId
 
-      request.body.validate[PostResult].fold(
-        { e => log.error(s"Unable to unpack template body: $e"); None },
-        Some.apply _
-      ).map { case PostResult(title, data) =>
-        Ok(Queries.pageSave(userId, domain_id, path)(title, Json.toJson(data)).toString)
+      val parser = models.TemplateData.byName(key)
+
+      parser
+        .validate(request.body)
+        .map(parser.unpack)
+        .map { case (title, data) => Ok(Queries.pageSave(userId, domain_id, path)(title, data).toString)
       } getOrElse { BadRequest }
     }
   }
