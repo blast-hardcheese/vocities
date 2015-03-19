@@ -1,16 +1,33 @@
-initComponents = function(key, data) {
-    var components = _.map(Templates[key].sequences, function(func) {
-        var r = func(data);
-        r.setProps(data);
-        return r;
-    });
-};
+function TemplateManager(key, data) {
+    var _this = this;
 
-refreshComponents = function(components, data) {
-    _.map(components, function(c) {
-        return c.setProps(data);
-    });
-};
+    var initComponents = function(key, data) {
+        var components = null;
+        var extendedData = _.extend({}, {
+        }, data, {
+            updated: function (newProps) {
+                _this.refresh(newProps);
+            }
+        });
+        components = _.map(Templates[key].sequences, function(func) {
+            var r = func(extendedData);
+            r.setProps(extendedData);
+            return r;
+        });
+    };
+
+    var refreshComponents = function(components, data) {
+        _.map(components, function(c) {
+            return c.setProps(data);
+        });
+    };
+
+    this.components = initComponents(key, data);
+    this.refresh = function(data) {
+        console.info('refresh:', data);
+        refreshComponents(_this.components, data);
+    };
+}
 
 var Templates = {
     "html5up_read_only": (function(self) {

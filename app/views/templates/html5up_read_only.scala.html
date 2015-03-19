@@ -40,7 +40,7 @@ var DefaultTemplateValues = @Html(Json.stringify(css_values))
 
 jQuery(function($) {
 
-    initComponents(@templateId, PageData);
+    new TemplateManager(@templateId, PageData);
 
     skel.init({
 	reset: 'full',
