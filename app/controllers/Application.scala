@@ -71,12 +71,4 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
   def route(path: String) = Action { implicit request =>
     lookup(path)(render)
   }
-
-  def testData = Action { request =>
-    DB.withSession { implicit s =>
-      println(s"Seed test data")
-      models.TestData.create
-      Ok("Created")
-    }
-  }
 }

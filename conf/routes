@@ -1,5 +1,3 @@
-GET     /test-data                                                   @controllers.Application.testData
-
 GET     /account                                                     @controllers.Users.index
 GET     /account/edit/:domain_id/                                    @controllers.Users.edit(domain_id: Long, path="")
 GET     /account/edit/:domain_id/*path                               @controllers.Users.edit(domain_id: Long, path)
