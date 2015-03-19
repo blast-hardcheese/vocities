@@ -24,7 +24,7 @@ class Users(override implicit val env: RuntimeEnvironment[UserModel]) extends Ba
     }
   }
 
-  def edit(domain_id: Long, path: String) = Action { implicit request =>
+  def edit(domain_id: Long, path: String) = SecuredAction { implicit request =>
     DB.withSession { implicit s =>
       val userId = request.user.userId
       Queries.pageEdit(userId, domain_id, path)
