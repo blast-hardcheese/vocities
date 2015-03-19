@@ -105,11 +105,26 @@ var Templates = {
         });
 
         var Section = React.createClass({
+            getDefaultProps: function() {
+                return {
+                    updated: function(newProps) {
+                        console.error('Section tried to update:', newProps);
+                    }
+                }
+            },
             render: function() {
+                var data = _.extend({}, {
+                    updated: (function(newProps) {
+                        this.props.updated({
+                            tag: this.props.tag,
+                            content: newProps,
+                        });
+                    }).bind(this)
+                }, this.props.content);
                 return (
                     <section id={this.props.tag}>
                         <div className="container">
-                            {React.createElement(Widget, this.props.content)}
+                            {React.createElement(Widget, data)}
                         </div>
                     </section>
                 );
