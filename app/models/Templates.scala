@@ -6,15 +6,17 @@ import play.api.libs.json.{ Json, JsValue, Reads, Writes }
 trait ValidatableTemplateData {
   val log = Logger("application")
 
-  def validate[T](data: JsValue)(implicit reads: Reads[T], writes: Writes[T]): Option[(String, JsValue)] = {
-    data.validate[T].fold(
+  type UnpackTarget
+
+  def validate(data: JsValue)(implicit reads: Reads[UnpackTarget], writes: Writes[UnpackTarget]): Option[(String, JsValue)] = {
+    data.validate[UnpackTarget].fold(
       { e => log.error(s"Unable to unpack template body: $e"); None },
       Some.apply _
     )
     .map(unpack)
   }
 
-  def unpack[T](data: T): (String, JsValue)
+  def unpack(data: UnpackTarget): (String, JsValue)
 }
 
 object TemplateData {
@@ -40,7 +42,9 @@ object TemplateData {
     case class PostResult(title: String, data: PageData)
     implicit val jsonFormatPostResult = Json.format[PostResult]
 
-    def unpack[T](data: T): (String, JsValue) = data match {
+    type UnpackTarget = PostResult
+
+    def unpack(data: PostResult): (String, JsValue) = data match {
       case PostResult(title, data) => (title, Json.toJson(data))
     }
   }
