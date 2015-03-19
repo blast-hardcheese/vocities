@@ -6,11 +6,12 @@ import play.api.libs.json.{ Json, JsValue, Reads, Writes }
 trait ValidatableTemplateData {
   val log = Logger("application")
 
-  def validate[T](data: JsValue)(implicit reads: Reads[T], writes: Writes[T]): Option[T] = {
+  def validate[T](data: JsValue)(implicit reads: Reads[T], writes: Writes[T]): Option[(String, JsValue)] = {
     data.validate[T].fold(
       { e => log.error(s"Unable to unpack template body: $e"); None },
       Some.apply _
     )
+    .map(unpack)
   }
 
   def unpack[T](data: T): (String, JsValue)

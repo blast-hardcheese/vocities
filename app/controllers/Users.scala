@@ -43,7 +43,6 @@ class Users(override implicit val env: RuntimeEnvironment[UserModel]) extends Ba
 
       parser
         .validate(request.body)
-        .map(parser.unpack)
         .map { case (title, data) => Ok(Queries.pageSave(userId, domain_id, path)(title, data).toString)
       } getOrElse { BadRequest }
     }
