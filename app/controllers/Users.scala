@@ -32,4 +32,19 @@ class Users(override implicit val env: RuntimeEnvironment[UserModel]) extends Ba
         .getOrElse(NotFound)
     }
   }
+
+  def save(domain_id: Long, path: String) = SecuredAction(parse.json) { implicit request =>
+    import models.TemplateData.Html5Up_read_only._
+
+    DB.withSession { implicit s =>
+      val userId = request.user.userId
+
+      request.body.validate[PostResult].fold(
+        { e => log.error(s"Unable to unpack template body: $e"); None },
+        Some.apply _
+      ).map { case PostResult(title, data) =>
+        Ok(Queries.pageSave(userId, domain_id, path)(title, Json.toJson(data)).toString)
+      } getOrElse { BadRequest }
+    }
+  }
 }
