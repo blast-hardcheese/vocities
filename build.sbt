@@ -8,7 +8,10 @@ scalaVersion := "2.11.1"
 
 resolvers += Resolver.sonatypeRepo("releases")
 
+resolvers += "google-sedis-fix" at "http://pk11-scratch.googlecode.com/svn/trunk"
+
 libraryDependencies ++= Seq(
+  "com.typesafe.play.plugins" %% "play-plugins-redis" % "2.3.1",
   "org.webjars" % "font-awesome" % "4.3.0-1",
   "org.webjars" % "bootstrap" % "3.3.2-2",
   "com.github.tminglei" % "slick-pg_2.11" % "0.8.4",
