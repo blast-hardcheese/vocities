@@ -3,6 +3,7 @@
 # except for .gitignore
 !.gitignore
 !.flowconfig
+!.buildpacks
 
 # Ignore Play! working directory #
 ######################
