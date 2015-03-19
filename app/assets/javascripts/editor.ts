@@ -1,5 +1,7 @@
 /// <reference path="dt/jquery/jquery.d.ts"/>
 
+var jQuery = require('jquery');
+
 interface PageInfo {
     domain_id: number;
     path: string;
