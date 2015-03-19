@@ -798,8 +798,7 @@ var Paragraph = React.createClass({
         } else {
             r = (
                 <div>
-                    <div dangerouslySetInnerHTML={{__html: this.props.content}}>
-                    </div>
+                    <div dangerouslySetInnerHTML={{__html: this.props.content}} />
                     <button onClick={this.toggleEditing}>Test toggle</button>
                 </div>
             );
