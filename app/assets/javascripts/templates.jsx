@@ -132,9 +132,32 @@ var Templates = {
         });
 
         var Main = React.createClass({
+            getDefaultProps: function() {
+                return {
+                    updated: function(newProps) {
+                        console.error('Main tried to update:', newProps);
+                    }
+                }
+            },
+            sectionUpdated: function(data, idx) {
+                var newSections = [].concat(this.props.sections);
+                if (data !== null) {
+                    newSections.splice(idx, 1);
+                } else {
+                    newSections[idx] = data;
+                }
+
+                this.props.updated(newSections);
+            },
             render: function() {
-                var sections = _.map(this.props.sections, function(s) {
-                    return <Section key={s.tag} tag={s.tag} content={s.content} />
+                var _this = this;
+
+                var sections = _.map(this.props.sections, function(s, idx) {
+                    var updated = function(newProps) {
+                        _this.sectionUpdated(newProps, idx);
+                    };
+
+                    return <Section key={s.tag} tag={s.tag} content={s.content} updated={updated} />
                 });
                 return (
                     <div id="main">
