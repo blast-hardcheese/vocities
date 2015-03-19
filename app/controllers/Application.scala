@@ -32,7 +32,7 @@ object Application extends BaseController {
     val r = new ScriptEngineManager(null).getEngineByName("nashorn")
     log.debug(s"[Core]: $r")
     r.eval("var global = this;")
-    r.eval("var noop = function() {}; var console = { warn: noop, info: noop, log: noop };")
+    r.eval("var log = function(x) { java.lang.System.out.println(x); }; var console = { warn: log, info: log, log: log };")
     r.evalResource("public/lib/underscorejs/underscore.js")
     r.evalResource("public/lib/react/react-with-addons.js")
     r.evalResource("public/javascripts/widgets.js")
