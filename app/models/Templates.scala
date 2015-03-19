@@ -10,7 +10,7 @@ object TemplateData {
     case class Widget(`type`: String, data: JsValue)
     case class Section(tag: String, title: String, content: Widget)
     case class Social(twitter: Option[String], facebook: Option[String], instagram: Option[String], github: Option[String], email: Option[String])
-    case class PageData(sections: List[Section], social: Social, sidebar: Sidebar)
+    case class PageData(sections: List[Section], social: Social, sidebar: Sidebar, footer: Footer)
     case class Css(values: JsValue)
 
     implicit val jsonFormatHeader = Json.format[Header]
