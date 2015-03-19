@@ -11,6 +11,7 @@ resolvers += Resolver.sonatypeRepo("releases")
 resolvers += "google-sedis-fix" at "http://pk11-scratch.googlecode.com/svn/trunk"
 
 libraryDependencies ++= Seq(
+  "org.webjars" % "tinymce-jquery" % "4.1.7-1",
   "com.typesafe.play.plugins" %% "play-plugins-redis" % "2.3.1",
   "org.webjars" % "font-awesome" % "4.3.0-1",
   "org.webjars" % "bootstrap" % "3.3.2-2",
