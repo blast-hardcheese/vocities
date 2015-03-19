@@ -1,6 +1,7 @@
-/// <reference path="dt/jquery/jquery.d.ts"/>
+/// <reference path="dt/node/node.d.ts" />
+/// <reference path="dt/jquery/jquery.d.ts" />
 
-var jQuery = require('jquery');
+var jQuery: JQueryStatic = require('jquery');
 
 interface PageInfo {
     domain_id: number;
