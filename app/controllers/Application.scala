@@ -72,17 +72,6 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
     lookup(path)(render)
   }
 
-  def edit(path: String) = Action { implicit request =>
-    lookup(path) { case (title, templateId, data, css_template, css_values) => {
-        Ok //(views.html.editor(title, templateId, data, Html("")))
-      }
-    }
-  }
-
-  def save(path: String) = Action { request =>
-    Redirect(routes.Application.edit(path))
-  }
-
   def testData = Action { request =>
     DB.withSession { implicit s =>
       println(s"Seed test data")

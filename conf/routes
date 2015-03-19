@@ -1,6 +1,4 @@
 GET     /test-data                                                   @controllers.Application.testData
-GET     /edit                                                        @controllers.Application.edit(path: String ?= "")
-POST    /edit                                                        @controllers.Application.save(path: String ?= "")
 
 GET     /account                                                     @controllers.Users.index
 GET     /account/edit/:domain_id/                                    @controllers.Users.edit(domain_id: Long, path="")
