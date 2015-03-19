@@ -26,6 +26,37 @@ var ReadyComponent = function(timeout): any {
     };
 }
 
+
+var TinyMCEComponent = (function() {
+    var active = false;
+    return {
+        buildTinyMCE: function(selector) {
+            if (active) { console.error('Already have one TinyMCE instance'); return false; }
+
+            active = true;
+
+            tinymce.init({
+                selector: selector,
+                plugins: [
+                "advlist autolink lists link image charmap print preview anchor",
+                "searchreplace visualblocks code fullscreen",
+                "insertdatetime media table contextmenu paste"
+                ],
+                toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+            });
+
+            return true;
+        },
+        destroyTinyMCE: function() {
+            if (!active) { console.error('No TinyMCE instance available'); return false; }
+            tinymce.remove(0);
+            active = false;
+
+            return true;
+        }
+    };
+})();
+
 // Widgets
 
 var RootContainer = React.createClass({
@@ -707,15 +738,74 @@ var YouTube = React.createClass({
     },
 });
 
+var InstanceCounter = function() {
+    this.counter = 0;
+    this.next = function() {
+        var r = this.counter;
+        this.counter += 1;
+        return r;
+    }
+};
+
+var ParagraphCounter = new InstanceCounter();
+
 var Paragraph = React.createClass({
+    mixins: [TinyMCEComponent],
+
+    getDefaultProps: function() {
+        return {
+            updated: function(newProps) {
+                console.error('Paragraph tried to update:', newProps);
+            }
+        }
+    },
+    getInitialState: function() {
+        return {
+            widgetClass: "paragraph-" + ParagraphCounter.next(),
+            editing: false,
+        };
+    },
+    componentWillUpdate: function (nextProps, nextState) {
+        if (this.state.editing && !nextState.editing) {
+            this.destroyTinyMCE();
+            this.props.updated({
+                content: $(this.refs.editText.getDOMNode()).val(),
+            });
+        }
+    },
+    componentDidUpdate: function (prevProps, prevState) {
+        if (this.state.editing && !prevState.editing) {
+            if(!this.buildTinyMCE('.' + this.state.widgetClass + ' .tinymce')) {
+                this.setState({editing: false});
+            }
+        }
+    },
+    toggleEditing: function() {
+        this.setState({
+            editing: !this.state.editing,
+        });
+    },
     render: function() {
-        return (
-            <div>{
-                this.props.content.map(function(x, i) {
-                    return <p key={i}>{x}</p>;
-                })
-            }</div>
-        );
+        var r = null;
+
+        if (this.state.editing) {
+            r = (
+                <div className={this.state.widgetClass}>
+                    <textarea className="tinymce" ref="editText" defaultValue={this.props.content.join('\n\n')}></textarea>
+                    <button onClick={this.toggleEditing}>Test toggle</button>
+                </div>
+            );
+        } else {
+            r = (
+                <div>
+                    <div dangerouslySetInnerHTML={{__html: this.props.content}}>
+                    </div>
+                    <button onClick={this.toggleEditing}>Test toggle</button>
+                </div>
+            );
+        }
+
+        return r;
     }
 });
 
