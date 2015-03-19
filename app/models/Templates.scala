@@ -10,8 +10,8 @@ object TemplateData {
     case class Widget(`type`: String, data: JsValue)
     case class Section(tag: String, title: String, content: Widget)
     case class Social(twitter: Option[String], facebook: Option[String], instagram: Option[String], github: Option[String], email: Option[String])
-    case class PageData(sections: List[Section], social: Social, sidebar: Sidebar, footer: Footer)
     case class Css(values: JsValue)
+    case class PageData(sections: List[Section], social: Social, sidebar: Sidebar, footer: Footer, css: Css)
 
     implicit val jsonFormatHeader = Json.format[Header]
     implicit val jsonFormatFooter = Json.format[Footer]
@@ -19,8 +19,8 @@ object TemplateData {
     implicit val jsonFormatWidget = Json.format[Widget]
     implicit val jsonFormatSection = Json.format[Section]
     implicit val jsonFormatSocial = Json.format[Social]
-    implicit val jsonFormatPageData = Json.format[PageData]
     implicit val jsonFormatCss = Json.format[Css]
+    implicit val jsonFormatPageData = Json.format[PageData]
 
     case class PostResult(title: String, data: PageData)
     implicit val jsonFormatPostResult = Json.format[PostResult]
