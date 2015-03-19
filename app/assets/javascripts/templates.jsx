@@ -13,19 +13,6 @@ refreshComponents = function(components, data) {
 };
 
 var Templates = {
-    "0": function() {
-        return React.createClass({
-            render: function() {
-                return (
-                    <RootContainer bgColor={this.props.bgColor}>
-                        <span>Hello there, {this.props.hello}!</span>
-                        <YouTube videoId={this.props.youtube} />
-                        <SoundCloudPlayer url={this.props['sc-url']} />
-                    </RootContainer>
-                );
-            },
-        });
-    },
     "html5up_read_only": (function(self) {
         var SidebarProfile = React.createClass({
             propTypes: {
