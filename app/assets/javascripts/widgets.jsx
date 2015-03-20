@@ -714,6 +714,7 @@ var SlideOutDiv = React.createClass({
 var YouTube = React.createClass({
     getInitialState: function() {
         return {
+            editing: false,
         };
     },
     getDefaultProps: function() {
@@ -724,17 +725,68 @@ var YouTube = React.createClass({
             allowFullscreen: "allowfullscreen",
         };
     },
+    startEdit: function() {
+        this.setState({
+            editing: true,
+        });
+    },
+    save: function() {
+        var url = $(this.refs.editBox.getDOMNode()).val();
+
+        var strips = [
+            [/^https?:\/\//, ''],
+            [/^(www\.)?/, ''],
+            [/^(youtube\.[^\/]+|youtu\.be)\//, ''],
+            [/^watch\/*\?(?:.*&)?v=([^&]+)(&.*)?$/, '$1'],
+            [/^embed\//, ''],
+            [/\?.*$/, ''],
+        ];
+
+        var videoId = _.reduce(strips, function(memo, pair) {
+            var re = pair[0];
+            var repl = pair[1];
+            var r = memo.replace(re, repl);
+            console.info(memo, r);
+            return r;
+        }, url);
+
+        this.props.updated({
+            videoId: videoId,
+        });
+
+        this.setState({
+            editing: false,
+        });
+    },
     render: function() {
         var src = "//www.youtube.com/embed/" + this.props.videoId + "?html5=1";
 
-        return <iframe
-            className="w-youtube"
-            width={this.props.width}
-            height={this.props.height}
-            src={src}
-            frameBorder={this.props.frameborder}
-            allowFullScreen={this.props.allowFullscreen}
-        />
+        var editButton = null;
+
+        if (this.state.editing) {
+            editButton = (
+                <div>
+                    <input ref="editBox" defaultValue={"https://youtu.be/" + this.props.videoId} />
+                    <button onClick={this.save}>Save</button>
+                </div>
+            );
+        } else {
+            editButton = <a onClick={this.startEdit}>Edit</a>;
+        }
+
+        return (
+            <div>
+                <iframe
+                    className="w-youtube"
+                    width={this.props.width}
+                    height={this.props.height}
+                    src={src}
+                    frameBorder={this.props.frameborder}
+                    allowFullScreen={this.props.allowFullscreen}
+                />
+                {editButton}
+            </div>
+        );
     },
 });
 
