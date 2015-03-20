@@ -165,9 +165,11 @@ var Templates = {
                     newSections.splice(idx, 1);
                 }
 
-                this.props.updated(_.extend({}, this.props, {
+                var newProps = _.extend({}, this.props, {
                     sections: newSections,
-                }));
+                });
+
+                this.props.updated(newProps);
             },
             render: function() {
                 var _this = this;
