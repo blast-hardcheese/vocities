@@ -832,7 +832,6 @@ var WidgetBuilder = function(extra) {
             if (widget !== undefined) {
                 var data = _.extend({}, {
                     updated: function(newProps) {
-                        console.info('Widget:', newProps);
                         _this.props.updated({
                             type: _this.props.type,
                             data: newProps,
