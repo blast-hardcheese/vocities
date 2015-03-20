@@ -792,7 +792,7 @@ var Paragraph = React.createClass({
             r = (
                 <div className={this.state.widgetClass}>
                     <textarea className="tinymce" ref="editText" defaultValue={this.props.content}></textarea>
-                    <button onClick={this.toggleEditing}>Test toggle</button>
+                    <button onClick={this.toggleEditing}>Save</button>
                 </div>
             );
         } else {
