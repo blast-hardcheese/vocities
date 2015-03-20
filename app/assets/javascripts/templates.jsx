@@ -2,16 +2,9 @@ function TemplateManager(key, data) {
     var _this = this;
 
     var initComponents = function(key, data) {
-        var components = null;
-        var extendedData = _.extend({}, {
-        }, data, {
-            updated: function (newProps) {
-                _this.refresh(newProps);
-            }
-        });
-        components = _.map(Templates[key].sequences, function(func) {
-            var r = func(extendedData);
-            r.setProps(extendedData);
+        return _.map(Templates[key].sequences, function(func) {
+            var r = func(data);
+            r.setProps(data);
             return r;
         });
     };
@@ -155,6 +148,14 @@ var Templates = {
                         console.error('Main tried to update:', newProps);
                     }
                 }
+            },
+            componentDidMount: function() {
+                var _this = this;
+                this.setProps(_.extend({}, this.props, {
+                    updated: function(newProps) {
+                        _this.setProps(newProps);
+                    }
+                }));
             },
             sectionUpdated: function(data, idx) {
                 var newSections = [].concat(this.props.sections);
