@@ -791,7 +791,7 @@ var Paragraph = React.createClass({
         if (this.state.editing) {
             r = (
                 <div className={this.state.widgetClass}>
-                    <textarea className="tinymce" ref="editText" defaultValue={this.props.content.join('\n\n')}></textarea>
+                    <textarea className="tinymce" ref="editText" defaultValue={this.props.content}></textarea>
                     <button onClick={this.toggleEditing}>Test toggle</button>
                 </div>
             );

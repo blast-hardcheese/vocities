@@ -164,7 +164,9 @@ var Templates = {
                     newSections[idx] = data;
                 }
 
-                this.props.updated(newSections);
+                this.props.updated(_.extend({}, this.props, {
+                    sections: newSections,
+                }));
             },
             render: function() {
                 var _this = this;
