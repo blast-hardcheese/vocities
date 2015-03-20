@@ -160,9 +160,9 @@ var Templates = {
             sectionUpdated: function(data, idx) {
                 var newSections = [].concat(this.props.sections);
                 if (data !== null) {
-                    newSections.splice(idx, 1);
-                } else {
                     newSections[idx] = data;
+                } else {
+                    newSections.splice(idx, 1);
                 }
 
                 this.props.updated(_.extend({}, this.props, {
