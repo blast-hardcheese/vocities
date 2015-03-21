@@ -798,8 +798,23 @@ var YouTube = React.createClass({
                     height: '100%',
                     backgroundColor: 'rgba(0,0,0,0.1)',
                 }}>
-                    <input ref="editBox" defaultValue={"https://youtu.be/" + this.props.videoId} />
-                    <button onClick={this.save}>Save</button>
+                    <div style={{
+                        position: 'relative',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                    }}>
+                        <input ref="editBox" style={{
+                            display: 'block',
+                            width: '80%',
+                            margin: '10px auto',
+                        }} defaultValue={"https://youtu.be/" + this.props.videoId} />
+                        <button ref="save" style={{
+                            display: 'block',
+                            margin: '10px auto',
+                            padding: '10px 20px',
+                            borderRadius: '10px',
+                        }} onClick={this.save}>Save</button>
+                    </div>
                 </div>
             );
         } else {
@@ -810,6 +825,10 @@ var YouTube = React.createClass({
             <div ref="padding" style={{position: 'relative'}}>
                 <div ref="wrapper" className="w-youtube">
                     <iframe
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                        }}
                         src={src}
                         frameBorder={this.props.frameborder}
                         allowFullScreen={this.props.allowFullscreen}
