@@ -231,18 +231,15 @@ var Templates = {
                 var target = $('style#dynamic')
 
                 var setDynamicTemplate = function(template, userValues) {
-                    if (userValues !== undefined) {
-                        var values = _.extend({}, dynamicCssValues, userValues);
-                        var overrides = vm.css.template === undefined ? "" : (_.template(vm.css.template)(values));
-                        target.text(dynamicCss(values) + overrides);
-                    }
+                    var values = _.extend({}, dynamicCssValues, userValues);
+                    var overrides = template === undefined ? "" : (_.template(template)(values));
+                    target.text(dynamicCss(values) + overrides);
                 };
 
                 return {
                     setProps: function(newProps) {
-                        if(newProps.css !== undefined) {
-                            setDynamicTemplate(newProps.css.template, newProps.css.values);
-                        }
+                        var _props = _.extend({}, {css:{}}, newProps)
+                        setDynamicTemplate(_props.css.template, _props.css.values);
                     },
                 };
             },
