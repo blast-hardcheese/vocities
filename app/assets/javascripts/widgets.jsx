@@ -765,8 +765,14 @@ var YouTube = React.createClass({
     componentDidUpdate: function (prevProps, prevState) {
         var _this = this;
         if (this.state.editing && !prevState.editing) {
-            $(this.refs.wrapper.getDOMNode()).resizable({
-                maxWidth: 780,
+            var el = $(this.refs.wrapper.getDOMNode());
+
+            var containerWidth = el.parentsUntil('.container').width();
+
+            el.resizable({
+                minWidth: containerWidth,
+                maxWidth: containerWidth,
+                handles: 's, se',
                 start: function(event, ui) {
                     $(_this.refs.padding.getDOMNode()).css('height', ui.size.height);
                 },
