@@ -758,7 +758,7 @@ var YouTube = React.createClass({
         if (this.state.editing && !nextState.editing) {
             $(this.refs.wrapper.getDOMNode()).resizable('destroy');
             this.props.updated({
-                videoId: videoId,
+                videoId: nextProps.videoId,
             });
         }
     },
