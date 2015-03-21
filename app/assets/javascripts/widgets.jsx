@@ -776,7 +776,14 @@ var YouTube = React.createClass({
 
         if (this.state.editing) {
             editButton = (
-                <div>
+                <div style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0,0,0,0.1)',
+                }}>
                     <input ref="editBox" defaultValue={"https://youtu.be/" + this.props.videoId} />
                     <button onClick={this.save}>Save</button>
                 </div>
@@ -786,7 +793,7 @@ var YouTube = React.createClass({
         }
 
         return (
-            <div ref="wrapper" className="w-youtube">
+            <div ref="wrapper" className="w-youtube" style={{position: 'relative'}}>
                 <iframe
                     src={src}
                     frameBorder={this.props.frameborder}
