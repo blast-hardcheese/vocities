@@ -750,13 +750,24 @@ var YouTube = React.createClass({
             return r;
         }, url);
 
-        this.props.updated({
-            videoId: videoId,
-        });
-
         this.setState({
             editing: false,
         });
+    },
+    componentWillUpdate: function (nextProps, nextState) {
+        if (this.state.editing && !nextState.editing) {
+            $(this.refs.wrapper.getDOMNode()).resizable('destroy');
+            this.props.updated({
+                videoId: videoId,
+            });
+        }
+    },
+    componentDidUpdate: function (prevProps, prevState) {
+        var _this = this;
+        if (this.state.editing && !prevState.editing) {
+            $(this.refs.wrapper.getDOMNode()).resizable({
+            });
+        }
     },
     render: function() {
         var src = "//www.youtube.com/embed/" + this.props.videoId + "?html5=1";
@@ -775,11 +786,8 @@ var YouTube = React.createClass({
         }
 
         return (
-            <div>
+            <div ref="wrapper" className="w-youtube">
                 <iframe
-                    className="w-youtube"
-                    width={this.props.width}
-                    height={this.props.height}
                     src={src}
                     frameBorder={this.props.frameborder}
                     allowFullScreen={this.props.allowFullscreen}
