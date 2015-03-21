@@ -766,6 +766,20 @@ var YouTube = React.createClass({
         var _this = this;
         if (this.state.editing && !prevState.editing) {
             $(this.refs.wrapper.getDOMNode()).resizable({
+                maxWidth: 780,
+                start: function(event, ui) {
+                    $(_this.refs.padding.getDOMNode()).css('height', ui.size.height);
+                },
+                resize: function(event, ui) {
+                    var el = $(_this.refs.padding.getDOMNode());
+                    if (el.height() < ui.size.height) {
+                        el.css('height', ui.size.height);
+                    }
+                },
+                stop: function(event, ui) {
+                    var el = $(_this.refs.padding.getDOMNode());
+                    el.css('height', '');
+                }
             });
         }
     },
@@ -793,13 +807,15 @@ var YouTube = React.createClass({
         }
 
         return (
-            <div ref="wrapper" className="w-youtube" style={{position: 'relative'}}>
-                <iframe
-                    src={src}
-                    frameBorder={this.props.frameborder}
-                    allowFullScreen={this.props.allowFullscreen}
-                />
-                {editButton}
+            <div ref="padding" style={{position: 'relative'}}>
+                <div ref="wrapper" className="w-youtube">
+                    <iframe
+                        src={src}
+                        frameBorder={this.props.frameborder}
+                        allowFullScreen={this.props.allowFullscreen}
+                    />
+                    {editButton}
+                </div>
             </div>
         );
     },
