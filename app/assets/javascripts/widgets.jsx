@@ -723,6 +723,7 @@ var YouTube = React.createClass({
             height: undefined,
             frameborder: 0,
             allowFullscreen: "allowfullscreen",
+            ratio: '4_3',
         };
     },
     startEdit: function() {
@@ -828,8 +829,8 @@ var YouTube = React.createClass({
         }
 
         return (
-            <div ref="padding" style={{position: 'relative'}}>
-                <div ref="wrapper" className="w-youtube">
+            <div className="widget w-youtube" ref="padding" style={{position: 'relative'}} data-ratio={this.props.ratio}>
+                <div ref="wrapper" className="wrapper">
                     <iframe
                         style={{
                             width: '100%',

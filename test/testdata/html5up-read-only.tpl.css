@@ -41,4 +41,4 @@ body, input, select, textarea {
   color: <%= normal_text %>;
 }
 
-.w-youtube { width: <%= youtube_width || "100%" %>; height: <%= youtube_height || "480px" %>; }
+.w-youtube .wrapper { width: <%= youtube_width || "100%" %>; height: <%= youtube_height || "480px" %>; }
