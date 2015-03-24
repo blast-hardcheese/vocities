@@ -723,7 +723,7 @@ var YouTube = React.createClass({
             height: undefined,
             frameborder: 0,
             allowFullscreen: "allowfullscreen",
-            ratio: '4_3',
+            size: 'normal',
         };
     },
     startEdit: function() {
@@ -829,7 +829,7 @@ var YouTube = React.createClass({
         }
 
         return (
-            <div className="widget w-youtube" ref="padding" style={{position: 'relative'}} data-ratio={this.props.ratio}>
+            <div className="widget w-youtube" ref="padding" style={{position: 'relative'}} data-size={this.props.size}>
                 <div ref="wrapper" className="wrapper">
                     <iframe
                         style={{
@@ -840,8 +840,8 @@ var YouTube = React.createClass({
                         frameBorder={this.props.frameborder}
                         allowFullScreen={this.props.allowFullscreen}
                     />
-                    {editButton}
                 </div>
+                {editButton}
             </div>
         );
     },
