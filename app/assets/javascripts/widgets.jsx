@@ -747,18 +747,17 @@ var YouTube = React.createClass({
             var re = pair[0];
             var repl = pair[1];
             var r = memo.replace(re, repl);
-            console.info(memo, r);
             return r;
         }, url);
 
-        this.setState({
-            editing: false,
-        });
-    },
-    componentWillUpdate: function (nextProps, nextState) {
-        if (this.state.editing && !nextState.editing) {
+        // Crude validation
+        if (videoId.length === 11) {
+            this.setState({
+                editing: false,
+            });
+
             this.props.updated({
-                videoId: nextProps.videoId,
+                videoId: videoId,
             });
         }
     },
