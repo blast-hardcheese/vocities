@@ -757,7 +757,6 @@ var YouTube = React.createClass({
     },
     componentWillUpdate: function (nextProps, nextState) {
         if (this.state.editing && !nextState.editing) {
-            $(this.refs.wrapper.getDOMNode()).resizable('destroy');
             this.props.updated({
                 videoId: nextProps.videoId,
             });
@@ -769,25 +768,6 @@ var YouTube = React.createClass({
             var el = $(this.refs.wrapper.getDOMNode());
 
             var containerWidth = el.parentsUntil('.container').width();
-
-            el.resizable({
-                minWidth: containerWidth,
-                maxWidth: containerWidth,
-                handles: 's, se',
-                start: function(event, ui) {
-                    $(_this.refs.padding.getDOMNode()).css('height', ui.size.height);
-                },
-                resize: function(event, ui) {
-                    var el = $(_this.refs.padding.getDOMNode());
-                    if (el.height() < ui.size.height) {
-                        el.css('height', ui.size.height);
-                    }
-                },
-                stop: function(event, ui) {
-                    var el = $(_this.refs.padding.getDOMNode());
-                    el.css('height', '');
-                }
-            });
         }
     },
     render: function() {
