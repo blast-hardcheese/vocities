@@ -111,7 +111,7 @@ jQuery(function($) {
 @main(title)(header) {
         <div id="wrapper">
             <!-- Header -->
-                <div id="header-wrapper">
+                <div id="header-wrapper" class="skel-layers-fixed">
 		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#header-wrapper'], $pageData));").toString)
                 </div>
 

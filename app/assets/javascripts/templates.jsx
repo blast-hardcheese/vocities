@@ -86,7 +86,7 @@ var Templates = {
         var Sidebar = React.createClass({
             render: function() {
                 return (
-                    <section id="header" className="skel-layers-fixed">
+                    <section id="header">
                         {React.createElement(SidebarProfile, this.props.sidebar.header)}
                         <SidebarNav sections={this.props.sections} />
                         <SidebarFooter social={this.props.social}/>
