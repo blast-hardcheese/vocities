@@ -265,12 +265,20 @@ var Templates = {
         });
 
         var Footer = React.createClass({
+            copyrightUpdated: function (newProps) {
+                this.props.updated(_.extend({}, this.props, {
+                    footer: _.extend({}, this.props.footer, {
+                        copyright: newProps.content,
+                    }),
+                }));
+            },
             render: function() {
                 var copyright = this.props.footer.copyright;
+
                 return (
                     <div className="container">
                         <ul className="copyright">
-                            <li>&copy; {copyright}. All rights reserved.</li>
+                            <li>&copy; <TextField content={copyright} updated={this.copyrightUpdated} />. All rights reserved.</li>
                             <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
                         </ul>
                     </div>
