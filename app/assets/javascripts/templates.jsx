@@ -188,6 +188,7 @@ var Templates = {
                     updated: (function(newProps) {
                         this.props.updated({
                             tag: this.props.tag,
+                            title: this.props.title,
                             content: newProps,
                         });
                     }).bind(this)
@@ -240,7 +241,7 @@ var Templates = {
                         _this.sectionUpdated(newProps, idx);
                     };
 
-                    return <Section key={s.tag} tag={s.tag} content={s.content} updated={updated} />
+                    return <Section title={s.title} key={s.tag} tag={s.tag} content={s.content} updated={updated} />
                 });
                 return (
                     <div id="main">
