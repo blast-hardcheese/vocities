@@ -1,6 +1,13 @@
 function TemplateManager(key, data) {
     var _this = this;
 
+    data = _.extend({}, data, {
+        updated: function (newData) {
+            console.info('data', newData);
+            _this.refresh(newData);
+        }
+    });
+
     var initComponents = function(key, data) {
         return _.map(Templates[key].sequences, function(func) {
             var r = func(data);
