@@ -156,16 +156,29 @@ var Templates = {
             },
         });
 
-
         var HeaderBlock = React.createClass({
+            subtitleUpdated: function (data) {
+                this.props.updated({
+                    title: this.props.title,
+                    subtitle: data.content,
+                    text: this.props.text,
+                });
+            },
+            textUpdated: function (data) {
+                this.props.updated({
+                    title: this.props.title,
+                    subtitle: this.props.subtitle,
+                    text: data.content,
+                });
+            },
             render: function() {
                 return (
                     <div>
                         <header className="major">
                             <h2>{this.props.title}</h2>
-                            <p dangerouslySetInnerHTML={{__html: this.props.subtitle}}></p>
+                            <Paragraph content={this.props.subtitle} updated={this.subtitleUpdated} />
                         </header>
-                        <p>{this.props.text}</p>
+                        <Paragraph content={this.props.text} updated={this.textUpdated} />
                     </div>
                 );
             }

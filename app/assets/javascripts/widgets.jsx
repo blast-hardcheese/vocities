@@ -840,6 +840,11 @@ var ParagraphCounter = new InstanceCounter();
 var Paragraph = React.createClass({
     mixins: [TinyMCEComponent],
 
+    propTypes: {
+        content: React.PropTypes.string.isRequired,
+        updated: React.PropTypes.func.isRequired,
+    },
+
     getDefaultProps: function() {
         return {
             updated: function(newProps) {
