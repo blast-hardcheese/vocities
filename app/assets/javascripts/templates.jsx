@@ -157,6 +157,13 @@ var Templates = {
         });
 
         var HeaderBlock = React.createClass({
+            titleUpdated: function (data) {
+                this.props.updated({
+                    title: data.content,
+                    subtitle: this.props.subtitle,
+                    text: this.props.text,
+                });
+            },
             subtitleUpdated: function (data) {
                 this.props.updated({
                     title: this.props.title,
@@ -175,7 +182,7 @@ var Templates = {
                 return (
                     <div>
                         <header className="major">
-                            <h2>{this.props.title}</h2>
+                            <TextField content={this.props.title} updated={this.titleUpdated} containerTag='h2' />
                             <Paragraph content={this.props.subtitle} updated={this.subtitleUpdated} />
                         </header>
                         <Paragraph content={this.props.text} updated={this.textUpdated} />
