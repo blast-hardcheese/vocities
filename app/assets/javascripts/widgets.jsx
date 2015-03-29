@@ -901,6 +901,59 @@ var Paragraph = React.createClass({
     }
 });
 
+var TextField = React.createClass({
+    propTypes: {
+        content: React.PropTypes.string.isRequired,
+        updated: React.PropTypes.func.isRequired,
+    },
+
+    getDefaultProps: function() {
+        return {
+            content: 'Unknown',
+            updated: function(newProps) {
+                console.error('TextField tried to update:', newProps);
+                throw 'Render call';
+            },
+        };
+    },
+
+    getInitialState: function () {
+        return {
+            editing: false,
+        };
+    },
+
+    componentWillUpdate: function (nextProps, nextState) {
+        if (this.state.editing && !nextState.editing) {
+            this.props.updated({
+                content: $(this.refs.editText.getDOMNode()).val(),
+            });
+        }
+    },
+    toggleEditing: function() {
+        this.setState({
+            editing: !this.state.editing,
+        });
+    },
+    keyDown: function (e) {
+        if (e.key === 'Enter') {
+            this.toggleEditing();
+        }
+    },
+
+    render: function() {
+        var r = null;
+
+        if (this.state.editing) {
+            r = <input ref="editText" defaultValue={this.props.content} onKeyDown={this.keyDown} />;
+        } else {
+            r = <span onClick={this.toggleEditing}>{this.props.content}</span>;
+        }
+
+        return r;
+    },
+});
+
 var WidgetBuilder = function(extra) {
     var builtins = {
         'soundcloud': SoundCloudPlayer,
