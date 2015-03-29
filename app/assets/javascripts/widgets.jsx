@@ -1,5 +1,21 @@
 /* @flow weak */
 
+
+var deepExtend = function (key, data, newData) {
+    var splitKey = key.split('.');
+    if (key.length === 0) {
+        return _.extend({}, data, newData);
+    } else {
+        var subkey = splitKey[0];
+        var restkey = _.drop(splitKey, 1).join('.');
+
+        var extended = {};
+        extended[subkey] = deepExtend(restkey, (data[subkey] || {}), newData);
+
+        return _.extend({}, data, extended);
+    }
+};
+
 var classSet = React.addons.classSet;
 
 // Components
