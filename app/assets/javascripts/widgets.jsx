@@ -843,13 +843,15 @@ var Paragraph = React.createClass({
     propTypes: {
         content: React.PropTypes.string.isRequired,
         updated: React.PropTypes.func.isRequired,
+        containerTag: React.PropTypes.string,
     },
 
     getDefaultProps: function() {
         return {
             updated: function(newProps) {
                 console.error('Paragraph tried to update:', newProps);
-            }
+            },
+            containerTag: 'div',
         }
     },
     getInitialState: function() {
@@ -889,11 +891,10 @@ var Paragraph = React.createClass({
                 </div>
             );
         } else {
-            r = (
-                <div onClick={this.toggleEditing}>
-                    <div dangerouslySetInnerHTML={{__html: this.props.content}} />
-                </div>
-            );
+            r = React.createElement(this.props.containerTag, {
+                onClick: this.toggleEditing,
+                dangerouslySetInnerHTML: {__html: this.props.content},
+            });
         }
 
         return r;
