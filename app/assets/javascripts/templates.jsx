@@ -44,6 +44,60 @@ var Templates = {
         });
 
         var SidebarNav = React.createClass({
+            initScroller: function() {
+                var $nav = $('#nav'),
+                    $nav_a = $nav.find('a');
+
+                var ids = [];
+
+                // Set up nav items.
+                $nav_a
+                    .scrolly()
+                    .on('click', function(event) {
+
+                        var $this = $(this),
+                            href = $this.attr('href');
+
+                            // Not an internal link? Bail.
+                            if (href.charAt(0) != '#')
+                                return;
+
+                            // Prevent default behavior.
+                            event.preventDefault();
+
+                            // Remove active class from all links and mark them as locked (so scrollzer leaves them alone).
+                            $nav_a
+                                .removeClass('active')
+                                .addClass('scrollzer-locked');
+
+                            // Set active class on this link.
+                            $this.addClass('active');
+
+                    })
+                    .each(function() {
+                        var $this = $(this),
+                            href = $this.attr('href'),
+                            id;
+
+                            // Not an internal link? Bail.
+                            if (href.charAt(0) != '#')
+                                return;
+
+                            // Add to scrollzer ID list.
+                            id = href.substring(1);
+                            $this.attr('id', id + '-link');
+                            ids.push(id);
+                    });
+
+                // Initialize scrollzer.
+                $.scrollzer(ids, { pad: 300, lastHack: true });
+            },
+            componentDidMount: function() {
+                this.initScroller();
+            },
+            componentDidUpdate: function() {
+                this.initScroller();
+            },
             render: function() {
                 var sections = _.map(this.props.sections, function(s) {
                     return <li key={s.tag}><a href={'#' + s.tag}>{s.title}</a></li>;
@@ -241,61 +295,6 @@ var Templates = {
                         var _props = _.extend({}, {css:{}}, newProps)
                         setDynamicTemplate(_props.css.template, _props.css.values);
                     },
-                };
-            },
-
-            function(vm) {
-                var initMenu = function(newProps) {
-                    // Header.
-                    var ids = [],
-                        $nav = $('#nav'), $nav_a = $nav.find('a');
-
-                    // Set up nav items.
-                    $nav_a
-                        .scrolly()
-                        .off('click')
-                        .on('click', function(event) {
-
-                            var $this = $(this),
-                            href = $this.attr('href');
-
-                            // Not an internal link? Bail.
-                            if (href.charAt(0) != '#')
-                            return;
-
-                            // Prevent default behavior.
-                            event.preventDefault();
-
-                            // Remove active class from all links and mark them as locked (so scrollzer leaves them alone).
-                            $nav_a
-                            .removeClass('active')
-                            .addClass('scrollzer-locked');
-
-                            // Set active class on this link.
-                            $this.addClass('active');
-                        })
-                        .each(function() {
-
-                            var $this = $(this),
-                            href = $this.attr('href'),
-                            id;
-
-                            // Not an internal link? Bail.
-                            if (href.charAt(0) != '#')
-                            return;
-
-                            // Add to scrollzer ID list.
-                            id = href.substring(1);
-                            $this.attr('id', id + '-link');
-                            ids.push(id);
-                        });
-
-                    // Initialize scrollzer.
-                    $.scrollzer(ids, { pad: 300, lastHack: true });
-                };
-
-                return {
-                    setProps: initMenu,
                 };
             },
         ];
