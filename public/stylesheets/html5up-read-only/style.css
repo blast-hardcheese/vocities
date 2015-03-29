@@ -190,7 +190,7 @@
 		font-size: 3.5em;
 	}
 
-		header.major h2 + p {
+		header.major h2 + div > p {
 			color: #777;
 			font-size: 1.75em;
 			font-weight: 700;
