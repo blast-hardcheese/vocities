@@ -921,10 +921,12 @@ var TextField = React.createClass({
     propTypes: {
         content: React.PropTypes.string.isRequired,
         updated: React.PropTypes.func.isRequired,
+        containerTag: React.PropTypes.string,
     },
 
     getDefaultProps: function() {
         return {
+            containerTag: 'span',
             content: 'Unknown',
             updated: function(newProps) {
                 console.error('TextField tried to update:', newProps);
@@ -963,7 +965,9 @@ var TextField = React.createClass({
         if (this.state.editing) {
             r = <input ref="editText" defaultValue={this.props.content} onKeyDown={this.keyDown} />;
         } else {
-            r = <span onClick={this.toggleEditing}>{this.props.content}</span>;
+            r = React.createElement(this.props.containerTag, {
+                onClick: this.toggleEditing,
+            }, this.props.content);
         }
 
         return r;
