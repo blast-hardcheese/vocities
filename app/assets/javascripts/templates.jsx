@@ -286,6 +286,82 @@ var Templates = {
             },
         });
 
+        var ColorPicker = React.createClass({
+            getSchemes: function () {
+                var dynamicCssValues = JSON.parse($('#dynamic-tpl-values').text());
+                return dynamicCssValues['schemes'];
+            },
+            schemes: [
+                {
+                    "primary_bg": "#4acaa8",
+                    "primary_fg": "#d1f1e9",
+                    "secondary": "#b6e9dc",
+                    "accent": "#5ccfb0",
+                },
+                {
+                    "primary_bg": "purple",
+                    "primary_fg": "blue",
+                    "secondary": "red",
+                    "accent": "green",
+                },
+            ],
+            update: function (data) {
+                this.props.updated(
+                    deepExtend("css.values", this.props, {
+                        "primary_bg": data.primary_bg,
+                        "primary_color": data.primary_fg,
+                        "hilight_color": data.secondary,
+                        "accent_color": data.accent,
+                        "nav_active_bg": "white",
+                        "nav_active_color": data.primary_bg,
+                    }));
+            },
+            select: function (idx) {
+                this.update(this.schemes[idx]);
+            },
+            render: function() {
+                var _this = this;
+
+                var choices = this.schemes.map(function(o, idx) {
+                    var build = function (color) {
+                        return (
+                            <div style={{
+                                width: 20,
+                                height: 20,
+                                float: 'left',
+                                backgroundColor: color,
+                            }} />
+                        );
+                    };
+
+                    return (
+                        <div style={{
+                            marginTop: 5,
+                            marginRight: 5,
+                            border: '1px solid black',
+                            overflow: 'auto',
+                        }} key={idx} onClick={function() { return _this.select(idx); }}>
+                            {build(o.primary_bg)}
+                            {build(o.primary_fg)}
+                            {build(o.secondary)}
+                            {build(o.accent)}
+                        </div>
+                    );
+                });
+
+                return (
+                    <div style={{
+                        position: 'fixed',
+                        top: 10,
+                        left: 10,
+                        zIndex: 1,
+                    }}>
+                        {choices}
+                    </div>
+                );
+            },
+        });
+
         var render = function(sel, data, clazz) {
             var factory = React.createFactory(clazz)(data);
             var target = $(sel)[0];
