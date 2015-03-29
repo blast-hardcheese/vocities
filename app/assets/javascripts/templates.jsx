@@ -384,6 +384,10 @@ var Templates = {
             },
 
             function(vm) {
+                return render('#color-picker', vm, ColorPicker);
+            },
+
+            function(vm) {
                 var dynamicCss = _.template($('#dynamic-tpl').text());
                 var dynamicCssValues = JSON.parse($('#dynamic-tpl-values').text());
 
@@ -410,6 +414,7 @@ var Templates = {
             '#header-wrapper': Sidebar,
             '#main-wrapper': Main,
             '#footer': Footer,
+            '#color-picker': ColorPicker,
         };
 
         return self;

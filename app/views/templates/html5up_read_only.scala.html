@@ -124,5 +124,9 @@ jQuery(function($) {
                 <section id="footer">
 		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#footer'], $pageData));").toString)
                 </section>
+
+		<div id="color-picker">
+		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#color-picker'], $pageData));").toString)
+		</div>
         </div>
 }
