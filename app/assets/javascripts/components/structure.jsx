@@ -76,8 +76,25 @@ var SidebarNav = React.createClass({
 
             return <li key={s.tag}>{link}</li>;
         });
+
+        var toggleEdit = null;
+        if (this.props.editable) {
+            var style = {
+                position: 'absolute',
+                top: 0,
+                right: 0,
+            };
+
+            if (!this.state.editing) {
+                toggleEdit = <a onClick={this.startEdit} style={style}>Edit</a>;
+            } else {
+                toggleEdit = <a onClick={this.stopEdit} style={style}>Done</a>;
+            }
+        }
+
         return (
-            <nav id="nav">
+            <nav id="nav" style={{position: 'relative'}}>
+                {toggleEdit}
                 <ul>
                     {sections}
                 </ul>
