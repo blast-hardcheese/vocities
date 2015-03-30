@@ -965,9 +965,13 @@ var TextField = React.createClass({
         if (this.state.editing) {
             r = <input ref="editText" defaultValue={this.props.content} onKeyDown={this.keyDown} />;
         } else {
-            r = React.createElement(this.props.containerTag, {
+            var subProps = _.extend({}, this.props, {
                 onClick: this.toggleEditing,
-            }, this.props.content);
+            });
+
+            delete subProps['content'];
+
+            r = React.createElement(this.props.containerTag, subProps, this.props.content);
         }
 
         return r;
