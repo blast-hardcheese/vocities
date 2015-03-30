@@ -15,3 +15,53 @@ var Updatable = {
         };
     },
 };
+
+var Editable = {
+    propTypes: {
+        editable: React.PropTypes.bool,
+    },
+
+    getInitialState: function() {
+        return {
+            editing: false,
+        };
+    },
+
+    startEdit: function() {
+        if (!this.editable) {
+            console.error(this, 'called startEdit when not editable!');
+        }
+        this.setState({
+            editing: true,
+        });
+    },
+
+    stopEdit: function () {
+        if (!this.editable) {
+            console.error(this, 'called stopEdit when not editable!');
+        }
+        this.setState({
+            editing: false,
+        });
+    },
+
+    editStarted: function() {
+        console.info(this, 'began editing');
+    },
+
+    editStopped: function() {
+        console.info(this, 'stopped editing');
+    },
+
+    componentDidUpdate: function (prevProps, prevState) {
+        if (this.state.editing && !prevState.editing) {
+            this.editStarted();
+        }
+    },
+
+    componentWillUpdate: function (nextProps, nextState) {
+        if (this.state.editing && !nextState.editing) {
+            this.editStopped();
+        }
+    },
+};
