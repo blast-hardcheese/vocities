@@ -3,7 +3,6 @@ function TemplateManager(key, data) {
 
     data = _.extend({}, data, {
         updated: function (newData) {
-            console.info('data', newData);
             _this.refresh(newData);
         }
     });
