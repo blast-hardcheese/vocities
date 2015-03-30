@@ -107,16 +107,29 @@ var SidebarNav = React.createClass({
 });
 
 var SocialIcon = React.createClass({
+    mixins: [Updatable],
+
     render: function() {
+        var _this = this;
+
         var icon = this.props.type;
         switch (this.props.type) {
             case 'email':
                 icon = 'envelope';
                 break;
         }
+
+        var onClick=null;
+        if (this.props.editable) {
+            onClick = function(e) {
+                e.preventDefault();
+                console.info('Would edit:', _this.props.type, _this.props.target);
+            };
+        }
+
         return (
             <li key={this.props.type}>
-                <a href={this.props.target} className={"icon fa-" + icon}><span className="label">{this.props.type}</span></a>
+                <a href={this.props.target} className={"icon fa-" + icon} onClick={onClick}><span className="label">{this.props.type}</span></a>
             </li>
         );
     },
