@@ -1,7 +1,7 @@
 var SidebarNav = React.createClass({
     initScroller: function() {
         var $nav = $('#nav'),
-            $nav_a = $nav.find('a');
+            $nav_a = $nav.find('a[href^=#]');
 
         var ids = [];
 
@@ -12,10 +12,6 @@ var SidebarNav = React.createClass({
 
                 var $this = $(this),
                     href = $this.attr('href');
-
-                    // Not an internal link? Bail.
-                    if (href.charAt(0) != '#')
-                        return;
 
                     // Prevent default behavior.
                     event.preventDefault();
@@ -33,10 +29,6 @@ var SidebarNav = React.createClass({
                 var $this = $(this),
                     href = $this.attr('href'),
                     id;
-
-                    // Not an internal link? Bail.
-                    if (href.charAt(0) != '#')
-                        return;
 
                     // Add to scrollzer ID list.
                     id = href.substring(1);
