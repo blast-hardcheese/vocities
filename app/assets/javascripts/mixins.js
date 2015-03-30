@@ -28,7 +28,7 @@ var Editable = {
     },
 
     startEdit: function() {
-        if (!this.editable) {
+        if (!this.props.editable) {
             console.error(this, 'called startEdit when not editable!');
         }
         this.setState({
@@ -37,7 +37,7 @@ var Editable = {
     },
 
     stopEdit: function () {
-        if (!this.editable) {
+        if (!this.props.editable) {
             console.error(this, 'called stopEdit when not editable!');
         }
         this.setState({
