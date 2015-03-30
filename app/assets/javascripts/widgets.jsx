@@ -482,7 +482,8 @@ var SoundCloudPlayer = React.createClass({
             api: api,
             audioHandlers: audioHandlers,
         });
-
+    },
+    componentDidUpdate: function () {
         // Must be done after API has been set!
         this.loadUrl(this.props.url, this.props.title);
     },
