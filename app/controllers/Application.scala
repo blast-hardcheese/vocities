@@ -36,6 +36,7 @@ object Application extends BaseController {
     r.evalResource("public/lib/underscorejs/underscore.js")
     r.evalResource("public/lib/react/react-with-addons.js")
     r.evalResource("public/javascripts/widgets.js")
+    r.evalResource("public/javascripts/mixins.js")
     r.evalResource("public/javascripts/components/structure.js")
     r.evalResource("public/javascripts/templates.js")
 
