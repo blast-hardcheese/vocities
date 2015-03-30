@@ -1,4 +1,6 @@
 var SidebarNav = React.createClass({
+    mixins: [Updatable, Editable],
+
     initScroller: function() {
         var $nav = $('#nav'),
             $nav_a = $nav.find('a[href^=#]');
@@ -42,6 +44,7 @@ var SidebarNav = React.createClass({
     componentDidMount: function() {
         this.initScroller();
     },
+
     componentDidUpdate: function() {
         this.initScroller();
     },
@@ -68,7 +71,7 @@ var SidebarNav = React.createClass({
 
         var sections = _.map(this.props.sections, function(s, idx) {
             var link = null;
-            if (_this.props.editing) {
+            if (_this.state.editing) {
                 link = <TextField content={s.title} updated={_.partial(_this.renameSection, idx)} containerTag='a' href={'#' + s.tag} />;
             } else {
                 link = <a href={'#' + s.tag}>{s.title}</a>;
