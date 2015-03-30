@@ -403,9 +403,9 @@ var SoundCloudPlayer = React.createClass({
         var _this = this;
         var api = this.state.api;
 
-        if(this.props.apiKey != this.state.apiKey) {
-            if(api) {
-                api.cancel();
+        if (this.props.apiKey != this.state.apiKey) {
+            if (api) {
+                api.abort();
             }
 
             api = new SoundCloud({
