@@ -105,3 +105,33 @@ var SidebarNav = React.createClass({
         );
     }
 });
+
+var SocialIcon = React.createClass({
+    render: function() {
+        var icon = this.props.type;
+        switch (this.props.type) {
+            case 'email':
+                icon = 'envelope';
+                break;
+        }
+        return (
+            <li key={this.props.type}>
+                <a href={this.props.target} className={"icon fa-" + icon}><span className="label">{this.props.type}</span></a>
+            </li>
+        );
+    },
+});
+
+
+var SidebarFooter = React.createClass({
+    render: function() {
+        var each = _.map(this.props.social, function(value, key) {
+            return <SocialIcon key={key} type={key} target={value} />;
+        });
+        return <footer>
+            <ul className="icons">
+                {each}
+            </ul>
+        </footer>
+    },
+});
