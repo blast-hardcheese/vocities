@@ -2,6 +2,7 @@ function TemplateManager(key, data) {
     var _this = this;
 
     data = _.extend({}, data, {
+        editable: true,
         updated: function (newData) {
             _this.refresh(newData);
         }
@@ -58,8 +59,8 @@ var Templates = {
                 return (
                     <section id="header">
                         {React.createElement(SidebarProfile, this.props.sidebar.header)}
-                        <SidebarNav sections={this.props.sections} updated={this.sidebarUpdated} />
-                        <SidebarFooter social={this.props.social}/>
+                        <SidebarNav editable={this.props.editable} sections={this.props.sections} updated={this.sidebarUpdated} />
+                        <SidebarFooter editable={this.props.editable} social={this.props.social}/>
                     </section>
                 )
             },

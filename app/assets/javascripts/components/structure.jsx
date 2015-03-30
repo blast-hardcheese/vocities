@@ -139,8 +139,9 @@ var SocialIcon = React.createClass({
 
 var SidebarFooter = React.createClass({
     render: function() {
+        var _this = this;
         var each = _.map(this.props.social, function(value, key) {
-            return <SocialIcon key={key} type={key} target={value} />;
+            return <SocialIcon editable={_this.props.editable} key={key} type={key} target={value} />;
         });
         return <footer>
             <ul className="icons">
