@@ -145,11 +145,15 @@ var Templates = {
         });
 
         var Sidebar = React.createClass({
+            sidebarUpdated: function (newData) {
+                this.props.updated(_.extend({}, this.props, newData));
+            },
+
             render: function() {
                 return (
                     <section id="header">
                         {React.createElement(SidebarProfile, this.props.sidebar.header)}
-                        <SidebarNav sections={this.props.sections} />
+                        <SidebarNav sections={this.props.sections} updated={this.sidebarUpdated} />
                         <SidebarFooter social={this.props.social}/>
                     </section>
                 )
