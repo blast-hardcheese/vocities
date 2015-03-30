@@ -86,6 +86,7 @@ var SidebarNav = React.createClass({
                 position: 'absolute',
                 top: 0,
                 right: 0,
+                borderBottom: 'none',
             };
 
             if (!this.state.editing) {
