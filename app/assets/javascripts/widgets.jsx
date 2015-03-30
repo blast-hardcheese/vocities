@@ -387,12 +387,21 @@ var SoundCloudPlayer = React.createClass({
         };
     },
     loadUrl: function(url, title) {
+        var _this = this;
+
         var api = this.state.api;
         var link = {
             title: this.props.title || "Loading...",
             url: url,
         };
         api.loadTracksFromLink(link, function(tracks) {
+            if (!_this.isMounted()) {
+                if (api) {
+                    api.abort();
+                }
+                return;
+            }
+
             this.setState({
                 tracks: tracks,
                 selectedTrack: 0,
