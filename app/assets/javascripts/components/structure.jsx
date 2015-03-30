@@ -93,4 +93,3 @@ var SidebarNav = React.createClass({
         );
     }
 });
-
