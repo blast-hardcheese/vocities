@@ -150,3 +150,38 @@ var SidebarFooter = React.createClass({
         </footer>
     },
 });
+
+var HeaderBlock = React.createClass({
+    titleUpdated: function (data) {
+        this.props.updated({
+            title: data.content,
+            subtitle: this.props.subtitle,
+            text: this.props.text,
+        });
+    },
+    subtitleUpdated: function (data) {
+        this.props.updated({
+            title: this.props.title,
+            subtitle: data.content,
+            text: this.props.text,
+        });
+    },
+    textUpdated: function (data) {
+        this.props.updated({
+            title: this.props.title,
+            subtitle: this.props.subtitle,
+            text: data.content,
+        });
+    },
+    render: function() {
+        return (
+            <div>
+                <header className="major">
+                    <TextField content={this.props.title} updated={this.titleUpdated} containerTag='h2' />
+                    <Paragraph content={this.props.subtitle} updated={this.subtitleUpdated} />
+                </header>
+                <Paragraph content={this.props.text} updated={this.textUpdated} />
+            </div>
+        );
+    }
+});

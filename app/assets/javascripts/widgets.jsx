@@ -993,6 +993,7 @@ var WidgetBuilder = function(extra) {
         'soundcloud': SoundCloudPlayer,
         'paragraph': Paragraph,
         'youtube': YouTube,
+        'header': HeaderBlock,
     };
 
     var widgets = _.extend({}, builtins, extra);
@@ -1026,5 +1027,3 @@ var WidgetBuilder = function(extra) {
         }
     });
 };
-
-var Widget = WidgetBuilder();
