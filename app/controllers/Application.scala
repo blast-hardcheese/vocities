@@ -49,7 +49,11 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
 
   private[this] def render(title: String, templateId: String, data: JsValue, css_template: String, css_values: JsValue) = {
     // Only here temporarily
-    new RichScriptEngine(engine).evalResource("public/javascripts/templates.js")
+    var r = new RichScriptEngine(engine)
+    r.evalResource("public/javascripts/widgets.js")
+    r.evalResource("public/javascripts/mixins.js")
+    r.evalResource("public/javascripts/components/structure.js")
+    r.evalResource("public/javascripts/templates.js")
 
     templateId match {
       case "html5up-read-only" => Ok(views.html.templates.html5up_read_only(engine)(title, data, css_template, css_values))
