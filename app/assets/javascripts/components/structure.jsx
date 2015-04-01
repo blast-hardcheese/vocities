@@ -185,3 +185,19 @@ var HeaderBlock = React.createClass({
         );
     }
 });
+
+var Sidebar = React.createClass({
+    sidebarUpdated: function (newData) {
+        this.props.updated(_.extend({}, this.props, newData));
+    },
+
+    render: function() {
+        return (
+            <section id="header">
+                {React.createElement(SidebarProfile, this.props.sidebar.header)}
+                <SidebarNav editable={this.props.editable} sections={this.props.sections} updated={this.sidebarUpdated} />
+                <SidebarFooter editable={this.props.editable} social={this.props.social}/>
+            </section>
+        )
+    },
+});
