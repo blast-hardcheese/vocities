@@ -186,6 +186,25 @@ var HeaderBlock = React.createClass({
     }
 });
 
+var SidebarProfile = React.createClass({
+    propTypes: {
+        src: React.PropTypes.string.isRequired,
+        alt: React.PropTypes.string,
+        name: React.PropTypes.string.isRequired,
+        namehref: React.PropTypes.string,
+        flavortext: React.PropTypes.string
+    },
+    render: function() {
+        return (
+            <header>
+                <span className="image avatar"><img src={this.props.src} alt={this.props.alt} /></span>
+                <h1 id="logo"><a href={this.props.namehref}>{this.props.name}</a></h1>
+                <p>{this.props.flavortext}</p>
+            </header>
+        );
+    },
+});
+
 var Sidebar = React.createClass({
     sidebarUpdated: function (newData) {
         this.props.updated(_.extend({}, this.props, newData));

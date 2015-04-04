@@ -31,25 +31,6 @@ function TemplateManager(key, data) {
 
 var Templates = {
     "html5up_read_only": (function(self) {
-        var SidebarProfile = React.createClass({
-            propTypes: {
-                src: React.PropTypes.string.isRequired,
-                alt: React.PropTypes.string,
-                name: React.PropTypes.string.isRequired,
-                namehref: React.PropTypes.string,
-                flavortext: React.PropTypes.string
-            },
-            render: function() {
-                return (
-                    <header>
-                        <span className="image avatar"><img src={this.props.src} alt={this.props.alt} /></span>
-                        <h1 id="logo"><a href={this.props.namehref}>{this.props.name}</a></h1>
-                        <p>{this.props.flavortext}</p>
-                    </header>
-                );
-            },
-        });
-
         var Section = React.createClass({
             getDefaultProps: function() {
                 return {
