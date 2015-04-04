@@ -31,34 +31,6 @@ function TemplateManager(key, data) {
 
 var Templates = {
     "html5up_read_only": (function(self) {
-        var Section = React.createClass({
-            getDefaultProps: function() {
-                return {
-                    updated: function(newProps) {
-                        console.error('Section tried to update:', newProps);
-                    }
-                }
-            },
-            render: function() {
-                var data = _.extend({}, {
-                    updated: (function(newProps) {
-                        this.props.updated({
-                            tag: this.props.tag,
-                            title: this.props.title,
-                            content: newProps,
-                        });
-                    }).bind(this)
-                }, this.props.content);
-                return (
-                    <section id={this.props.tag}>
-                        <div className="container">
-                            {React.createElement(WidgetBuilder(), data)}
-                        </div>
-                    </section>
-                );
-            }
-        });
-
         var Main = React.createClass({
             getDefaultProps: function() {
                 return {
