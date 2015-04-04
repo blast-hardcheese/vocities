@@ -92,10 +92,10 @@ var Templates = {
                     "accent": "#5ccfb0",
                 },
                 {
-                    "primary_bg": "purple",
-                    "primary_fg": "blue",
-                    "secondary": "red",
-                    "accent": "green",
+                    "primary_bg": "rgb(221, 115, 221)",
+                    "primary_fg": "rgb(255, 0, 232)",
+                    "secondary": "rgb(163, 78, 159)",
+                    "accent": "rgb(249, 168, 255)",
                 },
             ],
             update: function (data) {
