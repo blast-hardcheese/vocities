@@ -32,6 +32,10 @@ update "templates" set css_template = '
   border-top: solid 2px <%= accent_color %>;;
 }
 
+#header > header p {
+  color: <%= primary_color %>;;
+}
+
 header.major h2 {
   color: <%= primary_bg %>;;
 }
