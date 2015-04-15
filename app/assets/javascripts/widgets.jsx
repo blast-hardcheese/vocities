@@ -817,7 +817,7 @@ var YouTube = React.createClass({
                 </div>
             );
         } else {
-            editButton = <a onClick={this.startEdit}>Edit</a>;
+            editButton = this.buildEditableButton();
         }
 
         return (
