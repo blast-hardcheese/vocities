@@ -187,6 +187,10 @@ var HeaderBlock = React.createClass({
 });
 
 var SidebarProfile = React.createClass({
+    mixins: [Updatable, Editable, Utils],
+
+    extendPropsFunctions: [Editable.extendPropsEditable],
+
     propTypes: {
         src: React.PropTypes.string.isRequired,
         alt: React.PropTypes.string,
@@ -197,6 +201,7 @@ var SidebarProfile = React.createClass({
     render: function() {
         return (
             <header>
+                {this.buildEditableButton()}
                 <span className="image avatar"><img src={this.props.src} alt={this.props.alt} /></span>
                 <h1 id="logo"><a href={this.props.namehref}>{this.props.name}</a></h1>
                 <p>{this.props.flavortext}</p>
