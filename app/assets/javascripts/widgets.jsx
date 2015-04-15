@@ -44,13 +44,8 @@ var ReadyComponent = function(timeout): any {
 
 
 var TinyMCEComponent = (function() {
-    var active = false;
     return {
         buildTinyMCE: function(selector) {
-            if (active) { console.error('Already have one TinyMCE instance'); return false; }
-
-            active = true;
-
             tinymce.init({
                 selector: selector,
                 plugins: [
@@ -64,9 +59,7 @@ var TinyMCEComponent = (function() {
             return true;
         },
         destroyTinyMCE: function() {
-            if (!active) { console.error('No TinyMCE instance available'); return false; }
-            tinymce.remove(0);
-            active = false;
+            tinymce.EditorManager.execCommand('mceRemoveEditor',true, this.state.editorId);
 
             return true;
         }
@@ -867,8 +860,10 @@ var Paragraph = React.createClass({
         }
     },
     getInitialState: function() {
+        var widgetClass = "paragraph-" + ParagraphCounter.next();
         return {
-            widgetClass: "paragraph-" + ParagraphCounter.next(),
+            widgetClass: widgetClass,
+            editorId: 'tinymce-' + widgetClass,
         };
     },
 
@@ -880,9 +875,7 @@ var Paragraph = React.createClass({
     },
 
     editStarted: function() {
-        if(!this.buildTinyMCE('.' + this.state.widgetClass + ' .tinymce')) {
-            this.stopEdit();
-        }
+        this.buildTinyMCE('#' + this.state.editorId);
     },
 
     render: function() {
@@ -891,7 +884,7 @@ var Paragraph = React.createClass({
         if (this.state.editing) {
             r = (
                 <div className={this.state.widgetClass}>
-                    <textarea className="tinymce" ref="editText" defaultValue={this.props.content}></textarea>
+                    <textarea id={this.state.editorId} className="tinymce" ref="editText" defaultValue={this.props.content}></textarea>
                     <button onClick={this.stopEdit}>Save</button>
                 </div>
             );
