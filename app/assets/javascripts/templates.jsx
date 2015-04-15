@@ -130,7 +130,6 @@ var Templates = {
                     return (
                         <div style={{
                             marginTop: 5,
-                            marginRight: 5,
                             border: '1px solid black',
                             overflow: 'auto',
                         }} key={idx} onClick={function() { return _this.select(idx); }}>
@@ -153,6 +152,35 @@ var Templates = {
                     </div>
                 );
             },
+        });
+
+        var EditToggler = React.createClass({
+            mixins: [Editable, Updatable],
+
+            setEditable: function (newState) {
+                this.props.updated({
+                    editable: newState,
+                });
+            },
+
+            render: function() {
+                var button = null;
+
+                var style = {
+                    position: 'fixed',
+                    top: 15,
+                    left: 97,
+                    zIndex: 1,
+                };
+
+                if (this.props.editable) {
+                    button = <button style={style} onClick={this.setEditable.bind(this, false)}>Disable Editing</button>;
+                } else {
+                    button = <button style={style} onClick={this.setEditable.bind(this, true)}>Enable Editing</button>;
+                }
+
+                return button;
+            }
         });
 
         var render = function(sel, data, clazz) {
@@ -178,6 +206,10 @@ var Templates = {
 
             function(vm) {
                 return render('#color-picker', vm, ColorPicker);
+            },
+
+            function(vm) {
+                return render('#edit-toggler', vm, EditToggler);
             },
 
             function(vm) {
@@ -208,6 +240,7 @@ var Templates = {
             '#main-wrapper': Main,
             '#footer': Footer,
             '#color-picker': ColorPicker,
+            '#edit-toggler': EditToggler,
         };
 
         return self;

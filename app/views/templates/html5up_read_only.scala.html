@@ -40,7 +40,7 @@ var DefaultTemplateValues = @Html(Json.stringify(css_values))
 
 jQuery(function($) {
 
-    window.tm = new TemplateManager(@templateId, PageData);
+    new TemplateManager(@templateId, PageData);
 
     skel.init({
 	reset: 'full',
@@ -127,6 +127,10 @@ jQuery(function($) {
 
 		<div id="color-picker">
 		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#color-picker'], $pageData));").toString)
+		</div>
+
+		<div id="edit-toggler">
+		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#edit-toggler'], $pageData));").toString)
 		</div>
         </div>
 }
