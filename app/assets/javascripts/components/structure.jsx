@@ -206,16 +206,16 @@ var SidebarProfile = React.createClass({
 });
 
 var Sidebar = React.createClass({
-    sidebarUpdated: function (newData) {
-        this.props.updated(_.extend({}, this.props, newData));
-    },
+    mixins: [Updatable, Editable, Utils],
+
+    extendPropsFunctions: [Editable.extendPropsEditable, Updatable.autoUpdated],
 
     render: function() {
         return (
             <section id="header">
-                {React.createElement(SidebarProfile, this.props.sidebar.header)}
-                <SidebarNav editable={this.props.editable} sections={this.props.sections} updated={this.sidebarUpdated} />
-                <SidebarFooter editable={this.props.editable} social={this.props.social}/>
+                {React.createElement(SidebarProfile, this.extendProps('sidebar.header'))}
+                {React.createElement(SidebarNav, this.extendProps('sections'))}
+                {React.createElement(SidebarFooter, this.extendProps('social'))}
             </section>
         )
     },
