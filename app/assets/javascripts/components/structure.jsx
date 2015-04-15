@@ -214,8 +214,8 @@ var Sidebar = React.createClass({
         return (
             <section id="header">
                 {React.createElement(SidebarProfile, this.extendProps('sidebar.header'))}
-                {React.createElement(SidebarNav, this.extendProps('sections'))}
-                {React.createElement(SidebarFooter, this.extendProps('social'))}
+                {React.createElement(SidebarNav, this.buildProps({sections: this.props.sections}))}
+                {React.createElement(SidebarFooter, this.buildProps({social: this.props.social}))}
             </section>
         )
     },
