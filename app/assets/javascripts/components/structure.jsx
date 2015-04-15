@@ -183,7 +183,7 @@ var HeaderBlock = React.createClass({
                     <TextField content={this.props.title} updated={this.titleUpdated} editable={this.props.editable} containerTag='h2' />
                     <Paragraph content={this.props.subtitle} updated={this.subtitleUpdated} editable={this.props.editable} />
                 </header>
-                <Paragraph content={this.props.text} updated={this.textUpdated} />
+                <Paragraph content={this.props.text} updated={this.textUpdated} editable={this.props.editable} />
             </div>
         );
     }
