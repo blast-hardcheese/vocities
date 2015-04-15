@@ -2,10 +2,10 @@
 
 
 var deepExtend = function (key, data, newData) {
-    var splitKey = key.split('.');
-    if (key.length === 0) {
+    if (key === undefined || key === null || key.length === 0) {
         return _.extend({}, data, newData);
     } else {
+        var splitKey = key.split('.');
         var subkey = splitKey[0];
         var restkey = _.drop(splitKey, 1).join('.');
 
