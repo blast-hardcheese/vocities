@@ -738,7 +738,7 @@ var SlideOutDiv = React.createClass({
 //});
 
 var YouTube = React.createClass({
-    mixins: [Editable],
+    mixins: [Editable, Updatable],
 
     getDefaultProps: function() {
         return {
