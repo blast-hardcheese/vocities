@@ -1,6 +1,8 @@
 var SidebarNav = React.createClass({
     mixins: [Updatable, Editable],
 
+    extendPropsFunctions: [Editable.extendPropsEditable],
+
     initScroller: function() {
         var $nav = $('#nav'),
             $nav_a = $nav.find('a[href^=#]');
