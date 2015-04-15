@@ -1018,7 +1018,8 @@ var WidgetBuilder = function(extra) {
                             type: _this.props.type,
                             data: newProps,
                         });
-                    }
+                    },
+                    editable: _this.props.editable,
                 }, this.props.data);
                 res = React.createElement(widget, data);
             }

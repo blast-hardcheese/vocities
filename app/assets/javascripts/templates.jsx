@@ -69,7 +69,7 @@ var Templates = {
                         _this.sectionUpdated(newProps, idx);
                     };
 
-                    return <Section title={s.title} key={s.tag} tag={s.tag} content={s.content} updated={updated} />
+                    return <Section title={s.title} key={s.tag} tag={s.tag} content={s.content} updated={updated} editable={_this.props.editable} />
                 });
                 return (
                     <div id="main">

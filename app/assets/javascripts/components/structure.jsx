@@ -268,7 +268,8 @@ var Section = React.createClass({
                     title: this.props.title,
                     content: newProps,
                 });
-            }).bind(this)
+            }).bind(this),
+            editable: this.props.editable,
         }, this.props.content);
         return (
             <section id={this.props.tag}>
