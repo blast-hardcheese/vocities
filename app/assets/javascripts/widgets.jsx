@@ -932,6 +932,12 @@ var TextField = React.createClass({
         };
     },
 
+    editStarted: function() {
+        var node = this.refs.editText.getDOMNode();
+        node.focus();
+        node.value = node.value; // http://stackoverflow.com/questions/511088/use-javascript-to-place-cursor-at-end-of-text-in-text-input-element
+    },
+
     editStopped: function() {
         this.props.updated({
             content: $(this.refs.editText.getDOMNode()).val(),
