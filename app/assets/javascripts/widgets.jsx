@@ -854,48 +854,37 @@ var InstanceCounter = function() {
 var ParagraphCounter = new InstanceCounter();
 
 var Paragraph = React.createClass({
-    mixins: [TinyMCEComponent],
+    mixins: [TinyMCEComponent, Editable, Updatable],
 
     propTypes: {
         content: React.PropTypes.string.isRequired,
-        updated: React.PropTypes.func.isRequired,
         containerTag: React.PropTypes.string,
     },
 
     getDefaultProps: function() {
         return {
-            updated: function(newProps) {
-                console.error('Paragraph tried to update:', newProps);
-            },
             containerTag: 'div',
         }
     },
     getInitialState: function() {
         return {
             widgetClass: "paragraph-" + ParagraphCounter.next(),
-            editing: false,
         };
     },
-    componentWillUpdate: function (nextProps, nextState) {
-        if (this.state.editing && !nextState.editing) {
-            this.destroyTinyMCE();
-            this.props.updated({
-                content: $(this.refs.editText.getDOMNode()).val(),
-            });
-        }
-    },
-    componentDidUpdate: function (prevProps, prevState) {
-        if (this.state.editing && !prevState.editing) {
-            if(!this.buildTinyMCE('.' + this.state.widgetClass + ' .tinymce')) {
-                this.setState({editing: false});
-            }
-        }
-    },
-    toggleEditing: function() {
-        this.setState({
-            editing: !this.state.editing,
+
+    editStopped: function() {
+        this.destroyTinyMCE();
+        this.props.updated({
+            content: $(this.refs.editText.getDOMNode()).val(),
         });
     },
+
+    editStarted: function() {
+        if(!this.buildTinyMCE('.' + this.state.widgetClass + ' .tinymce')) {
+            this.stopEdit();
+        }
+    },
+
     render: function() {
         var r = null;
 
@@ -903,14 +892,21 @@ var Paragraph = React.createClass({
             r = (
                 <div className={this.state.widgetClass}>
                     <textarea className="tinymce" ref="editText" defaultValue={this.props.content}></textarea>
-                    <button onClick={this.toggleEditing}>Save</button>
+                    <button onClick={this.stopEdit}>Save</button>
                 </div>
             );
         } else {
-            r = React.createElement(this.props.containerTag, {
-                onClick: this.toggleEditing,
+            var subProps = _.extend({
                 dangerouslySetInnerHTML: {__html: this.props.content},
-            });
+            }, this.props);
+
+            delete subProps['content'];
+
+            if (this.props.editable) {
+                subProps.onClick = this.startEdit;
+            }
+
+            r = React.createElement(this.props.containerTag, subProps);
         }
 
         return r;
