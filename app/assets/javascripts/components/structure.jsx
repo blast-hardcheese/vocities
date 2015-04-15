@@ -180,8 +180,8 @@ var HeaderBlock = React.createClass({
         return (
             <div>
                 <header className="major">
-                    <TextField content={this.props.title} updated={this.titleUpdated} containerTag='h2' />
-                    <Paragraph content={this.props.subtitle} updated={this.subtitleUpdated} />
+                    <TextField content={this.props.title} updated={this.titleUpdated} editable={this.props.editable} containerTag='h2' />
+                    <Paragraph content={this.props.subtitle} updated={this.subtitleUpdated} editable={this.props.editable} />
                 </header>
                 <Paragraph content={this.props.text} updated={this.textUpdated} />
             </div>
@@ -295,7 +295,7 @@ var Footer = React.createClass({
         return (
             <div className="container">
                 <ul className="copyright">
-                    <li>&copy; <TextField content={copyright} updated={this.copyrightUpdated} />. All rights reserved.</li>
+                    <li>&copy; <TextField content={copyright} updated={this.copyrightUpdated} editable={this.props.editable} />. All rights reserved.</li>
                     <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
                 </ul>
             </div>

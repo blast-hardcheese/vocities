@@ -50,7 +50,7 @@ var Updatable = {
 
 var Editable = {
     propTypes: {
-        editable: React.PropTypes.bool,
+        editable: React.PropTypes.bool.isRequired,
     },
 
     buildEditableButton: function () {
