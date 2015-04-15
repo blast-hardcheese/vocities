@@ -21,6 +21,30 @@ var Editable = {
         editable: React.PropTypes.bool,
     },
 
+    buildEditableButton: function () {
+        var label = 'Edit',
+            target = this.startEdit;
+
+        if (this.state.editable) {
+            label = 'Done';
+            target = this.stopEdit;
+        }
+
+        var elem = React.createElement("a", {
+            cursor: 'pointer',
+            onClick: target,
+        }, label);
+
+        return this.props.editable ? elem : null;
+    },
+
+    extendPropsEditable: function(props) {
+        var _this = this;
+        return _.extend({}, props, {
+            editable: _this.props.editable,
+        });
+    },
+
     getInitialState: function() {
         return {
             editing: false,
