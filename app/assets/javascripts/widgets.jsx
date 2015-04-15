@@ -918,9 +918,10 @@ var Paragraph = React.createClass({
 });
 
 var TextField = React.createClass({
+    mixins: [Editable, Updatable],
+
     propTypes: {
         content: React.PropTypes.string.isRequired,
-        updated: React.PropTypes.func.isRequired,
         containerTag: React.PropTypes.string,
     },
 
@@ -928,34 +929,18 @@ var TextField = React.createClass({
         return {
             containerTag: 'span',
             content: 'Unknown',
-            updated: function(newProps) {
-                console.error('TextField tried to update:', newProps);
-                throw 'Render call';
-            },
         };
     },
 
-    getInitialState: function () {
-        return {
-            editing: false,
-        };
-    },
-
-    componentWillUpdate: function (nextProps, nextState) {
-        if (this.state.editing && !nextState.editing) {
-            this.props.updated({
-                content: $(this.refs.editText.getDOMNode()).val(),
-            });
-        }
-    },
-    toggleEditing: function() {
-        this.setState({
-            editing: !this.state.editing,
+    editStopped: function() {
+        this.props.updated({
+            content: $(this.refs.editText.getDOMNode()).val(),
         });
     },
+
     keyDown: function (e) {
         if (e.key === 'Enter') {
-            this.toggleEditing();
+            this.stopEdit();
         }
     },
 
@@ -966,7 +951,7 @@ var TextField = React.createClass({
             r = <input ref="editText" defaultValue={this.props.content} onKeyDown={this.keyDown} />;
         } else {
             var subProps = _.extend({}, this.props, {
-                onClick: this.toggleEditing,
+                onClick: this.startEdit,
             });
 
             delete subProps['content'];
