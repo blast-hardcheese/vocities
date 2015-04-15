@@ -1,14 +1,21 @@
 var Utils = {
     propAtPath: function (path) {
-        return _.foldl(path.split('.'), function (props, key) {
-            return props[key];
-        }, this.props);
+        var r = this.props;
+        if (path !== undefined && path !== null) {
+            r = _.foldl(path.split('.'), function (props, key) {
+                return props[key];
+            }, this.props);
+        }
+        return r;
     },
 
     extendProps: function(path) {
-        var _this = this;
+        var deepProps = this.propAtPath(path);
+        return this.buildProps(deepProps, path);
+    },
 
-        var props = _this.propAtPath(path);
+    buildProps: function(props, path) {
+        var _this = this;
 
         var r = _.foldl(this.extendPropsFunctions, function(props, func) {
             return func.apply(_this, [props, path]);
