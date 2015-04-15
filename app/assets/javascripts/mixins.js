@@ -45,23 +45,23 @@ var Editable = {
         });
     },
 
-    editStarted: function() {
-        console.info(this, 'began editing');
-    },
-
-    editStopped: function() {
-        console.info(this, 'stopped editing');
-    },
-
     componentDidUpdate: function (prevProps, prevState) {
         if (this.state.editing && !prevState.editing) {
-            this.editStarted();
+            if(this.editStarted) {
+                this.editStarted();
+            } else {
+                console.info(this.getDOMNode(), 'editStarted');
+            }
         }
     },
 
     componentWillUpdate: function (nextProps, nextState) {
         if (this.state.editing && !nextState.editing) {
-            this.editStopped();
+            if(this.editStopped) {
+                this.editStopped();
+            } else {
+                console.info(this.getDOMNode(), 'editStopped');
+            }
         }
     },
 };
