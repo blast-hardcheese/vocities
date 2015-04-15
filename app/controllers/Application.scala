@@ -35,8 +35,8 @@ object Application extends BaseController {
     r.eval("var log = function(x) { java.lang.System.out.println(x); }; var console = { warn: log, info: log, log: log };")
     r.evalResource("public/lib/underscorejs/underscore.js")
     r.evalResource("public/lib/react/react-with-addons.js")
-    r.evalResource("public/javascripts/widgets.js")
     r.evalResource("public/javascripts/mixins.js")
+    r.evalResource("public/javascripts/widgets.js")
     r.evalResource("public/javascripts/components/structure.js")
     r.evalResource("public/javascripts/templates.js")
 
@@ -50,8 +50,8 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
   private[this] def render(title: String, templateId: String, data: JsValue, css_template: String, css_values: JsValue) = {
     // Only here temporarily
     var r = new RichScriptEngine(engine)
-    r.evalResource("public/javascripts/widgets.js")
     r.evalResource("public/javascripts/mixins.js")
+    r.evalResource("public/javascripts/widgets.js")
     r.evalResource("public/javascripts/components/structure.js")
     r.evalResource("public/javascripts/templates.js")
 
