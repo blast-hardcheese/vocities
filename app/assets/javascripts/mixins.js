@@ -57,7 +57,7 @@ var Editable = {
         var label = 'Edit',
             target = this.startEdit;
 
-        if (this.state.editable) {
+        if (this.state.editing) {
             label = 'Done';
             target = this.stopEdit;
         }
