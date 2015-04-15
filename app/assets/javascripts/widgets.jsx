@@ -738,11 +738,8 @@ var SlideOutDiv = React.createClass({
 //});
 
 var YouTube = React.createClass({
-    getInitialState: function() {
-        return {
-            editing: false,
-        };
-    },
+    mixins: [Editable],
+
     getDefaultProps: function() {
         return {
             width: undefined,
@@ -751,11 +748,6 @@ var YouTube = React.createClass({
             allowFullscreen: "allowfullscreen",
             size: 'normal',
         };
-    },
-    startEdit: function() {
-        this.setState({
-            editing: true,
-        });
     },
     save: function() {
         var url = $(this.refs.editBox.getDOMNode()).val();
@@ -778,9 +770,7 @@ var YouTube = React.createClass({
 
         // Crude validation
         if (videoId.length === 11) {
-            this.setState({
-                editing: false,
-            });
+            this.stopEdit();
 
             this.props.updated({
                 videoId: videoId,
