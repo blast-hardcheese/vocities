@@ -956,9 +956,11 @@ var TextField = React.createClass({
         if (this.state.editing) {
             r = <input ref="editText" defaultValue={this.props.content} onKeyDown={this.keyDown} />;
         } else {
-            var subProps = _.extend({}, this.props, {
-                onClick: this.startEdit,
-            });
+            var subProps = _.extend({}, this.props);
+
+            if (this.props.editable) {
+                subProps.onClick = this.startEdit;
+            }
 
             delete subProps['content'];
 
