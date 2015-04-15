@@ -87,9 +87,12 @@ var Editable = {
         if (!this.props.editable) {
             console.error(this, 'called startEdit when not editable!');
         }
-        this.setState({
-            editing: true,
-        });
+
+        if (this.canStartEdit === undefined || this.canStartEdit()) {
+            this.setState({
+                editing: true,
+            });
+        }
     },
 
     stopEdit: function () {

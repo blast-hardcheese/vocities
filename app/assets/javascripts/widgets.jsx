@@ -45,6 +45,10 @@ var ReadyComponent = function(timeout): any {
 
 var TinyMCEComponent = (function() {
     return {
+        canStartEdit: function() {
+            return tinymce.editors.length === 0;
+        },
+
         buildTinyMCE: function(selector) {
             tinymce.init({
                 selector: selector,
