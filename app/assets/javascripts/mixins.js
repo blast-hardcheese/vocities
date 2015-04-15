@@ -1,3 +1,22 @@
+var Utils = {
+    propAtPath: function (path) {
+        return _.foldl(path.split('.'), function (props, key) {
+            return props[key];
+        }, this.props);
+    },
+
+    extendProps: function(path) {
+        var _this = this;
+
+        var props = _this.propAtPath(path);
+
+        var r = _.foldl(this.extendPropsFunctions, function(props, func) {
+            return func.apply(_this, [props, path]);
+        }, props);
+        return r;
+    },
+};
+
 var Updatable = {
     propTypes: {
         updated: React.PropTypes.func.isRequired,
