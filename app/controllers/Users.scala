@@ -24,16 +24,16 @@ class Users(override implicit val env: RuntimeEnvironment[UserModel]) extends Ba
     }
   }
 
-  def edit(domain_id: Long, path: String) = SecuredAction { implicit request =>
+  def edit(domain: String, path: String) = SecuredAction { implicit request =>
     DB.withSession { implicit s =>
       val userId = request.user.userId
-      Queries.pageEdit(userId, domain_id, path)
+      Queries.pageEdit(userId, domain, path)
         .map(vm => Ok(views.html.account.edit(vm)))
         .getOrElse(NotFound)
     }
   }
 
-  def save(domain_id: Long, path: String) = SecuredAction(parse.json) { implicit request =>
+  def save(domain: String, path: String) = SecuredAction(parse.json) { implicit request =>
     val key = "html5up-read-only"
 
     DB.withSession { implicit s =>
@@ -43,7 +43,7 @@ class Users(override implicit val env: RuntimeEnvironment[UserModel]) extends Ba
 
       parser
         .validate(request.body)
-        .map { case (title, data) => Ok(Queries.pageSave(userId, domain_id, path)(title, data).toString)
+        .map { case (title, data) => Ok(Queries.pageSave(userId, domain, path)(title, data).toString)
       } getOrElse { BadRequest }
     }
   }

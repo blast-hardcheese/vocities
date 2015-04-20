@@ -135,7 +135,7 @@ object Queries {
     AccountViewModel(accounts, domains, pages, templates)
   }
 
-  def pageEdit(user_id: Long, domain_id: Long, path: String)(implicit s: Session): Option[PageEditViewModel] = {
+  def pageEdit(user_id: Long, domain: String, path: String)(implicit s: Session): Option[PageEditViewModel] = {
     Accounts.accounts
       .innerJoin(Domains.domains)
       .innerJoin(Pages.pages)
@@ -143,7 +143,7 @@ object Queries {
       .on { case (((a, d), p), t) =>
         a.user_ids @> List(user_id) &&
         a.id === d.account_id &&
-        d.id === domain_id &&
+        d.domain === domain &&
         p.account_id === a.id &&
         p.domain_id === d.id &&
         p.path === path &&
@@ -158,14 +158,14 @@ object Queries {
       .map(PageEditViewModel.tupled)
   }
 
-  def pageSave(user_id: Long, domain_id: Long, path: String)(title: String, data: JsValue)(implicit s: Session): Boolean = {
+  def pageSave(user_id: Long, domain: String, path: String)(title: String, data: JsValue)(implicit s: Session): Boolean = {
     Accounts.accounts
       .innerJoin(Domains.domains)
       .innerJoin(Pages.pages)
       .on { case ((a, d), p) =>
         a.user_ids @> List(user_id) &&
         a.id === d.account_id &&
-        d.id === domain_id &&
+        d.domain === domain &&
         p.account_id === a.id &&
         p.domain_id === d.id &&
         p.path === path
