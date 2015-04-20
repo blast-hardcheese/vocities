@@ -22,6 +22,10 @@ var Utils = {
         }, props);
         return r;
     },
+
+    newSectionPopup: function() {
+        $('#add-popup').show();
+    },
 };
 
 var Updatable = {

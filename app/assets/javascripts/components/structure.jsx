@@ -1,5 +1,5 @@
 var SidebarNav = React.createClass({
-    mixins: [Updatable, Editable],
+    mixins: [Updatable, Editable, Utils],
 
     extendPropsFunctions: [Editable.extendPropsEditable],
 
@@ -84,6 +84,7 @@ var SidebarNav = React.createClass({
         });
 
         var toggleEdit = null;
+        var newSection = null;
         if (this.props.editable) {
             var style = {
                 position: 'absolute',
@@ -97,6 +98,8 @@ var SidebarNav = React.createClass({
             } else {
                 toggleEdit = <a onClick={this.stopEdit} style={style}>Done</a>;
             }
+
+            newSection = <li key="new-section" style={{cursor: 'pointer'}}><a onClick={this.newSectionPopup}>New Section</a></li>;
         }
 
         return (
@@ -104,6 +107,7 @@ var SidebarNav = React.createClass({
                 {toggleEdit}
                 <ul>
                     {sections}
+                    {newSection}
                 </ul>
             </nav>
         );
