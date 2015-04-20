@@ -112,25 +112,25 @@ jQuery(function($) {
         <div id="wrapper">
             <!-- Header -->
                 <div id="header-wrapper" class="skel-layers-fixed">
-		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#header-wrapper'], $pageData));").toString)
+		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#header-wrapper'], _.extend({editable: false}, $pageData)));").toString)
                 </div>
 
             <!-- Main -->
                 <div id="main-wrapper">
-		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#main-wrapper'], $pageData));").toString)
+		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#main-wrapper'], _.extend({editable: false}, $pageData)));").toString)
                 </div>
 
             <!-- Footer -->
                 <section id="footer">
-		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#footer'], $pageData));").toString)
+		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#footer'], _.extend({editable: false}, $pageData)));").toString)
                 </section>
 
 		<div id="color-picker">
-		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#color-picker'], $pageData));").toString)
+		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#color-picker'], _.extend({editable: false}, $pageData)));").toString)
 		</div>
 
 		<div id="edit-toggler">
-		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#edit-toggler'], $pageData));").toString)
+		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#edit-toggler'], _.extend({editable: false}, $pageData)));").toString)
 		</div>
         </div>
 }
