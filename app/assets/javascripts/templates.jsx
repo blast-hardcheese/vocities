@@ -154,7 +154,7 @@ var Templates = {
             },
         });
 
-        var EditToggler = React.createClass({
+        var EditButtons = React.createClass({
             mixins: [Editable, Updatable],
 
             setEditable: function (newState) {
@@ -306,7 +306,7 @@ var Templates = {
             },
 
             function(vm) {
-                return render('#edit-toggler', vm, EditToggler);
+                return render('#edit-buttons', vm, EditButtons);
             },
 
             function(vm) {
@@ -341,7 +341,7 @@ var Templates = {
             '#main-wrapper': Main,
             '#footer': Footer,
             '#color-picker': ColorPicker,
-            '#edit-toggler': EditToggler,
+            '#edit-buttons': EditButtons,
             '#add-popup': AddWidgetPopup,
         };
 

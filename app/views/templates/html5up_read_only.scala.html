@@ -135,8 +135,8 @@ jQuery(function($) {
 		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#color-picker'], _.extend({editable: false}, $pageData)));").toString)
 		</div>
 
-		<div id="edit-toggler">
-		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#edit-toggler'], _.extend({editable: false}, $pageData)));").toString)
+		<div id="edit-buttons">
+		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#edit-buttons'], _.extend({editable: false}, $pageData)));").toString)
 		</div>
         </div>
 }
