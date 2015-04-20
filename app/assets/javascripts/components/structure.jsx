@@ -75,7 +75,7 @@ var SidebarNav = React.createClass({
             var link = null;
             var updated = _.partial(_this.renameSection, idx);
             if (_this.state.editing) {
-                link = <TextField content={s.title} updated={updated} containerTag='a' href={'#' + s.tag} />;
+                link = <TextField content={s.title} updated={updated} containerTag='a' href={'#' + s.tag} editable={_this.props.editable} />;
             } else {
                 link = <a href={'#' + s.tag}>{s.title}</a>;
             }
