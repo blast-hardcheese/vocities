@@ -18,7 +18,6 @@ libraryDependencies ++= Seq(
   "org.webjars.bower" % "jquery" % "2.1.3",
   "org.webjars.bower" % "jquery-ui" % "1.11.4",
   "org.webjars.bower" % "jquery-waypoints" % "3.1.1",
-  "org.webjars.bower" % "magnific-popup" % "1.0.0",
   "org.webjars.bower" % "underscore" % "1.8.3",
   "com.typesafe.play.plugins" %% "play-plugins-redis" % "2.3.1",
   "com.github.tminglei" % "slick-pg_2.11" % "0.8.4",
