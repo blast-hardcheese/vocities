@@ -7,14 +7,10 @@ User features include:
 
  - G+ Authentication via SecureSocial
  - Simple DNS setup via CNAME
+ - Multi-domain management
 
 Developer features include:
 
  - JSON website specification
  - Per-template React.js widgets
  - Server-side React rendering using Nashorn
-
-Goals:
-
- - Floating edit panel to allow real-time modification of templates
- - "Edit mode" extensions to Reactjs widgets
