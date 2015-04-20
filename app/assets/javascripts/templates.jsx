@@ -165,6 +165,27 @@ var Templates = {
 
             performSave: function () {
                 console.info('Save stub');
+                var pageData = _.extend({}, this.props);
+
+                delete pageData.editable;
+                delete pageData.saveUrl;
+                delete pageData.title;
+                delete pageData.updated;
+
+                var title = this.props.title;
+
+                var data = {
+                    title: title,
+                    data: pageData,
+                };
+
+                $.ajax({
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    dataType: 'json',
+                    method: 'PUT',
+                    url: this.props.saveUrl,
+                });
             },
 
             render: function() {

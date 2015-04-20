@@ -37,7 +37,7 @@
 	</script>
 
     <script type="text/javascript">
-var PageData = _.extend({saveUrl: @Html(Json.stringify(jsSaveUrl))}, @Html(Json.stringify(pageData)));
+var PageData = _.extend({saveUrl: @Html(Json.stringify(jsSaveUrl)), title: @Html(Json.stringify(JsString(title)))}, @Html(Json.stringify(pageData)));
 var DefaultTemplateValues = @Html(Json.stringify(css_values))
 
 jQuery(function($) {
