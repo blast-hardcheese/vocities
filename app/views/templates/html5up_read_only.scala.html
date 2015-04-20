@@ -109,6 +109,10 @@ jQuery(function($) {
 }
 
 @main(title)(header) {
+	<div id="add-popup">
+	    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#add-popup'], _.extend({editable: false}, $pageData)));").toString)
+	</div>
+
         <div id="wrapper">
             <!-- Header -->
                 <div id="header-wrapper" class="skel-layers-fixed">
@@ -131,10 +135,6 @@ jQuery(function($) {
 
 		<div id="edit-toggler">
 		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#edit-toggler'], _.extend({editable: false}, $pageData)));").toString)
-		</div>
-
-		<div id="add-popup">
-		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#add-popup'], _.extend({editable: false}, $pageData)));").toString)
 		</div>
         </div>
 }

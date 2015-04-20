@@ -8,9 +8,22 @@ html, body {
 #add-popup {
   display: none;
 
-  position: absolute;
+  position: fixed;
   width: 100%;
   height: 100%;
 
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0,0,0,0.4);
+
+  z-index: 5;
+}
+
+#add-popup .popup {
+  position: absolute;
+
+  left: 20%;
+  right: 20%;
+  top: 20%;
+  bottom: 20%;
+
+  background-color: rgba(127, 127, 127, 0.5);
 }

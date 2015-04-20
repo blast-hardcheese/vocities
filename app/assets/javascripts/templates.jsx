@@ -184,9 +184,82 @@ var Templates = {
         });
 
         var AddWidgetPopup = React.createClass({
+            availableTypes: {
+                'paragraph': {
+                    'class': Paragraph,
+                    'name': 'Paragraph',
+                },
+
+                'youtube': {
+                    'class': YouTube,
+                    'name': 'YouTube Video',
+                },
+
+                'header': {
+                    'class': HeaderBlock,
+                    'name': 'Section Header',
+                },
+            },
+
+            addSection: function() {
+                var title = this.refs.sectionName.getDOMNode().value;
+                var type = this.refs.sectionType.getDOMNode().value;
+
+                var tag = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+                var section = {
+                    tag: tag,
+                    title: title,
+                    content: {
+                        type: type,
+                    }
+                };
+
+                switch(type) {
+                    case 'paragraph':
+                        section.content.data = {
+                            content: '<p>Lorem ipsum sit dolor amet</p>',
+                        };
+                        break;
+                    case 'youtube':
+                        section.content.data = {
+                            videoId: 'vSjX02FIZCk',
+                        };
+                        break;
+                    case 'header':
+                        section.content.data = {
+                            title: title,
+                            text: '<p>Lorem ipsum sit dolor amet</p>',
+                            subtitle: '<p>Nunc convallis dictum consectetur</p>',
+                        };
+                        break;
+                }
+
+                var data = _.extend({}, this.props, {
+                    sections: _.flatten([this.props.sections, [section]]),
+                });
+
+                this.props.updated(data);
+
+                $('#add-popup').hide();
+            },
+
             render: function() {
+                var _this = this;
+
+                var options = _.map(Object.keys(this.availableTypes), function(kind) {
+                    return <option key={kind} value={kind}>{_this.availableTypes[kind].name}</option>;
+                });
+
                 return <div className="popup">
-                    <h2>Hey</h2>
+                    <h2>Add Section</h2>
+                    <input ref="sectionName" className="name" placeholder="Enter section name here" />
+                    <select ref="sectionType">
+                        <option value="" disabled>Select widget type</option>
+                        {options}
+                    </select>
+
+                    <button onClick={this.addSection}>Add Section</button>
                 </div>;
             },
         });
