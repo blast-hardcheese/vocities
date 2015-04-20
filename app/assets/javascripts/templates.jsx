@@ -183,6 +183,14 @@ var Templates = {
             }
         });
 
+        var AddWidgetPopup = React.createClass({
+            render: function() {
+                return <div className="popup">
+                    <h2>Hey</h2>
+                </div>;
+            },
+        });
+
         var render = function(sel, data, clazz) {
             var factory = React.createFactory(clazz)(data);
             var target = $(sel)[0];
@@ -210,6 +218,10 @@ var Templates = {
 
             function(vm) {
                 return render('#edit-toggler', vm, EditToggler);
+            },
+
+            function(vm) {
+                return render('#add-popup', vm, AddWidgetPopup);
             },
 
             function(vm) {
@@ -241,6 +253,7 @@ var Templates = {
             '#footer': Footer,
             '#color-picker': ColorPicker,
             '#edit-toggler': EditToggler,
+            '#add-popup': AddWidgetPopup,
         };
 
         return self;

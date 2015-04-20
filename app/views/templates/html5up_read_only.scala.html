@@ -132,5 +132,9 @@ jQuery(function($) {
 		<div id="edit-toggler">
 		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#edit-toggler'], _.extend({editable: false}, $pageData)));").toString)
 		</div>
+
+		<div id="add-popup">
+		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#add-popup'], _.extend({editable: false}, $pageData)));").toString)
+		</div>
         </div>
 }
