@@ -15,7 +15,7 @@ import play.twirl.api.Html
 import models.{ Page, Template }
 
 import securesocial.core.{ SecureSocial, RuntimeEnvironment }
-import models.UserModel
+import models.{ UserModel, Queries }
 
 class RichScriptEngine(val engine: ScriptEngine) {
   def evalResource(path: String): Object = {
@@ -79,6 +79,23 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
   }
 
   def edit(domain: String, path: String) = SecuredAction { implicit request =>
-    lookup(domain, path)(render(Some("/blah")))
+    val route = routes.Application.save(domain, path).toString
+
+    lookup(domain, path)(render(Some(route)))
+  }
+
+  def save(domain: String, path: String) = SecuredAction(parse.json) { implicit request =>
+    val key = "html5up-read-only"
+
+    DB.withSession { implicit s =>
+      val userId = request.user.userId
+
+      val parser = models.TemplateData.byName(key)
+
+      parser
+        .validate(request.body)
+        .map { case (title, data) => Ok(Queries.pageSave(userId, domain, path)(title, data).toString)
+      } getOrElse { BadRequest }
+    }
   }
 }
