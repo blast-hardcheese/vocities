@@ -1,4 +1,8 @@
 GET     /account                                                     @controllers.Users.index
+
+GET     /edit/:domain/                                               @controllers.Application.edit(domain: String, path="")
+GET     /edit/:domain/*path                                          @controllers.Application.edit(domain: String, path)
+
 GET     /account/edit/:domain_id/                                    @controllers.Users.edit(domain_id: Long, path="")
 GET     /account/edit/:domain_id/*path                               @controllers.Users.edit(domain_id: Long, path)
 

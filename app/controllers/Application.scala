@@ -61,9 +61,9 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
     }
   }
 
-  def lookup(path: String)(handler: (String, String, JsValue, String, JsValue) => Result)(implicit request: Request[_]) = {
+  def lookup(domain: String, path: String)(handler: (String, String, JsValue, String, JsValue) => Result)(implicit request: Request[_]) = {
     DB.withSession { implicit s =>
-      models.Pages.lookup(request.domain, path) map {
+      models.Pages.lookup(domain, path) map {
           case (_, Some(title), Some(data), Some(templateId), Some(css_template), Some(css_values)) => handler(title, templateId, data, css_template, css_values)
           case (_, None,        None,       _,                _,                  _               ) => BadRequest("404")
           case (_, _,           _,          None,             _,                  _               ) => InternalServerError("Can't find template!")
@@ -75,6 +75,10 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
   }
 
   def route(path: String) = Action { implicit request =>
-    lookup(path)(render)
+    lookup(request.domain, path)(render)
+  }
+
+  def edit(domain: String, path: String) = SecuredAction { implicit request =>
+    lookup(domain, path)(render)
   }
 }
