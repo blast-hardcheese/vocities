@@ -163,8 +163,13 @@ var Templates = {
                 });
             },
 
+            performSave: function () {
+                console.info('Save stub');
+            },
+
             render: function() {
-                var button = null;
+                var toggleEditButton = null;
+                var saveButton = null;
 
                 var style = {
                     position: 'fixed',
@@ -173,13 +178,24 @@ var Templates = {
                     zIndex: 1,
                 };
 
+                var buttonStyle = {
+                    display: 'block',
+                };
+
                 if (this.props.editable) {
-                    button = <button style={style} onClick={this.setEditable.bind(this, false)}>Disable Editing</button>;
+                    toggleEditButton = <button style={buttonStyle} onClick={this.setEditable.bind(this, false)}>Disable Editing</button>;
                 } else {
-                    button = <button style={style} onClick={this.setEditable.bind(this, true)}>Enable Editing</button>;
+                    toggleEditButton = <button style={buttonStyle} onClick={this.setEditable.bind(this, true)}>Enable Editing</button>;
                 }
 
-                return button;
+                if (this.props.saveUrl) {
+                    saveButton = <button style={buttonStyle} onClick={this.performSave}>Save</button>;
+                }
+
+                return <div style={style}>
+                    {toggleEditButton}
+                    {saveButton}
+                </div>;
             }
         });
 

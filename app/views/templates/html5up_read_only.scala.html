@@ -7,6 +7,8 @@
 @jsPath(path: String) = @{ routes.Assets.at("javascripts/html5up-read-only/" + path) }
 @cssPath(path: String) = @{ routes.Assets.at("stylesheets/html5up-read-only/" + path) }
 
+@saveUrl = @{ Some("/save").map(JsString.apply _).getOrElse(JsNull) }
+
 @header = {
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <meta name="description" content="" />
@@ -35,7 +37,7 @@
 	</script>
 
     <script type="text/javascript">
-var PageData = @Html(Json.stringify(pageData));
+var PageData = _.extend({saveUrl: @Html(Json.stringify(saveUrl))}, @Html(Json.stringify(pageData)));
 var DefaultTemplateValues = @Html(Json.stringify(css_values))
 
 jQuery(function($) {
