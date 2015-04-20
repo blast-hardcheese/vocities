@@ -1,4 +1,4 @@
-@(engine: javax.script.ScriptEngine)(title: String, pageData: JsValue, css_template: String, css_values: JsValue)
+@(engine: javax.script.ScriptEngine, saveUrl: Option[String])(title: String, pageData: JsValue, css_template: String, css_values: JsValue)
 
 @templateId = @{ Html(Json.stringify(JsString("html5up_read_only"))) }
 
@@ -7,7 +7,7 @@
 @jsPath(path: String) = @{ routes.Assets.at("javascripts/html5up-read-only/" + path) }
 @cssPath(path: String) = @{ routes.Assets.at("stylesheets/html5up-read-only/" + path) }
 
-@saveUrl = @{ Some("/save").map(JsString.apply _).getOrElse(JsNull) }
+@jsSaveUrl = @{ saveUrl.map(JsString.apply _).getOrElse(JsNull) }
 
 @header = {
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -37,7 +37,7 @@
 	</script>
 
     <script type="text/javascript">
-var PageData = _.extend({saveUrl: @Html(Json.stringify(saveUrl))}, @Html(Json.stringify(pageData)));
+var PageData = _.extend({saveUrl: @Html(Json.stringify(jsSaveUrl))}, @Html(Json.stringify(pageData)));
 var DefaultTemplateValues = @Html(Json.stringify(css_values))
 
 jQuery(function($) {

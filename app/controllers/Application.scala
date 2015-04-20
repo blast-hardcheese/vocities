@@ -47,7 +47,7 @@ object Application extends BaseController {
 class Application(override implicit val env: RuntimeEnvironment[UserModel]) extends BaseController with SecureSocial[UserModel] {
   val engine = Application.engine
 
-  private[this] def render(title: String, templateId: String, data: JsValue, css_template: String, css_values: JsValue) = {
+  private[this] def render(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue, css_template: String, css_values: JsValue) = {
     // Only here temporarily
     var r = new RichScriptEngine(engine)
     r.evalResource("public/javascripts/mixins.js")
@@ -56,7 +56,7 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
     r.evalResource("public/javascripts/templates.js")
 
     templateId match {
-      case "html5up-read-only" => Ok(views.html.templates.html5up_read_only(engine)(title, data, css_template, css_values))
+      case "html5up-read-only" => Ok(views.html.templates.html5up_read_only(engine, saveUrl)(title, data, css_template, css_values))
       case _ => NotFound
     }
   }
@@ -75,10 +75,10 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
   }
 
   def route(path: String) = Action { implicit request =>
-    lookup(request.domain, path)(render)
+    lookup(request.domain, path)(render())
   }
 
   def edit(domain: String, path: String) = SecuredAction { implicit request =>
-    lookup(domain, path)(render)
+    lookup(domain, path)(render(Some("/blah")))
   }
 }
