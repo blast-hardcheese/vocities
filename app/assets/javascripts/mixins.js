@@ -87,7 +87,9 @@ var Editable = {
         };
     },
 
-    startEdit: function() {
+    startEdit: function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         if (!this.props.editable) {
             console.error(this, 'called startEdit when not editable!');
         }
