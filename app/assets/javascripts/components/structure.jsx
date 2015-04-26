@@ -261,6 +261,19 @@ var Section = React.createClass({
         }
     },
     render: function() {
+        var headerImage = null;
+
+        if (this.props.bannerImage) {
+            headerImage = <div style={{
+                backgroundImage: 'url(' + this.props.bannerImage + ')',
+                backgroundPosition: 'top right',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'cover',
+                height: '15em',
+                width: '100%',
+            }} />;
+        }
+
         var data = _.extend({}, {
             updated: (function(newProps) {
                 this.props.updated({
@@ -273,6 +286,7 @@ var Section = React.createClass({
         }, this.props.content);
         return (
             <section id={this.props.tag}>
+                {headerImage}
                 <div className="container">
                     {React.createElement(WidgetBuilder(), data)}
                 </div>

@@ -1,19 +1,6 @@
 # --- !Ups
 
 update "templates" set css_template = '
-<% for(i in section_banners) { %>
-#main section<%= section_banners[i].section %>::before {
-    background-image: url(''<%= section_banners[i].url %>'');;
-    background-position: top right;;
-    background-repeat: no-repeat;;
-    background-size: cover;;
-    content: '''';;
-    display: block;;
-    height: 15em;;
-    width: 100%;;
-}
-<% } %>
-
 #header {
     background: <%= primary_bg %>;;
     color: <%= primary_color %>;;
