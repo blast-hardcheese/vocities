@@ -11,7 +11,8 @@ var Utils = {
 
     extendProps: function(path) {
         var deepProps = this.propAtPath(path);
-        return this.buildProps(deepProps, path);
+        var props = _.extend({key: path}, deepProps);
+        return this.buildProps(props, path);
     },
 
     buildProps: function(props, path) {
