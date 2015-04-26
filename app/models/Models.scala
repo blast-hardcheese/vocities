@@ -163,7 +163,7 @@ object Queries {
       .innerJoin(Domains.domains)
       .innerJoin(Pages.pages)
       .on { case ((a, d), p) =>
-        a.user_ids @> List(user_id) &&
+        user_id.bind === a.user_ids.any &&
         a.id === d.account_id &&
         d.domain === domain &&
         p.account_id === a.id &&
