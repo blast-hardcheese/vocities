@@ -309,31 +309,22 @@ var Templates = {
             return react;
         };
 
-        var sequences = [
-            function(vm) {
-                return render('#header-wrapper', vm, Sidebar);
-            },
+        var classes = {
+            '#header-wrapper': Sidebar,
+            '#main-wrapper': Main,
+            '#footer': Footer,
+            '#color-picker': ColorPicker,
+            '#edit-buttons': EditButtons,
+            '#add-popup': AddWidgetPopup,
+        };
 
-            function(vm) {
-                return render('#main-wrapper', vm, Main);
-            },
+        var classRenderers = _.map(classes, function(reactClass, id) {
+            return function(vm) {
+                return render(id, vm, reactClass);
+            };
+        })
 
-            function(vm) {
-                return render('#footer', vm, Footer);
-            },
-
-            function(vm) {
-                return render('#color-picker', vm, ColorPicker);
-            },
-
-            function(vm) {
-                return render('#edit-buttons', vm, EditButtons);
-            },
-
-            function(vm) {
-                return render('#add-popup', vm, AddWidgetPopup);
-            },
-
+        var sequences = classRenderers.concat([
             function(vm) {
                 var dynamicCss = _.template($('#dynamic-tpl').text());
                 var dynamicCssValues = JSON.parse($('#dynamic-tpl-values').text());
@@ -353,18 +344,11 @@ var Templates = {
                     },
                 };
             },
-        ];
+        ]);
 
         self.render = render;
         self.sequences = sequences;
-        self.classes = {
-            '#header-wrapper': Sidebar,
-            '#main-wrapper': Main,
-            '#footer': Footer,
-            '#color-picker': ColorPicker,
-            '#edit-buttons': EditButtons,
-            '#add-popup': AddWidgetPopup,
-        };
+        self.classes = classes;
 
         return self;
     })({})
