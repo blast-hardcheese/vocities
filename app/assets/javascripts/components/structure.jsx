@@ -93,11 +93,7 @@ var SidebarNav = React.createClass({
                 borderBottom: 'none',
             };
 
-            if (!this.state.editing) {
-                toggleEdit = <a onClick={this.startEdit} style={style}>Edit</a>;
-            } else {
-                toggleEdit = <a onClick={this.stopEdit} style={style}>Done</a>;
-            }
+            toggleEdit = this.buildEditableButton({style: style});
 
             newSection = <li key="new-section" style={{cursor: 'pointer'}}><a onClick={this.newSectionPopup}>New Section</a></li>;
         }

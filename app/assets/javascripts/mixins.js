@@ -57,7 +57,7 @@ var Editable = {
         editable: React.PropTypes.bool.isRequired,
     },
 
-    buildEditableButton: function () {
+    buildEditableButton: function (attrs) {
         var label = 'Edit',
             target = this.startEdit;
 
@@ -66,10 +66,10 @@ var Editable = {
             target = this.stopEdit;
         }
 
-        var elem = React.createElement("a", {
+        var elem = React.createElement("a", _.extend({}, {
             cursor: 'pointer',
             onClick: target,
-        }, label);
+        }, attrs), label);
 
         return this.props.editable ? elem : null;
     },
