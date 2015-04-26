@@ -56,6 +56,10 @@ body, input, select, textarea {
 
 @media (max-width: 1280px) {
   .widget.w-youtube[data-size="normal"] > .wrapper { height: 31em;; }
+
+  #titleBar > span.toggle::before {
+    background-color: <%= primary_bg %>;;
+  }
 }
 
 @media (max-width: 1024px) {
