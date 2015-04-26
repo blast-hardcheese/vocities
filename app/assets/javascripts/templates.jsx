@@ -32,13 +32,9 @@ function TemplateManager(key, data) {
 var Templates = {
     "html5up_read_only": (function(self) {
         var Main = React.createClass({
-            getDefaultProps: function() {
-                return {
-                    updated: function(newProps) {
-                        console.error('Main tried to update:', newProps);
-                    }
-                }
-            },
+            mixins: [Utils, Editable, Updatable],
+            extendPropsFunctions: [Editable.extendPropsEditable, Updatable.autoUpdated],
+
             componentDidMount: function() {
                 var _this = this;
                 this.setProps(_.extend({}, this.props, {
@@ -47,29 +43,11 @@ var Templates = {
                     }
                 }));
             },
-            sectionUpdated: function(data, idx) {
-                var newSections = [].concat(this.props.sections);
-                if (data !== null) {
-                    newSections[idx] = data;
-                } else {
-                    newSections.splice(idx, 1);
-                }
-
-                var newProps = _.extend({}, this.props, {
-                    sections: newSections,
-                });
-
-                this.props.updated(newProps);
-            },
             render: function() {
                 var _this = this;
 
                 var sections = _.map(this.props.sections, function(s, idx) {
-                    var updated = function(newProps) {
-                        _this.sectionUpdated(newProps, idx);
-                    };
-
-                    return <Section title={s.title} key={s.tag} tag={s.tag} content={s.content} updated={updated} editable={_this.props.editable} />
+                    return React.createElement(Section, _this.extendProps('sections.' + idx));
                 });
                 return (
                     <div id="main">
