@@ -1,4 +1,4 @@
-@(vm: models.PageEditViewModel)
+@(domain: String, vm: models.PageEditViewModel)
 
 @import play.api.libs.json.{ Json, JsString, JsNumber }
 
@@ -18,7 +18,7 @@
 
         <script type="text/javascript">
             PageInfo = {
-                domain_id: @Html(Json.stringify(JsNumber(vm.page.domain_id))),
+                domain: @Html(Json.stringify(JsString(domain))),
                 path: @Html(Json.stringify(JsString(vm.page.path))),
             };
         </script>

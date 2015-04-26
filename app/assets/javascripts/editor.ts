@@ -1,11 +1,9 @@
 /// <reference path="dt/jquery/jquery.d.ts" />
 
 interface PageInfo {
-    domain_id: number;
+    domain: string;
     path: string;
 }
-
-console.log('Executing! Also, jQuery:', jQuery);
 
 declare var PageInfo: PageInfo;
 
@@ -30,7 +28,7 @@ jQuery(function($) {
         $.ajax({
             type: 'PUT',
             contentType: 'application/json',
-            url: '/account/edit/' + PageInfo.domain_id + '/' + PageInfo.path,
+            url: '/account/edit/' + PageInfo.domain + '/' + PageInfo.path,
             data: JSON.stringify(body),
         }).then(function() {
                 console.info('Success!');

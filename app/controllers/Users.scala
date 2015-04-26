@@ -28,7 +28,7 @@ class Users(override implicit val env: RuntimeEnvironment[UserModel]) extends Ba
     DB.withSession { implicit s =>
       val userId = request.user.userId
       Queries.pageEdit(userId, domain, path)
-        .map(vm => Ok(views.html.account.edit(vm)))
+        .map(vm => Ok(views.html.account.edit(domain, vm)))
         .getOrElse(NotFound)
     }
   }
