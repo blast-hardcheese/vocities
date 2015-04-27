@@ -131,3 +131,72 @@ var Editable = {
         }
     },
 };
+
+var Droptarget = {
+    getDefaultProps: function() {
+        return {
+            dragOver: false,
+        };
+    },
+
+    onDragEnter: function (event) {
+        event.preventDefault();
+        console.info('drag enter');
+        this.setState({
+            dragOver: true,
+        });
+    },
+
+    onDragOver: function (event) {
+        event.preventDefault();
+    },
+
+    onDragLeave: function (event) {
+        event.preventDefault();
+        console.info('drag leave');
+        this.setState({
+            dragOver: false,
+        });
+    },
+
+    onDropUpdateProp: function (propName) {
+        var _this = this;
+        return function (event) {
+            _this.setState({
+                dragOver: false,
+            });
+        };
+    },
+
+    buildDropStyles: function (propName) {
+        var styles = null;
+
+        var commonStyles = {
+            height: '15em',
+            width: '100%',
+        };
+
+        if (this.state.dragOver) {
+            styles = _.extend({
+                backgroundColor: 'gray',
+                backgroundImage: 'url(/assets/images/drop-here.png)',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+            }, commonStyles);
+        } else if (this.props[propName]) {
+            styles = _.extend({
+                backgroundImage: 'url(' + this.props[propName] + ')',
+                backgroundPosition: 'top right',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'cover',
+            }, commonStyles);
+        } else {
+            styles = {
+                display: 'none',
+            };
+        }
+
+        return styles;
+    },
+};
