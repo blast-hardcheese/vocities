@@ -190,7 +190,7 @@ var HeaderBlock = React.createClass({
 });
 
 var SidebarProfile = React.createClass({
-    mixins: [Updatable, Editable, Utils],
+    mixins: [Updatable, Editable, Utils, Droptarget],
 
     extendPropsFunctions: [Editable.extendPropsEditable],
 
@@ -228,7 +228,12 @@ var SidebarProfile = React.createClass({
         return (
             <header>
                 {this.buildEditableButton()}
-                <span className="image avatar"><img src={this.props.src} alt={this.props.alt} /></span>
+                {this.buildDroppable('src', null, {
+                  borderRadius: '100%',
+                  width: '8em',
+                  height: '8em',
+                  margin: '0 auto 2.25em auto',
+                })}
                 {name}
                 <p>{this.props.flavortext}</p>
             </header>
