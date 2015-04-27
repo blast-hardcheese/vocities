@@ -204,6 +204,14 @@ var Droptarget = {
         };
 
         if (this.state.dragOver) {
+            var dashes = React.createElement("div", {
+                style: _.extend({}, commonStyles, styles, {
+                    border: "3px dashed black",
+                    width: "100%",
+                    height: "100%",
+                    margin: null,
+                }),
+            });
             res = React.createElement("div", _.extend({}, {
                 style: _.extend({
                     backgroundColor: 'gray',
@@ -211,9 +219,10 @@ var Droptarget = {
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
                     backgroundSize: 'contain',
+                    padding: "5px",
                 }, commonStyles, styles),
                 onDrop: this.onDropUpdateProp(propName),
-            }, commonAttrs, attrs));
+            }, commonAttrs, attrs), dashes);
         } else if(this.props[propName]) {
             res = React.createElement("div", _.extend({}, {
                 style: _.extend({
