@@ -253,20 +253,9 @@ var Sidebar = React.createClass({
 });
 
 var Section = React.createClass({
-    mixins: [Updatable, Editable],
+    mixins: [Updatable, Editable, Droptarget],
     render: function() {
-        var headerImage = null;
-
-        if (this.props.bannerImage) {
-            headerImage = <div style={{
-                backgroundImage: 'url(' + this.props.bannerImage + ')',
-                backgroundPosition: 'top right',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'cover',
-                height: '15em',
-                width: '100%',
-            }} />;
-        }
+        var headerImage = <div style={this.buildDropStyles('bannerImage')} onDrop={this.onDropUpdateProp('bannerImage')} />;
 
         var data = _.extend({}, {
             updated: (function(newProps) {
@@ -279,7 +268,7 @@ var Section = React.createClass({
             editable: this.props.editable,
         }, this.props.content);
         return (
-            <section id={this.props.tag}>
+            <section id={this.props.tag} onDragEnter={this.onDragEnter} onDragLeave={this.onDragLeave}>
                 {headerImage}
                 <div className="container">
                     {React.createElement(WidgetBuilder(), data)}
