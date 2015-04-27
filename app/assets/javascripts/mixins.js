@@ -210,7 +210,7 @@ var Droptarget = {
         } else if (this.props[propName]) {
             styles = _.extend({
                 backgroundImage: 'url(' + this.props[propName] + ')',
-                backgroundPosition: 'top right',
+                backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'cover',
             }, commonStyles);
