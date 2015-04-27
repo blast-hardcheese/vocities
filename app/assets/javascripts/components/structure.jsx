@@ -253,13 +253,7 @@ var Sidebar = React.createClass({
 });
 
 var Section = React.createClass({
-    getDefaultProps: function() {
-        return {
-            updated: function(newProps) {
-                console.error('Section tried to update:', newProps);
-            }
-        }
-    },
+    mixins: [Updatable, Editable],
     render: function() {
         var headerImage = null;
 
