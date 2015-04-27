@@ -9,10 +9,19 @@ var deepExtend = function (key, data, newData) {
         var subkey = splitKey[0];
         var restkey = _.drop(splitKey, 1).join('.');
 
-        var extended = {};
-        extended[subkey] = deepExtend(restkey, (data[subkey] || {}), newData);
+        var extended = deepExtend(restkey, (data[subkey] || {}), newData);
 
-        return _.extend({}, data, extended);
+        var res = null;
+
+        if (Array.isArray(data)) {
+            res = [].concat(data);
+        } else {
+            res = _.extend({}, data);
+        }
+
+        res[subkey] = extended;
+
+        return res;
     }
 };
 
