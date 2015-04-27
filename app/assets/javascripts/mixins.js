@@ -165,6 +165,29 @@ var Droptarget = {
             _this.setState({
                 dragOver: false,
             });
+
+            var file = event.dataTransfer.files[0];
+
+            var data = new FormData();
+            data.append('file', file);
+            data.append('upload_preset', window.CloudinarySettings.upload_preset);
+
+            jQuery.ajax({
+                url: 'https://api.cloudinary.com/v1_1/' + window.CloudinarySettings.cloud_name + '/image/upload',
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                success: function(data){
+                    var newData = {};
+                    newData[propName] = data.url;
+                    _this.props.updated(newData);
+                },
+                error: function() {
+                    console.info('error:', arguments);
+                }
+            });
         };
     },
 
