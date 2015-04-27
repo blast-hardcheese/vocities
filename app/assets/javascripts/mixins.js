@@ -198,6 +198,11 @@ var Droptarget = {
             width: '100%',
         };
 
+        var commonAttrs = {
+            onDragEnter: this.onDragEnter,
+            onDragLeave: this.onDragLeave,
+        };
+
         if (this.state.dragOver) {
             res = React.createElement("div", _.extend({}, {
                 style: _.extend({
@@ -208,7 +213,7 @@ var Droptarget = {
                     backgroundSize: 'contain',
                 }, commonStyles, styles),
                 onDrop: this.onDropUpdateProp(propName),
-            }, attrs));
+            }, commonAttrs, attrs));
         } else if(this.props[propName]) {
             res = React.createElement("div", _.extend({}, {
                 style: _.extend({
@@ -218,7 +223,7 @@ var Droptarget = {
                     backgroundSize: 'cover',
                 }, commonStyles, styles),
                 onDrop: this.onDropUpdateProp(propName),
-            }, attrs));
+            }, commonAttrs, attrs));
         }
 
         return res;
