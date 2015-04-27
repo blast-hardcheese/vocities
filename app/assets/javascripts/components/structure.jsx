@@ -255,7 +255,7 @@ var Sidebar = React.createClass({
 var Section = React.createClass({
     mixins: [Updatable, Editable, Droptarget],
     render: function() {
-        var headerImage = <div style={this.buildDropStyles('bannerImage')} onDrop={this.onDropUpdateProp('bannerImage')} />;
+        var headerImage = this.buildDroppable('bannerImage');
 
         var data = _.extend({}, {
             updated: (function(newProps) {

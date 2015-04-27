@@ -191,35 +191,36 @@ var Droptarget = {
         };
     },
 
-    buildDropStyles: function (propName) {
-        var styles = null;
-
+    buildDroppable: function(propName, attrs, styles) {
+        var res = null;
         var commonStyles = {
             height: '15em',
             width: '100%',
         };
 
         if (this.state.dragOver) {
-            styles = _.extend({
-                backgroundColor: 'gray',
-                backgroundImage: 'url(/assets/images/drop-here.png)',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'contain',
-            }, commonStyles);
-        } else if (this.props[propName]) {
-            styles = _.extend({
-                backgroundImage: 'url(' + this.props[propName] + ')',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'cover',
-            }, commonStyles);
-        } else {
-            styles = {
-                display: 'none',
-            };
+            res = React.createElement("div", _.extend({}, {
+                style: _.extend({
+                    backgroundColor: 'gray',
+                    backgroundImage: 'url(/assets/images/drop-here.png)',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: 'contain',
+                }, commonStyles, styles),
+                onDrop: this.onDropUpdateProp(propName),
+            }, attrs));
+        } else if(this.props[propName]) {
+            res = React.createElement("div", _.extend({}, {
+                style: _.extend({
+                    backgroundImage: 'url(' + this.props[propName] + ')',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: 'cover',
+                }, commonStyles, styles),
+                onDrop: this.onDropUpdateProp(propName),
+            }, attrs));
         }
 
-        return styles;
+        return res;
     },
 };
