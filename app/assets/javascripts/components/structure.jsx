@@ -273,7 +273,7 @@ var Section = React.createClass({
             editable: this.props.editable,
         }, this.props.content);
         return (
-            <section id={this.props.tag} onDragEnter={this.onDragEnter} onDragLeave={this.onDragLeave}>
+            <section id={this.props.tag}>
                 {headerImage}
                 <div className="container">
                     {React.createElement(WidgetBuilder(), data)}

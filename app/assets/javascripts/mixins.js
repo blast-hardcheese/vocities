@@ -139,32 +139,43 @@ var Droptarget = {
         };
     },
 
-    onDragEnter: function (event) {
-        event.preventDefault();
-        console.info('drag enter');
-        this.setState({
-            dragOver: true,
-        });
+    dragEnterPage: function(direction) {
+        if (direction === 'enter') {
+            this.setState({
+                dragOver: true,
+            });
+        } else if (direction === 'leave') {
+            this.setState({
+                dragOver: false,
+            });
+        } else if (direction === 'drop') {
+            this.setState({
+                dragOver: false,
+            });
+        } else {
+            console.info('Unknown method', direction);
+        }
     },
 
-    onDragOver: function (event) {
-        event.preventDefault();
+    componentDidMount: function() {
+        if (this.subscriptions === undefined) {
+            this.subscriptions = [];
+        }
+
+        this.subscriptions.push(EventActions.get('dragStatus').listen(this.dragEnterPage));
     },
 
-    onDragLeave: function (event) {
-        event.preventDefault();
-        console.info('drag leave');
-        this.setState({
-            dragOver: false,
+    componentWillUnmount: function() {
+        this.subscriptions.forEach(function(s) {
+            s.stop();
         });
+        this.subscriptions.splice(0, this.subscriptions.length);
     },
 
     onDropUpdateProp: function (propName) {
         var _this = this;
         return function (event) {
-            _this.setState({
-                dragOver: false,
-            });
+            event.preventDefault();
 
             var file = event.dataTransfer.files[0];
 
@@ -199,8 +210,6 @@ var Droptarget = {
         };
 
         var commonAttrs = {
-            onDragEnter: this.onDragEnter,
-            onDragLeave: this.onDragLeave,
         };
 
         if (this.state.dragOver) {
