@@ -62,6 +62,8 @@ body, input, select, textarea {
 }
 ' where key = 'html5up-read-only';
 
+CREATE UNIQUE INDEX pages_account_domain ON pages (account_id, domain_id);
+
 # --- !Downs
 
 update "templates" set css_template = '
@@ -110,3 +112,5 @@ body, input, select, textarea {
 
 .w-youtube { width: <%= youtube_width || "100%" %>;; height: <%= youtube_height || "480px" %>;; }
 ' where key = 'html5up-read-only';
+
+DROP INDEX pages_account_domain;
