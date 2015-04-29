@@ -322,6 +322,50 @@ var Templates = {
                     },
                 };
             },
+
+            function(vm) {
+                var target = $('html');
+                if (target.length === 0) { // If we're not in a DOM, bail
+                    console.info('Can\'t find body, bailing');
+                    return {
+                        setProps: function() {},
+                    };
+                }
+
+                target.on('dragenter', function(e) {
+                    e.preventDefault();
+
+                    EventActions.trigger('_dragStatus', 'enter');
+
+                    return false;
+                });
+
+                target.on('dragover', function(e) {
+                    e.preventDefault();
+
+                    EventActions.trigger('_dragStatus', 'over');
+                });
+
+                target.on('dragleave', function(e) {
+                    e.preventDefault();
+
+                    EventActions.trigger('_dragStatus', 'leave');
+
+                    return false;
+                });
+
+                target.on('drop', function(e) {
+                    e.preventDefault();
+
+                    EventActions.trigger('_dragStatus', 'drop');
+
+                    console.info('Hey!', e.originalEvent.target);
+                });
+
+                return {
+                    setProps: function() {},
+                };
+            },
         ]);
 
         self.render = render;
