@@ -251,7 +251,7 @@ var Templates = {
                 }
 
                 var data = _.extend({}, this.props, {
-                    sections: _.flatten([this.props.sections, [section]]),
+                    sections: _.flatten([this.props.sections || [], [section]]),
                 });
 
                 this.props.updated(data);

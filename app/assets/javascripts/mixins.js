@@ -3,7 +3,7 @@ var Utils = {
         var r = this.props;
         if (path !== undefined && path !== null) {
             r = _.foldl(path.split('.'), function (props, key) {
-                return props[key];
+                return (props === undefined) ? undefined : props[key];
             }, this.props);
         }
         return r;

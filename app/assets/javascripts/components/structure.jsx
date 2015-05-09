@@ -284,6 +284,8 @@ var Section = React.createClass({
 });
 
 var Footer = React.createClass({
+    mixins: [Utils],
+
     copyrightUpdated: function (newProps) {
         this.props.updated(_.extend({}, this.props, {
             footer: _.extend({}, this.props.footer, {
@@ -292,7 +294,7 @@ var Footer = React.createClass({
         }));
     },
     render: function() {
-        var copyright = this.props.footer.copyright;
+        var copyright = this.propAtPath('footer.copyright');
 
         return (
             <div className="container">
