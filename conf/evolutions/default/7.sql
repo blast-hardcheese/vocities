@@ -1,5 +1,27 @@
 # --- !Ups
 
+insert into "templates" (id, key, css_values, css_template) values (1, 'html5up-read-only', 'null', '');
+
+update "templates" set css_values = '
+{
+  "youtube_width": null,
+  "youtube_height": null,
+
+  "primary_bg": "#4acaa8",
+  "primary_color": "#d1f1e9",
+  "hilight_color": "#b6e9dc",
+  "accent_color": "#5ccfb0",
+  "nav_active_bg": "white",
+  "nav_active_color": "#4acaa8",
+
+  "dark_text": "#777777",
+  "normal_text": "#888888",
+  "section_banners": [
+    {"url": "http://html5up.net/uploads/demos/read-only/images/banner.jpg", "section": "#first"}
+  ]
+}
+' where key = 'html5up-read-only';
+
 update "templates" set css_template = '
 #header {
     background: <%= primary_bg %>;;
@@ -66,51 +88,6 @@ CREATE UNIQUE INDEX pages_account_domain ON pages (account_id, domain_id);
 
 # --- !Downs
 
-update "templates" set css_template = '
-<% for(i in section_banners) { %>
-#main section<%= section_banners[i].section %>::before {
-    background-image: url(''<%= section_banners[i].url %>'');;
-    background-position: top right;;
-    background-repeat: no-repeat;;
-    background-size: cover;;
-    content: '''';;
-    display: block;;
-    height: 15em;;
-    width: 100%;;
-}
-<% } %>
-
-#header {
-    background: <%= primary_bg %>;;
-    color: <%= primary_color %>;;
-}
-
-#header > nav ul li a.active {
-    background: <%= nav_active_bg %>;;
-    color: <%= nav_active_color %> !important;;
-}
-
-#header > footer .icons li a {
-    color: <%= hilight_color %>;;
-}
-
-#header > nav ul li {
-  border-top: solid 2px <%= accent_color %>;;
-}
-
-header.major h2 {
-  color: <%= primary_bg %>;;
-}
-
-header.major h2 + p {
-  color: <%= dark_text %>;;
-}
-
-body, input, select, textarea {
-  color: <%= normal_text %>;;
-}
-
-.w-youtube { width: <%= youtube_width || "100%" %>;; height: <%= youtube_height || "480px" %>;; }
-' where key = 'html5up-read-only';
+delete from "templates" where key = 'html5up-read-only';
 
 DROP INDEX pages_account_domain;
