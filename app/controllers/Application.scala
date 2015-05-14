@@ -12,6 +12,8 @@ import play.api.libs.json.{ Json, JsValue }
 
 import play.twirl.api.Html
 
+import org.webjars.WebJarAssetLocator
+
 import models.{ Page, Template }
 
 import securesocial.core.{ SecureSocial, RuntimeEnvironment }
@@ -20,6 +22,11 @@ import models.{ UserModel, Queries }
 class RichScriptEngine(val engine: ScriptEngine) {
   def evalResource(path: String): Object = {
     engine.eval(new InputStreamReader(Play.classloader.getResourceAsStream(path)))
+  }
+
+  def evalWebjar(pkg: String, name: String): Object = {
+    val path = s"${WebJarAssetLocator.WEBJARS_PATH_PREFIX}/${WebJarAssets.fullPath(pkg, name)}"
+    evalResource(path)
   }
 }
 
@@ -33,8 +40,9 @@ object Application extends BaseController {
     log.debug(s"[Core]: $r")
     r.eval("var global = this;")
     r.eval("var log = function(x) { java.lang.System.out.println(x); }; var console = { warn: log, info: log, log: log };")
-    r.evalResource("public/lib/underscorejs/underscore.js")
-    r.evalResource("public/lib/react/react-with-addons.js")
+    r.evalWebjar("underscore", "underscore.js")
+    r.evalWebjar("react", "react-with-addons.js")
+
     r.evalResource("public/javascripts/mixins.js")
     r.evalResource("public/javascripts/widgets.js")
     r.evalResource("public/javascripts/components/structure.js")

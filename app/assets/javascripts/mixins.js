@@ -3,7 +3,7 @@ var Utils = {
         var r = this.props;
         if (path !== undefined && path !== null) {
             r = _.foldl(path.split('.'), function (props, key) {
-                return props[key];
+                return (props === undefined) ? undefined : props[key];
             }, this.props);
         }
         return r;
@@ -129,5 +129,121 @@ var Editable = {
                 console.info(this.getDOMNode(), 'editStopped');
             }
         }
+    },
+};
+
+var Droptarget = {
+    getDefaultProps: function() {
+        return {
+            dragOver: false,
+        };
+    },
+
+    dragEnterPage: function(direction) {
+        if (direction === 'enter') {
+            this.setState({
+                dragOver: true,
+            });
+        } else if (direction === 'leave') {
+            this.setState({
+                dragOver: false,
+            });
+        } else if (direction === 'drop') {
+            this.setState({
+                dragOver: false,
+            });
+        } else {
+            console.info('Unknown method', direction);
+        }
+    },
+
+    componentDidMount: function() {
+        if (this.subscriptions === undefined) {
+            this.subscriptions = [];
+        }
+
+        this.subscriptions.push(EventActions.get('dragStatus').listen(this.dragEnterPage));
+    },
+
+    componentWillUnmount: function() {
+        this.subscriptions.forEach(function(s) {
+            s.stop();
+        });
+        this.subscriptions.splice(0, this.subscriptions.length);
+    },
+
+    onDropUpdateProp: function (propName) {
+        var _this = this;
+        return function (event) {
+            event.preventDefault();
+
+            var file = event.dataTransfer.files[0];
+
+            var data = new FormData();
+            data.append('file', file);
+            data.append('upload_preset', window.CloudinarySettings.upload_preset);
+
+            jQuery.ajax({
+                url: 'https://api.cloudinary.com/v1_1/' + window.CloudinarySettings.cloud_name + '/image/upload',
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                success: function(data){
+                    var newData = {};
+                    newData[propName] = data.url;
+                    _this.props.updated(newData);
+                },
+                error: function() {
+                    console.info('error:', arguments);
+                }
+            });
+        };
+    },
+
+    buildDroppable: function(propName, attrs, styles) {
+        var res = null;
+        var commonStyles = {
+            height: '15em',
+            width: '100%',
+        };
+
+        var commonAttrs = {
+        };
+
+        if (this.state.dragOver) {
+            var dashes = React.createElement("div", {
+                style: _.extend({}, commonStyles, styles, {
+                    border: "3px dashed black",
+                    width: "100%",
+                    height: "100%",
+                    margin: null,
+                }),
+            });
+            res = React.createElement("div", _.extend({}, {
+                style: _.extend({
+                    backgroundColor: 'gray',
+                    backgroundImage: 'url(/assets/images/drop-here.png)',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: 'contain',
+                    padding: "5px",
+                }, commonStyles, styles),
+                onDrop: this.onDropUpdateProp(propName),
+            }, commonAttrs, attrs), dashes);
+        } else if(this.props[propName]) {
+            res = React.createElement("div", _.extend({}, {
+                style: _.extend({
+                    backgroundImage: 'url(' + this.props[propName] + ')',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: 'cover',
+                }, commonStyles, styles),
+                onDrop: this.onDropUpdateProp(propName),
+            }, commonAttrs, attrs));
+        }
+
+        return res;
     },
 };

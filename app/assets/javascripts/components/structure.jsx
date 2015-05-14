@@ -190,7 +190,7 @@ var HeaderBlock = React.createClass({
 });
 
 var SidebarProfile = React.createClass({
-    mixins: [Updatable, Editable, Utils],
+    mixins: [Updatable, Editable, Utils, Droptarget],
 
     extendPropsFunctions: [Editable.extendPropsEditable],
 
@@ -228,7 +228,12 @@ var SidebarProfile = React.createClass({
         return (
             <header>
                 {this.buildEditableButton()}
-                <span className="image avatar"><img src={this.props.src} alt={this.props.alt} /></span>
+                {this.buildDroppable('src', null, {
+                  borderRadius: '100%',
+                  width: '8em',
+                  height: '8em',
+                  margin: '0 auto 2.25em auto',
+                })}
                 {name}
                 <p>{this.props.flavortext}</p>
             </header>
@@ -253,20 +258,9 @@ var Sidebar = React.createClass({
 });
 
 var Section = React.createClass({
-    mixins: [Updatable, Editable],
+    mixins: [Updatable, Editable, Droptarget],
     render: function() {
-        var headerImage = null;
-
-        if (this.props.bannerImage) {
-            headerImage = <div style={{
-                backgroundImage: 'url(' + this.props.bannerImage + ')',
-                backgroundPosition: 'top right',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'cover',
-                height: '15em',
-                width: '100%',
-            }} />;
-        }
+        var headerImage = this.buildDroppable('bannerImage');
 
         var data = _.extend({}, {
             updated: (function(newProps) {
@@ -290,6 +284,8 @@ var Section = React.createClass({
 });
 
 var Footer = React.createClass({
+    mixins: [Utils],
+
     copyrightUpdated: function (newProps) {
         this.props.updated(_.extend({}, this.props, {
             footer: _.extend({}, this.props.footer, {
@@ -298,7 +294,7 @@ var Footer = React.createClass({
         }));
     },
     render: function() {
-        var copyright = this.props.footer.copyright;
+        var copyright = this.propAtPath('footer.copyright');
 
         return (
             <div className="container">

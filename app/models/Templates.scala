@@ -19,8 +19,12 @@ trait ValidatableTemplateData {
   def unpack(data: UnpackTarget): (String, JsValue)
 }
 
+trait HasDefaultTemplateData {
+  def default: JsValue
+}
+
 object TemplateData {
-  object Html5Up_read_only extends ValidatableTemplateData {
+  object Html5Up_read_only extends ValidatableTemplateData with HasDefaultTemplateData {
     case class Header(src: String, name: String, flavortext: Option[String])
     case class Footer(copyright: String)
     case class Sidebar(header: Header)
@@ -47,6 +51,24 @@ object TemplateData {
     def unpack(data: PostResult): (String, JsValue) = data match {
       case PostResult(title, data) => (title, Json.toJson(data))
     }
+
+    def default = Json.toJson(
+      PageData(
+        sections=List.empty,
+        social=Social(None, None, None, None, None),
+        sidebar=Sidebar(
+          header=Header(
+            src="http://photos3.meetupstatic.com/photos/member/3/9/a/7/member_243074759.jpeg",
+            name="Devon Stewart",
+            flavortext=None
+          )
+        ),
+        footer=Footer(
+          copyright="Devon Stewart"
+        ),
+        css=None
+      )
+    )
   }
 
   def byName(x: String) = x match {
