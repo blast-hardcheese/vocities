@@ -73,6 +73,7 @@ body, input, select, textarea {
 
 @media (max-width: 1024px) {
   .widget.w-youtube[data-size="normal"] > .wrapper { height: 40em;; }
+  #sidePanel { background-color: <%= primary_bg %>;; }
 }
 
 @media (max-width: 736px) {
