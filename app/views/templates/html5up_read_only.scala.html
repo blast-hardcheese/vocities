@@ -38,7 +38,19 @@
 
     <script type="text/javascript">
 var PageData = _.extend({saveUrl: @Html(Json.stringify(jsSaveUrl)), title: @Html(Json.stringify(JsString(title)))}, @Html(Json.stringify(pageData)));
-var DefaultTemplateValues = @Html(Json.stringify(css_values))
+var DefaultTemplateValues = @Html(Json.stringify(css_values));
+window.CloudinarySettings = @{
+    val config = play.api.Play.current.configuration
+    val maybeCloudinary = for {
+	cloud_name <- config.getString("cloudinary.cloud_name")
+	upload_preset <- config.getString("cloudinary.upload_preset")
+    } yield Json.obj(
+	"cloud_name" -> cloud_name,
+	"upload_preset" -> upload_preset
+    )
+
+    Html(Json.stringify(maybeCloudinary getOrElse Json.obj()))
+};
 
 jQuery(function($) {
 
