@@ -4,7 +4,7 @@
 
 @import play.api.libs.json.Json
 
-@jsPath(path: String) = @{ routes.Assets.at("javascripts/html5up-read-only/" + path) }
+@sharedCssPath(path: String) = @{ routes.Assets.at("stylesheets/html5up/" + path) }
 @cssPath(path: String) = @{ routes.Assets.at("stylesheets/html5up-read-only/" + path) }
 
 @jsSaveUrl = @{ saveUrl.map(JsString.apply _).getOrElse(JsNull) }
@@ -14,9 +14,9 @@
         <meta name="description" content="" />
         <meta name="keywords" content="" />
 
-        <!--[if lte IE 8]><script src="@cssPath("ie/html5shiv.js")"></script><![endif]-->
+        <!--[if lte IE 8]><script src="@sharedCssPath("ie/html5shiv.js")"></script><![endif]-->
         <noscript>
-            <link rel="stylesheet" href="@cssPath("skel.css")" />
+            <link rel="stylesheet" href="@sharedCssPath("skel.css")" />
             <link rel="stylesheet" media="screen" href="@cssPath("style.css")" />
             <link rel="stylesheet" media="screen" href="@cssPath("style-xlarge.css")" />
         </noscript>
