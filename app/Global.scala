@@ -12,15 +12,7 @@ import securesocial.core.{ RuntimeEnvironment, OAuth2Provider }
 import service.PostgresUserService
 import models.UserModel
 
-object LiftedRequestFilter extends Filter {
-  def apply(next: (RequestHeader) => Future[Result])(request: RequestHeader): Future[Result] = {
-    val result = next(request)
-    println(s"$request: $result")
-    result
-  }
-}
-
-object Global extends WithFilters(LiftedRequestFilter) {
+object Global extends WithFilters() {
   override def onLoadConfig(config: Configuration, path: File, classloader: ClassLoader, mode: Mode.Mode): Configuration = {
     val modeSpecificConfig = config ++ Configuration(ConfigFactory.load(s"application.${mode.toString.toLowerCase}.conf"))
     super.onLoadConfig(modeSpecificConfig, path, classloader, mode)
