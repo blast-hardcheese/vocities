@@ -357,7 +357,10 @@ var Templates = {
                 target.on('drop', function(e) {
                     e.preventDefault();
 
-                    EventActions.trigger('_dragStatus', 'drop');
+                    // Workaround for drop targets disappearing before event fires
+                    setTimeout(function() {
+                        EventActions.trigger('_dragStatus', 'drop');
+                    }, 1);
 
                     console.info('Hey!', e.originalEvent.target);
                 });
