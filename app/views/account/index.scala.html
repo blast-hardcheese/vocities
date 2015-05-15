@@ -33,6 +33,20 @@
                                     }
                                 </div>
                             </div>
+                            <div class="row">
+                                <form class="new-page-form" method="POST" action="@routes.Users.newPage">
+                                    <input name="domain_id" type="hidden" value="@{domain.id}" />
+                                    <input name="account_id" type="hidden" value="@{account.id}" />
+                                    <input name="path" type="hidden" value="" />
+                                    <input name="name" placeholder="Enter page name here" />
+                                    <select name="template">
+                                        <option disabled selected>Select a template</option>
+                                        <option value="html5up-read-only">html5up: Read Only</option>
+                                        <option value="html5up-prologue">html5up: Prologue</option>
+                                    </select>
+                                    <button type="submit">Create Page</button>
+                                </form>
+                            </div>
                         }
                     </div>
                 </div>
@@ -58,6 +72,34 @@
                     }, {});
 
                     data.account_id = Number.parseInt(data.account_id);
+
+                    $.ajax({
+                        url: form.attr('action'),
+                        data: JSON.stringify(data),
+                        type: 'POST',
+                        contentType: 'application/json',
+                        success: function(data){
+                            console.info('Success!', data);
+                        },
+                        error: function() {
+                            console.info('error:', arguments);
+                        }
+                    });
+                });
+
+            $('.new-page-form')
+                .submit(function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    var form = $(this);
+
+                    var data = _.foldl(form.serializeArray(), function(a, o) {
+                        a[o.name] = o.value;
+                        return a;
+                    }, {});
+
+                    data.account_id = Number.parseInt(data.account_id);
+                    data.domain_id = Number.parseInt(data.domain_id);
 
                     $.ajax({
                         url: form.attr('action'),

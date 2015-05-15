@@ -210,4 +210,31 @@ object Queries {
       }
       .headOption
   }
+
+  def newPage(user_id: Long, account_id: Long, domain_id: Long)(path: String, name: String, template_key: String)(implicit s: Session): Option[Page] = {
+    Domains.domains
+      .innerJoin(Accounts.accounts)
+      .innerJoin(Templates.templates)
+      .on { case ((d, a), t) => d.account_id === a.id && t.key === template_key }
+      .filter { case ((d, a), t) =>
+        d.id === domain_id &&
+        a.id === account_id &&
+        user_id.bind === a.user_ids.any
+      }
+      .map { case ((d, a), t) => (d.id, a.id, t.id) }
+      .run
+      .map { case (domain_id, account_id, template_id) =>
+        val defaultData = TemplateData.byName(template_key).default
+
+        Pages.create(Page(
+          account_id=account_id,
+          domain_id=domain_id,
+          path=path,
+          template_id=template_id,
+          title=name,
+          data=defaultData
+        ))
+      }
+      .headOption
+  }
 }

@@ -16,6 +16,7 @@ object Users extends BaseController {
 }
 
 case class NewDomainForm(account_id: Long, domain: String)
+case class NewPageForm(account_id: Long, domain_id: Long, path: String, name: String, template: String)
 
 class Users(override implicit val env: RuntimeEnvironment[UserModel]) extends BaseController with SecureSocial[UserModel] {
 
@@ -59,6 +60,24 @@ class Users(override implicit val env: RuntimeEnvironment[UserModel]) extends Ba
         Ok(Json.obj(
           "account_id" -> domain.account_id,
           "domain" -> domain.id
+        ))
+      } getOrElse {
+        BadRequest
+      }
+    }
+  }
+
+  implicit val readsNewPageForm = Json.reads[NewPageForm]
+  def newPage = SecuredAction(parse.json[NewPageForm]) { implicit request =>
+    val json = request.body
+
+    DB.withSession { implicit s =>
+      Queries.newPage(request.user.userId, json.account_id, json.domain_id)(json.path, json.name, json.template).map { page =>
+        Ok(Json.obj(
+          "account_id" -> page.account_id,
+          "domain_id" -> page.domain_id,
+          "path" -> page.path,
+          "title" -> page.title
         ))
       } getOrElse {
         BadRequest
