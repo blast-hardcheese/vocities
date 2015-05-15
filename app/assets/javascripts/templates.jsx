@@ -378,5 +378,38 @@ var Templates = {
         self.classes = classes;
 
         return self;
+    })({}),
+
+    "html5up_prologue": (function(self) {
+        var render = function(sel, data, clazz) {
+            var factory = React.createFactory(clazz)(data);
+            var target = $(sel)[0];
+            var react = React.render(factory, target);
+            react.setProps(data);
+            return react;
+        };
+
+        var classes = {
+            '#header-wrapper': Sidebar,
+            '#main-wrapper': Main,
+            '#footer': Footer,
+            '#color-picker': ColorPicker,
+            '#edit-buttons': EditButtons,
+            '#add-popup': AddWidgetPopup,
+        };
+
+        var classRenderers = _.map(classes, function(reactClass, id) {
+            return function(vm) {
+                return render(id, vm, reactClass);
+            };
+        })
+
+        var sequences = classRenderers.concat(sharedTemplateRenderers);
+
+        self.render = render;
+        self.sequences = sequences;
+        self.classes = classes;
+
+        return self;
     })({})
 }
