@@ -11,7 +11,7 @@ case class Page(account_id: Long, domain_id: Long, path: String, template_id: Lo
 case class PageInfo(account_id: Long, domain_id: Long, path: String, template_id: Long, title: String)
 
 class Accounts(tag: Tag) extends Table[Account](tag, "accounts") {
-  def id = column[Long]("id", O.PrimaryKey)
+  def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def name = column[String]("name")
   def user_ids = column[List[Long]]("user_ids", O.NotNull)
 
@@ -27,7 +27,7 @@ object Accounts {
 }
 
 class DomainTable(tag: Tag) extends Table[Domain](tag, "domains") {
-  def id = column[Long]("id", O.PrimaryKey)
+  def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def account_id = column[Long]("account_id", O.NotNull)
   def domain = column[String]("domain", O.NotNull)
 
@@ -45,7 +45,7 @@ object Domains {
 }
 
 class TemplateTable(tag: Tag) extends Table[Template](tag, "templates") {
-  def id = column[Long]("id", O.PrimaryKey)
+  def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def key = column[String]("key", O.NotNull)
   def css_template = column[String]("css_template", O.NotNull)
   def css_values = column[JsValue]("css_values", O.NotNull)
