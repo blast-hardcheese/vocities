@@ -33,6 +33,7 @@
                                     }
                                 </div>
                             </div>
+@*
                             <div class="row">
                                 <form class="new-page-form" method="POST" action="@routes.Users.newPage">
                                     <input name="domain_id" type="hidden" value="@{domain.id}" />
@@ -47,6 +48,7 @@
                                     <button type="submit">Create Page</button>
                                 </form>
                             </div>
+*@
                         }
                     </div>
                 </div>
@@ -86,7 +88,7 @@
                         }
                     });
                 });
-
+@*
             $('.new-page-form')
                 .submit(function (event) {
                     event.preventDefault();
@@ -114,6 +116,7 @@
                         }
                     });
                 });
+*@
         </script>
     </body>
 </html>
