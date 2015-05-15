@@ -56,6 +56,11 @@
                     <form class="new-domain-form" method="POST" action="@routes.Users.newDomain">
                         <input name="account_id" type="hidden" value="@{account.id}" />
                         <input name="domain" placeholder="Enter FQDN here" />
+                        <select name="template">
+                            <option disabled selected>Select a template</option>
+                            <option value="html5up-read-only">html5up: Read Only</option>
+                            <option value="html5up-prologue">html5up: Prologue</option>
+                        </select>
                         <button type="submit">Create Domain</button>
                     </form>
                 </div>

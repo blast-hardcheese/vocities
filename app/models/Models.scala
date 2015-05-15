@@ -193,7 +193,7 @@ object Queries {
       .getOrElse(false)
   }
 
-  def newDomain(user_id: Long, account_id: Long, domain: String)(implicit s: Session): Option[Domain] = {
+  def newDomain(user_id: Long, account_id: Long, domain: String)(template_key: String)(implicit s: Session): Option[Domain] = {
     Accounts.accounts
       .filter { a =>
         a.id === account_id &&
@@ -202,11 +202,15 @@ object Queries {
       .map { a => a.id }
       .run
       .map { account_id =>
-        Domains.create(Domain(
+        val _domain = Domains.create(Domain(
           id = -1,
           account_id = account_id,
           domain = domain
         ))
+
+        val page = newPage(user_id, account_id, _domain.id)("", "Empty page", template_key)
+
+        _domain
       }
       .headOption
   }
