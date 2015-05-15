@@ -29,8 +29,8 @@
     <body>
         <form class="container">
             <input name="title" value="@{vm.page.title}" />
-            <textarea name="data" class="col-xs-12" style="height: 500px">@{vm.page.data}</textarea>
-            <button name="save" style="float: right;">Save</button>
+            <textarea name="data" class="col-xs-12" style="display: none; height: 500px">@{vm.page.data}</textarea>
+            <button type="submit" name="save" style="float: right;">Save</button>
         </form>
         <a href="@routes.Users.index">Back</a>
     </body>
