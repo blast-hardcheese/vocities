@@ -5,8 +5,7 @@ import utils.ExtendedPostgresDriver.simple._
 
 case class Account(id: Long, name: String, user_ids: List[Long])
 case class Domain(id: Long, account_id: Long, domain: String)
-case class Template(id: Long, key: String, css_template: String, css_values: JsValue)
-case class TemplateInfo(id: Long, key: String)
+case class Template(id: Long, key: String)
 case class Page(account_id: Long, domain_id: Long, path: String, template_id: Long, title: String, data: JsValue)
 case class PageInfo(account_id: Long, domain_id: Long, path: String, template_id: Long, title: String)
 
@@ -49,11 +48,8 @@ object Domains {
 class TemplateTable(tag: Tag) extends Table[Template](tag, "templates") {
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def key = column[String]("key", O.NotNull)
-  def css_template = column[String]("css_template", O.NotNull)
-  def css_values = column[JsValue]("css_values", O.NotNull)
 
-  def * = (id, key, css_template, css_values) <> (Template.tupled, Template.unapply _)
-  def info = (id, key) <> (TemplateInfo.tupled, TemplateInfo.unapply)
+  def * = (id, key) <> (Template.tupled, Template.unapply _)
 }
 
 object Templates {
@@ -109,8 +105,8 @@ object Users {
   val users = TableQuery[Users]
 }
 
-case class AccountViewModel(accounts: Seq[Account], domains: Seq[Domain], pages: Seq[PageInfo], templates: Seq[TemplateInfo])
-case class PageEditViewModel(page: Page, template_key: String, css_values: JsValue)
+case class AccountViewModel(accounts: Seq[Account], domains: Seq[Domain], pages: Seq[PageInfo], templates: Seq[Template])
+case class PageEditViewModel(page: Page, template_key: String)
 
 object Queries {
   def accountsIndex(user_id: Long)(implicit s: Session) = {
@@ -135,7 +131,6 @@ object Queries {
 
     val templates = Templates.templates
       .filter(_.id inSetBind(templateIds))
-      .map(_.info)
       .run
 
     AccountViewModel(accounts, domains, pages, templates)
@@ -156,7 +151,7 @@ object Queries {
         p.template_id === t.id
       }
       .map { case (((a, d), p), t) =>
-        (p, t.key, t.css_values)
+        (p, t.key)
       }
       .take(1)
       .run
