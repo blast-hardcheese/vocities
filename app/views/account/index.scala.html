@@ -66,6 +66,14 @@
                 </div>
             }
         </div>
+        @if(vm.accounts.isEmpty) {
+        <div>
+            <h3>No accounts found!</h3>
+            <p>If you believe this is an error, please feel free to <a href="@securesocial.controllers.routes.LoginPage.logout">log out</a> and try again.</p>
+
+            <p>If you are not yet a member, please feel free to shoot an email over to <a href="mailto:blast@@hardchee.se">support@@vocities.com</a>! We're not fully open for business quite yet, but if you're interested in a test drive, you can use the system for free until we launch!</p>
+        </div>
+        }
         <script type="text/javascript">
             $('.new-domain-form')
                 .submit(function (event) {
