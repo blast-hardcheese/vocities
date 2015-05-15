@@ -15,6 +15,8 @@ import securesocial.core.{ SecureSocial, RuntimeEnvironment }
 object Users extends BaseController {
 }
 
+case class NewDomainForm(account_id: Long, domain: String)
+
 class Users(override implicit val env: RuntimeEnvironment[UserModel]) extends BaseController with SecureSocial[UserModel] {
 
   def index = SecuredAction { implicit request =>
@@ -46,5 +48,11 @@ class Users(override implicit val env: RuntimeEnvironment[UserModel]) extends Ba
         .map { case (title, data) => Ok(Queries.pageSave(userId, domain, path)(title, data).toString)
       } getOrElse { BadRequest }
     }
+  }
+
+  implicit val readsNewDomainForm = Json.reads[NewDomainForm]
+  def newDomain = SecuredAction(parse.json[NewDomainForm]) { implicit request =>
+    println(s"Got: ${request.body}")
+    Ok
   }
 }
