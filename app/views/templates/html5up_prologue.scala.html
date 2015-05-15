@@ -1,4 +1,4 @@
-@(engine: javax.script.ScriptEngine, saveUrl: Option[String])(title: String, pageData: JsValue, css_template: String, css_values: JsValue)
+@(engine: javax.script.ScriptEngine, saveUrl: Option[String])(title: String, pageData: JsValue)
 
 @templateId = @{ Html(Json.stringify(JsString("html5up_prologue"))) }
 
@@ -30,15 +30,13 @@
 
         <style id="dynamic" type="text/css"></style>
         <style id="dynamic-tpl" type="text/underscore">
-@Html(css_template)
         </style>
         <script id="dynamic-tpl-values" type="text/json">
-@Html(Json.stringify(css_values))
+{}
         </script>
 
     <script type="text/javascript">
 var PageData = _.extend({saveUrl: @Html(Json.stringify(jsSaveUrl)), title: @Html(Json.stringify(JsString(title)))}, @Html(Json.stringify(pageData)));
-var DefaultTemplateValues = @Html(Json.stringify(css_values))
 window.CloudinarySettings = @{
     val config = play.api.Play.current.configuration
     val maybeCloudinary = for {

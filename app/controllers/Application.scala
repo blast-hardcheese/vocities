@@ -55,7 +55,7 @@ object Application extends BaseController {
 class Application(override implicit val env: RuntimeEnvironment[UserModel]) extends BaseController with SecureSocial[UserModel] {
   val engine = Application.engine
 
-  private[this] def render(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue, css_template: String, css_values: JsValue) = {
+  private[this] def render(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue) = {
     // Only here temporarily
     var r = new RichScriptEngine(engine)
     r.evalResource("public/javascripts/mixins.js")
@@ -65,7 +65,7 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
 
     templateId match {
       case "html5up-read-only" => Ok(views.html.templates.html5up_read_only(engine, saveUrl)(title, data))
-      case "html5up-prologue" => Ok(views.html.templates.html5up_prologue(engine, saveUrl)(title, data, css_template, css_values))
+      case "html5up-prologue" => Ok(views.html.templates.html5up_prologue(engine, saveUrl)(title, data))
       case _ => NotFound
     }
   }
