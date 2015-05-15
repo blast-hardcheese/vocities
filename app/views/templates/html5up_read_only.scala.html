@@ -1,4 +1,4 @@
-@(engine: javax.script.ScriptEngine, saveUrl: Option[String])(title: String, pageData: JsValue, css_template: String, css_values: JsValue)
+@(engine: javax.script.ScriptEngine, saveUrl: Option[String])(title: String, pageData: JsValue)
 
 @templateId = @{ Html(Json.stringify(JsString("html5up_read_only"))) }
 
@@ -30,15 +30,83 @@
 
 	<style id="dynamic" type="text/css"></style>
 	<style id="dynamic-tpl" type="text/underscore">
-@Html(css_template)
+#header {
+    background: <%= primary_bg %>;
+    color: <%= primary_color %>;
+}
+
+#header > nav ul li a.active {
+    background: <%= nav_active_bg %>;
+    color: <%= nav_active_color %> !important;
+}
+
+#header > footer .icons li a {
+    color: <%= hilight_color %>;
+}
+
+#header > nav ul li {
+    border-top: solid 2px <%= accent_color %>;
+}
+
+#header > header p {
+    color: <%= primary_color %>;
+}
+
+header.major h2 {
+    color: <%= primary_bg %>;
+}
+
+header.major h2 + p {
+    color: <%= dark_text %>;
+}
+
+body, input, select, textarea {
+    color: <%= normal_text %>;
+}
+
+.widget.w-youtube .wrapper { width: 100%; height: 33em; }
+
+@@media (max-width: 1680px) {
+    .widget.w-youtube[data-size="normal"] > .wrapper { height: 33em; }
+}
+
+@@media (max-width: 1280px) {
+    .widget.w-youtube[data-size="normal"] > .wrapper { height: 31em; }
+
+    #titleBar > span.toggle::before {
+	background-color: <%= primary_bg %>;
+    }
+}
+
+@@media (max-width: 1024px) {
+    .widget.w-youtube[data-size="normal"] > .wrapper { height: 40em; }
+    #sidePanel { background-color: <%= primary_bg %>; }
+}
+
+@@media (max-width: 736px) {
+    .widget.w-youtube[data-size="normal"] > .wrapper { height: 30em; }
+}
+
+@@media (max-width: 480px) {
+    .widget.w-youtube[data-size="normal"] > .wrapper { height: 19em; }
+}
 	</style>
 	<script id="dynamic-tpl-values" type="text/json">
-@Html(Json.stringify(css_values))
+{
+    "primary_bg": "#4acaa8",
+    "primary_color": "#d1f1e9",
+    "hilight_color": "#b6e9dc",
+    "accent_color": "#5ccfb0",
+    "nav_active_bg": "white",
+    "nav_active_color": "#4acaa8",
+
+    "dark_text": "#777777",
+    "normal_text": "#888888"
+}
 	</script>
 
     <script type="text/javascript">
 var PageData = _.extend({saveUrl: @Html(Json.stringify(jsSaveUrl)), title: @Html(Json.stringify(JsString(title)))}, @Html(Json.stringify(pageData)));
-var DefaultTemplateValues = @Html(Json.stringify(css_values));
 window.CloudinarySettings = @{
     val config = play.api.Play.current.configuration
     val maybeCloudinary = for {

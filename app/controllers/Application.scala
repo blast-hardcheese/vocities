@@ -55,7 +55,7 @@ object Application extends BaseController {
 class Application(override implicit val env: RuntimeEnvironment[UserModel]) extends BaseController with SecureSocial[UserModel] {
   val engine = Application.engine
 
-  private[this] def render(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue, css_template: String, css_values: JsValue) = {
+  private[this] def render(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue) = {
     // Only here temporarily
     var r = new RichScriptEngine(engine)
     r.evalResource("public/javascripts/mixins.js")
@@ -64,19 +64,19 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
     r.evalResource("public/javascripts/templates.js")
 
     templateId match {
-      case "html5up-read-only" => Ok(views.html.templates.html5up_read_only(engine, saveUrl)(title, data, css_template, css_values))
-      case "html5up-prologue" => Ok(views.html.templates.html5up_prologue(engine, saveUrl)(title, data, css_template, css_values))
+      case "html5up-read-only" => Ok(views.html.templates.html5up_read_only(engine, saveUrl)(title, data))
+      case "html5up-prologue" => Ok(views.html.templates.html5up_prologue(engine, saveUrl)(title, data))
       case _ => NotFound
     }
   }
 
-  def lookup(domain: String, path: String)(handler: (String, String, JsValue, String, JsValue) => Result)(implicit request: Request[_]) = {
+  def lookup(domain: String, path: String)(handler: (String, String, JsValue) => Result)(implicit request: Request[_]) = {
     DB.withSession { implicit s =>
       models.Pages.lookup(domain, path) map {
-          case (_, Some(title), Some(data), Some(templateId), Some(css_template), Some(css_values)) => handler(title, templateId, data, css_template, css_values)
-          case (_, None,        None,       _,                _,                  _               ) => BadRequest("404")
-          case (_, _,           _,          None,             _,                  _               ) => InternalServerError("Can't find template!")
-          case (a, b,           c,          d,                e,                  f               ) => { log.error(s"Route match failure: $a $b $c $d $e $f"); InternalServerError("Unknown error") }
+          case (_, Some(title), Some(data), Some(templateId)) => handler(title, templateId, data)
+          case (_, None,        None,       _               ) => BadRequest("404")
+          case (_, _,           _,          None            ) => InternalServerError("Can't find template!")
+          case (a, b,           c,          d               ) => { log.error(s"Route match failure: $a $b $c $d"); InternalServerError("Unknown error") }
       } getOrElse {
         BadRequest("unknown domain")
       }
