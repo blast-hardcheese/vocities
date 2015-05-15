@@ -277,6 +277,75 @@ var AddWidgetPopup = React.createClass({
     },
 });
 
+
+var sharedTemplateRenderers = [
+    function(vm) {
+        var dynamicCss = _.template($('#dynamic-tpl').text());
+        var dynamicCssValues = JSON.parse($('#dynamic-tpl-values').text());
+
+        var target = $('style#dynamic')
+
+        var setDynamicTemplate = function(template, userValues) {
+            var values = _.extend({}, dynamicCssValues, userValues);
+            var overrides = template === undefined ? "" : (_.template(template)(values));
+            target.text(dynamicCss(values) + overrides);
+        };
+
+        return {
+            setProps: function(newProps) {
+                var _props = _.extend({}, {css:{}}, newProps)
+                setDynamicTemplate(_props.css.template, _props.css.values);
+            },
+        };
+    },
+    function(vm) {
+        var target = $('html');
+        if (target.length === 0) { // If we're not in a DOM, bail
+            console.info('Can\'t find body, bailing');
+            return {
+                setProps: function() {},
+            };
+        }
+
+        target.on('dragenter', function(e) {
+            e.preventDefault();
+
+            EventActions.trigger('_dragStatus', 'enter');
+
+            return false;
+        });
+
+        target.on('dragover', function(e) {
+            e.preventDefault();
+
+            EventActions.trigger('_dragStatus', 'over');
+        });
+
+        target.on('dragleave', function(e) {
+            e.preventDefault();
+
+            EventActions.trigger('_dragStatus', 'leave');
+
+            return false;
+        });
+
+        target.on('drop', function(e) {
+            e.preventDefault();
+
+            // Workaround for drop targets disappearing before event fires
+            setTimeout(function() {
+                EventActions.trigger('_dragStatus', 'drop');
+            }, 1);
+
+            console.info('Hey!', e.originalEvent.target);
+        });
+
+        return {
+            setProps: function() {},
+        };
+    },
+];
+
 var Templates = {
     "html5up_read_only": (function(self) {
         var render = function(sel, data, clazz) {
@@ -302,74 +371,7 @@ var Templates = {
             };
         })
 
-        var sequences = classRenderers.concat([
-            function(vm) {
-                var dynamicCss = _.template($('#dynamic-tpl').text());
-                var dynamicCssValues = JSON.parse($('#dynamic-tpl-values').text());
-
-                var target = $('style#dynamic')
-
-                var setDynamicTemplate = function(template, userValues) {
-                    var values = _.extend({}, dynamicCssValues, userValues);
-                    var overrides = template === undefined ? "" : (_.template(template)(values));
-                    target.text(dynamicCss(values) + overrides);
-                };
-
-                return {
-                    setProps: function(newProps) {
-                        var _props = _.extend({}, {css:{}}, newProps)
-                        setDynamicTemplate(_props.css.template, _props.css.values);
-                    },
-                };
-            },
-
-            function(vm) {
-                var target = $('html');
-                if (target.length === 0) { // If we're not in a DOM, bail
-                    console.info('Can\'t find body, bailing');
-                    return {
-                        setProps: function() {},
-                    };
-                }
-
-                target.on('dragenter', function(e) {
-                    e.preventDefault();
-
-                    EventActions.trigger('_dragStatus', 'enter');
-
-                    return false;
-                });
-
-                target.on('dragover', function(e) {
-                    e.preventDefault();
-
-                    EventActions.trigger('_dragStatus', 'over');
-                });
-
-                target.on('dragleave', function(e) {
-                    e.preventDefault();
-
-                    EventActions.trigger('_dragStatus', 'leave');
-
-                    return false;
-                });
-
-                target.on('drop', function(e) {
-                    e.preventDefault();
-
-                    // Workaround for drop targets disappearing before event fires
-                    setTimeout(function() {
-                        EventActions.trigger('_dragStatus', 'drop');
-                    }, 1);
-
-                    console.info('Hey!', e.originalEvent.target);
-                });
-
-                return {
-                    setProps: function() {},
-                };
-            },
-        ]);
+        var sequences = classRenderers.concat(sharedTemplateRenderers);
 
         self.render = render;
         self.sequences = sequences;
