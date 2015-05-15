@@ -11,7 +11,7 @@ var SidebarNav = React.createClass({
 
         // Set up nav items.
         $nav_a
-            .scrolly()
+//            .scrolly()
             .on('click', function(event) {
 
                 var $this = $(this),
