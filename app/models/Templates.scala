@@ -61,10 +61,8 @@ object TemplateData {
             bannerImage=None,
             content=Widget(
               `type`="paragraph",
-              Json.obj(
-                "data" -> Json.obj(
-                  "content" -> "<p style=\"text-align: center;\">Hey again! To get started building your site, click this text to edit it!</p>\n<p style=\"text-align: center;\">To add more content, click \"New Section\" at the bottom of the sidebar.</p>\n<p style=\"text-align: center;\">If you've got any questions or just want to chat, drop us a line at <a href=\"mailto:blast@hardchee.se\">support@vocities.com</a></p>\n<center><strong>Thanks in advance for your feedback!</strong></center>"
-                )
+              data=Json.obj(
+                "content" -> "<p style=\"text-align: center;\">Hey again! To get started building your site, click this text to edit it!</p>\n<p style=\"text-align: center;\">To add more content, click \"New Section\" at the bottom of the sidebar.</p>\n<p style=\"text-align: center;\">If you've got any questions or just want to chat, drop us a line at <a href=\"mailto:blast@hardchee.se\">support@vocities.com</a></p>\n<center><strong>Thanks in advance for your feedback!</strong></center>"
               )
             )
           )
