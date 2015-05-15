@@ -3,6 +3,7 @@
 interface PageInfo {
     domain: string;
     path: string;
+    saveUrl: string;
 }
 
 declare var PageInfo: PageInfo;
@@ -27,8 +28,8 @@ jQuery(function($) {
 
         $.ajax({
             type: 'PUT',
+            url: PageInfo.saveUrl,
             contentType: 'application/json',
-            url: '/account/edit/' + PageInfo.domain + '/' + PageInfo.path,
             data: JSON.stringify(body),
         }).then(function() {
                 console.info('Success!');
