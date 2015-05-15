@@ -52,7 +52,17 @@ class Users(override implicit val env: RuntimeEnvironment[UserModel]) extends Ba
 
   implicit val readsNewDomainForm = Json.reads[NewDomainForm]
   def newDomain = SecuredAction(parse.json[NewDomainForm]) { implicit request =>
-    println(s"Got: ${request.body}")
-    Ok
+    val json = request.body
+
+    DB.withSession { implicit s =>
+      Queries.newDomain(request.user.userId, json.account_id, json.domain).map { domain =>
+        Ok(Json.obj(
+          "account_id" -> domain.account_id,
+          "domain" -> domain.id
+        ))
+      } getOrElse {
+        BadRequest
+      }
+    }
   }
 }

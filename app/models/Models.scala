@@ -37,8 +37,10 @@ class DomainTable(tag: Tag) extends Table[Domain](tag, "domains") {
 object Domains {
   val domains = TableQuery[DomainTable]
 
-  def create(d: Domain)(implicit s: Session): Unit = {
-    domains.insert(d)
+  def create(d: Domain)(implicit s: Session): Domain = {
+    domains
+      .returning(domains)
+      .insert(d)
   }
 }
 
@@ -185,5 +187,23 @@ object Queries {
           .run == 1
       }
       .getOrElse(false)
+  }
+
+  def newDomain(user_id: Long, account_id: Long, domain: String)(implicit s: Session): Option[Domain] = {
+    Accounts.accounts
+      .filter { a =>
+        a.id === account_id &&
+        user_id.bind === a.user_ids.any
+      }
+      .map { a => a.id }
+      .run
+      .map { account_id =>
+        Domains.create(Domain(
+          id = -1,
+          account_id = account_id,
+          domain = domain
+        ))
+      }
+      .headOption
   }
 }
