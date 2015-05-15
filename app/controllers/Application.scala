@@ -64,7 +64,7 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
     r.evalResource("public/javascripts/templates.js")
 
     templateId match {
-      case "html5up-read-only" => Ok(views.html.templates.html5up_read_only(engine, saveUrl)(title, data, css_template, css_values))
+      case "html5up-read-only" => Ok(views.html.templates.html5up_read_only(engine, saveUrl)(title, data))
       case "html5up-prologue" => Ok(views.html.templates.html5up_prologue(engine, saveUrl)(title, data, css_template, css_values))
       case _ => NotFound
     }
