@@ -36,7 +36,42 @@
                         }
                     </div>
                 </div>
+                <div class="row">
+                    <form class="new-domain-form" method="POST" action="@routes.Users.newDomain">
+                        <input name="account_id" type="hidden" value="@{account.id}" />
+                        <input name="domain" placeholder="Enter FQDN here" />
+                        <button type="submit">Create Domain</button>
+                    </form>
+                </div>
             }
         </div>
+        <script type="text/javascript">
+            $('.new-domain-form')
+                .submit(function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    var form = $(this);
+
+                    var data = _.foldl(form.serializeArray(), function(a, o) {
+                        a[o.name] = o.value;
+                        return a;
+                    }, {});
+
+                    data.account_id = Number.parseInt(data.account_id);
+
+                    $.ajax({
+                        url: form.attr('action'),
+                        data: JSON.stringify(data),
+                        type: 'POST',
+                        contentType: 'application/json',
+                        success: function(data){
+                            console.info('Success!', data);
+                        },
+                        error: function() {
+                            console.info('error:', arguments);
+                        }
+                    });
+                });
+        </script>
     </body>
 </html>
