@@ -21,8 +21,10 @@ class Accounts(tag: Tag) extends Table[Account](tag, "accounts") {
 object Accounts {
   val accounts = TableQuery[Accounts]
 
-  def create(c: Account)(implicit session: Session) = {
-    accounts.insert(c)
+  def create(c: Account)(implicit session: Session): Account = {
+    accounts
+      .returning(accounts)
+      .insert(c)
   }
 }
 
@@ -77,8 +79,10 @@ class PageTable(tag: Tag) extends Table[Page](tag, "pages") {
 object Pages {
   val pages = TableQuery[PageTable]
 
-  def create(p: Page)(implicit s: Session): Unit = {
-    pages.insert(p)
+  def create(p: Page)(implicit s: Session): Page = {
+    pages
+      .returning(pages)
+      .insert(p)
   }
 
   type LookupResult = Option[(Long, Option[String], Option[JsValue], Option[String], Option[String], Option[JsValue])]
