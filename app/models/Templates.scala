@@ -54,7 +54,21 @@ object TemplateData {
 
     def default = Json.toJson(
       PageData(
-        sections=List.empty,
+        sections=List(
+          Section(
+            tag="welcome-to-vocities",
+            title="Welcome to VOCities!",
+            bannerImage=None,
+            content=Widget(
+              `type`="paragraph",
+              Json.obj(
+                "data" -> Json.obj(
+                  "content" -> "<p style=\"text-align: center;\">Hey again! To get started building your site, click this text to edit it!</p>\n<p style=\"text-align: center;\">To add more content, click \"New Section\" at the bottom of the sidebar.</p>\n<p style=\"text-align: center;\">If you've got any questions or just want to chat, drop us a line at <a href=\"mailto:blast@hardchee.se\">support@vocities.com</a></p>\n<center><strong>Thanks in advance for your feedback!</strong></center>"
+                )
+              )
+            )
+          )
+        ),
         social=Social(None, None, None, None, None),
         sidebar=Sidebar(
           header=Header(
@@ -73,6 +87,6 @@ object TemplateData {
 
   def byName(x: String) = x match {
     case "html5up-read-only" => Html5Up__sections
-    case "html5up-proloue" => Html5Up__sections
+    case "html5up-prologue" => Html5Up__sections
   }
 }

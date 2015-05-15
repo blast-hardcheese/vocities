@@ -11,7 +11,7 @@ case class Page(account_id: Long, domain_id: Long, path: String, template_id: Lo
 case class PageInfo(account_id: Long, domain_id: Long, path: String, template_id: Long, title: String)
 
 class Accounts(tag: Tag) extends Table[Account](tag, "accounts") {
-  def id = column[Long]("id", O.PrimaryKey)
+  def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def name = column[String]("name")
   def user_ids = column[List[Long]]("user_ids", O.NotNull)
 
@@ -21,13 +21,15 @@ class Accounts(tag: Tag) extends Table[Account](tag, "accounts") {
 object Accounts {
   val accounts = TableQuery[Accounts]
 
-  def create(c: Account)(implicit session: Session) = {
-    accounts.insert(c)
+  def create(c: Account)(implicit session: Session): Account = {
+    accounts
+      .returning(accounts)
+      .insert(c)
   }
 }
 
 class DomainTable(tag: Tag) extends Table[Domain](tag, "domains") {
-  def id = column[Long]("id", O.PrimaryKey)
+  def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def account_id = column[Long]("account_id", O.NotNull)
   def domain = column[String]("domain", O.NotNull)
 
@@ -37,13 +39,15 @@ class DomainTable(tag: Tag) extends Table[Domain](tag, "domains") {
 object Domains {
   val domains = TableQuery[DomainTable]
 
-  def create(d: Domain)(implicit s: Session): Unit = {
-    domains.insert(d)
+  def create(d: Domain)(implicit s: Session): Domain = {
+    domains
+      .returning(domains)
+      .insert(d)
   }
 }
 
 class TemplateTable(tag: Tag) extends Table[Template](tag, "templates") {
-  def id = column[Long]("id", O.PrimaryKey)
+  def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def key = column[String]("key", O.NotNull)
   def css_template = column[String]("css_template", O.NotNull)
   def css_values = column[JsValue]("css_values", O.NotNull)
@@ -75,8 +79,10 @@ class PageTable(tag: Tag) extends Table[Page](tag, "pages") {
 object Pages {
   val pages = TableQuery[PageTable]
 
-  def create(p: Page)(implicit s: Session): Unit = {
-    pages.insert(p)
+  def create(p: Page)(implicit s: Session): Page = {
+    pages
+      .returning(pages)
+      .insert(p)
   }
 
   type LookupResult = Option[(Long, Option[String], Option[JsValue], Option[String], Option[String], Option[JsValue])]
@@ -185,5 +191,54 @@ object Queries {
           .run == 1
       }
       .getOrElse(false)
+  }
+
+  def newDomain(user_id: Long, account_id: Long, domain: String)(template_key: String)(implicit s: Session): Option[Domain] = {
+    Accounts.accounts
+      .filter { a =>
+        a.id === account_id &&
+        user_id.bind === a.user_ids.any
+      }
+      .map { a => a.id }
+      .run
+      .map { account_id =>
+        val _domain = Domains.create(Domain(
+          id = -1,
+          account_id = account_id,
+          domain = domain
+        ))
+
+        val page = newPage(user_id, account_id, _domain.id)("", "Empty page", template_key)
+
+        _domain
+      }
+      .headOption
+  }
+
+  def newPage(user_id: Long, account_id: Long, domain_id: Long)(path: String, name: String, template_key: String)(implicit s: Session): Option[Page] = {
+    Domains.domains
+      .innerJoin(Accounts.accounts)
+      .innerJoin(Templates.templates)
+      .on { case ((d, a), t) => d.account_id === a.id && t.key === template_key }
+      .filter { case ((d, a), t) =>
+        d.id === domain_id &&
+        a.id === account_id &&
+        user_id.bind === a.user_ids.any
+      }
+      .map { case ((d, a), t) => (d.id, a.id, t.id) }
+      .run
+      .map { case (domain_id, account_id, template_id) =>
+        val defaultData = TemplateData.byName(template_key).default
+
+        Pages.create(Page(
+          account_id=account_id,
+          domain_id=domain_id,
+          path=path,
+          template_id=template_id,
+          title=name,
+          data=defaultData
+        ))
+      }
+      .headOption
   }
 }

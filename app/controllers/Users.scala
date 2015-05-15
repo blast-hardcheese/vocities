@@ -15,6 +15,9 @@ import securesocial.core.{ SecureSocial, RuntimeEnvironment }
 object Users extends BaseController {
 }
 
+case class NewDomainForm(account_id: Long, domain: String, template: String)
+case class NewPageForm(account_id: Long, domain_id: Long, path: String, name: String, template: String)
+
 class Users(override implicit val env: RuntimeEnvironment[UserModel]) extends BaseController with SecureSocial[UserModel] {
 
   def index = SecuredAction { implicit request =>
@@ -45,6 +48,41 @@ class Users(override implicit val env: RuntimeEnvironment[UserModel]) extends Ba
         .validate(request.body)
         .map { case (title, data) => Ok(Queries.pageSave(userId, domain, path)(title, data).toString)
       } getOrElse { BadRequest }
+    }
+  }
+
+  implicit val readsNewDomainForm = Json.reads[NewDomainForm]
+  def newDomain = SecuredAction(parse.json[NewDomainForm]) { implicit request =>
+    // TODO: Once multi-page is supported, remove "template" parameter and initial page creation in newDomain
+    val json = request.body
+
+    DB.withSession { implicit s =>
+      Queries.newDomain(request.user.userId, json.account_id, json.domain)(json.template).map { domain =>
+        Ok(Json.obj(
+          "account_id" -> domain.account_id,
+          "domain" -> domain.id
+        ))
+      } getOrElse {
+        BadRequest
+      }
+    }
+  }
+
+  implicit val readsNewPageForm = Json.reads[NewPageForm]
+  def newPage = SecuredAction(parse.json[NewPageForm]) { implicit request =>
+    val json = request.body
+
+    DB.withSession { implicit s =>
+      Queries.newPage(request.user.userId, json.account_id, json.domain_id)(json.path, json.name, json.template).map { page =>
+        Ok(Json.obj(
+          "account_id" -> page.account_id,
+          "domain_id" -> page.domain_id,
+          "path" -> page.path,
+          "title" -> page.title
+        ))
+      } getOrElse {
+        BadRequest
+      }
     }
   }
 }
