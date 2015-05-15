@@ -393,7 +393,6 @@ var Templates = {
             '#header-wrapper': Sidebar,
             '#main-wrapper': Main,
             '#footer': Footer,
-            '#color-picker': ColorPicker,
             '#edit-buttons': EditButtons,
             '#add-popup': AddWidgetPopup,
         };
