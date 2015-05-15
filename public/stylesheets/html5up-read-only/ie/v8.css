@@ -20,7 +20,7 @@
 	input[type="button"],
 	.button {
 		position: relative;
-		-ms-behavior: url("css/ie/PIE.htc");
+		-ms-behavior: url('../../html5up/css/ie/PIE.htc');
 	}
 
 /* Form */
