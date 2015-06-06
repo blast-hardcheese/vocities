@@ -89,6 +89,10 @@ var Editable = {
     },
 
     startEdit: function(e) {
+        if (_.contains(['A'], e.target.tagName)) {
+            return;
+        }
+
         e.preventDefault();
         e.stopPropagation();
         if (!this.props.editable) {
