@@ -15,6 +15,16 @@ html, body {
   }
 }
 
+.vertical-center(@side) when (@side = 'after') {
+  &::after {
+    // Vertically center #add-popup
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+  }
+}
+
 #add-popup {
   display: none;
 
@@ -54,6 +64,46 @@ html, body {
 
     .buttons {
       float: right;
+    }
+
+    input.name {
+      padding: 0 5px;
+    }
+
+    .styled-select {
+      display: block;
+      position: relative;
+      padding: 5px 0;
+
+      .arrow {
+        position: absolute;
+        top: 0;
+        right: 5px;
+        height: 100%;
+
+        pointer-events: none;
+
+        .vertical-center('after');
+
+        &::before {
+          vertical-align: middle;
+        }
+      }
+
+      select {
+        border: 1px solid lightgrey;
+        border-radius: 10px;
+        appearance: none;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+
+        font-size: 16px;
+
+        background: transparent;
+        border-radius: 10px;
+        padding: 0;
+        padding-right: 25px;
+      }
     }
   }
 }

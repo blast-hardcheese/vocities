@@ -286,10 +286,14 @@ var AddWidgetPopup = React.createClass({
             </div>
             <h2>Add Section</h2>
             <input ref="sectionName" className="name" placeholder="Enter section name here" />
-            <select ref="sectionType">
-                <option value="" disabled>Select widget type</option>
-                {options}
-            </select>
+
+            <span className="styled-select">
+                <i className="arrow fa fa-chevron-down"></i>
+                <select ref="sectionType">
+                    <option value="" disabled>Select widget type</option>
+                    {options}
+                </select>
+            </span>
 
             <div className="buttons">
                 <button onClick={this.addSection}>Add Section</button>
