@@ -2,7 +2,7 @@ function TemplateManager(key, data) {
     var _this = this;
 
     data = _.extend({templateId: key}, data, {
-        editable: true,
+        editable: Boolean(data.sandbox || data.saveUrl),
         updated: function (newData) {
             _this.refresh(newData);
         }
@@ -89,6 +89,9 @@ var ColorPicker = React.createClass({
         this.update(this.schemes[idx]);
     },
     render: function() {
+        // If we can't save and we're not in a sandbox, don't even show the save buttons
+        if (!this.props.saveUrl && !this.props.sandbox) return null;
+
         var _this = this;
 
         var choices = this.schemes.map(function(o, idx) {
@@ -168,6 +171,9 @@ var EditButtons = React.createClass({
     },
 
     render: function() {
+        // If we can't save and we're not in a sandbox, don't even show the save buttons
+        if (!this.props.saveUrl && !this.props.sandbox) return null;
+
         var toggleEditButton = null;
         var saveButton = null;
 
@@ -261,6 +267,9 @@ var AddWidgetPopup = React.createClass({
     },
 
     render: function() {
+        // If we can't save and we're not in a sandbox, don't even show the save buttons
+        if (!this.props.saveUrl && !this.props.sandbox) return null;
+
         var _this = this;
 
         var options = _.map(Object.keys(this.availableTypes), function(kind) {
