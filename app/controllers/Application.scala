@@ -73,17 +73,23 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
   private[this] def render(domain: String, path: String)(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue) = {
     val cacheKey = s"$templateId-$domain-$path"
 
-    cache.Cache.getAs[String](cacheKey)
-      .orElse {
-        val maybeRendered = doRender(domain, path)(saveUrl)(title, templateId, data)
+    val maybeHtml = if (saveUrl.isEmpty) {
+      cache.Cache.getAs[String](cacheKey)
+        .orElse {
+          val maybeRendered = doRender(domain, path)(saveUrl)(title, templateId, data)
 
-        maybeRendered
-          .foreach { value =>
-            cache.Cache.set(cacheKey, value)
-          }
+          maybeRendered
+            .foreach { value =>
+              cache.Cache.set(cacheKey, value)
+            }
 
-        maybeRendered
-      }
+          maybeRendered
+        }
+    } else {
+      doRender(domain, path)(saveUrl)(title, templateId, data)
+    }
+
+    maybeHtml
       .map { value: String =>
         Ok(Html(value))
       }
