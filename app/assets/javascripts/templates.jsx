@@ -1,7 +1,7 @@
 function TemplateManager(key, data) {
     var _this = this;
 
-    data = _.extend({}, data, {
+    data = _.extend({templateId: key}, data, {
         editable: true,
         updated: function (newData) {
             _this.refresh(newData);
@@ -143,10 +143,13 @@ var EditButtons = React.createClass({
         console.info('Save stub');
         var pageData = _.extend({}, this.props);
 
+        var templateId = pageData.templateId;
+
         delete pageData.editable;
         delete pageData.saveUrl;
         delete pageData.title;
         delete pageData.updated;
+        delete pageData.templateId;
 
         var title = this.props.title;
 
@@ -160,7 +163,7 @@ var EditButtons = React.createClass({
             data: JSON.stringify(data),
             dataType: 'json',
             method: 'PUT',
-            url: this.props.saveUrl,
+            url: this.props.saveUrl + '?templateId=' + templateId,
         });
     },
 

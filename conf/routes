@@ -3,8 +3,8 @@ GET     /account                                                     @controller
 GET     /edit/:domain/                                               @controllers.Application.edit(domain: String, path="")
 GET     /edit/:domain/*path                                          @controllers.Application.edit(domain: String, path)
 
-PUT     /edit/:domain/                                               @controllers.Application.save(domain: String, path="")
-PUT     /edit/:domain/*path                                          @controllers.Application.save(domain: String, path)
+PUT     /edit/:domain/                                               @controllers.Application.save(domain: String, path="", templateId: String ?= "")
+PUT     /edit/:domain/*path                                          @controllers.Application.save(domain: String, path, templateId: String ?= "")
 
 GET     /account/edit/:domain/                                       @controllers.Users.edit(domain: String, path="")
 GET     /account/edit/:domain/*path                                  @controllers.Users.edit(domain: String, path)

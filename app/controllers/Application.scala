@@ -115,9 +115,7 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
     lookup(domain, path)(render(domain, path)(saveUrl=Some(route)))
   }
 
-  def save(domain: String, path: String) = SecuredAction(parse.json) { implicit request =>
-    val templateId = "html5up_read_only"
-
+  def save(domain: String, path: String, templateId: String) = SecuredAction(parse.json) { implicit request =>
     DB.withSession { implicit s =>
       val userId = request.user.userId
 
@@ -125,7 +123,16 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
 
       parser
         .validate(request.body)
-        .map { case (title, data) => Ok(Queries.pageSave(userId, domain, path)(title, data).toString)
+        .map { case (title, data) =>
+          val result = Ok(Queries.pageSave(userId, domain, path)(title, data).toString)
+
+          val cacheKey = s"$templateId-$domain-$path"
+          doRender(domain, path)(None)(title, templateId, data)
+            .foreach { html =>
+              cache.Cache.set(cacheKey, html)
+            }
+
+          result
       } getOrElse { BadRequest }
     }
   }
