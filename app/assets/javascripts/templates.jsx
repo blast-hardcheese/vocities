@@ -266,6 +266,10 @@ var AddWidgetPopup = React.createClass({
         $('#add-popup').hide();
     },
 
+    cancel: function() {
+        $('#add-popup').hide();
+    },
+
     render: function() {
         // If we can't save and we're not in a sandbox, don't even show the save buttons
         if (!this.props.saveUrl && !this.props.sandbox) return null;
@@ -277,6 +281,9 @@ var AddWidgetPopup = React.createClass({
         });
 
         return <div className="popup">
+            <div className="close" onClick={this.cancel}>
+                <i className="fa fa-close"></i>
+            </div>
             <h2>Add Section</h2>
             <input ref="sectionName" className="name" placeholder="Enter section name here" />
             <select ref="sectionType">

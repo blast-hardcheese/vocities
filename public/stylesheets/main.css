@@ -27,6 +27,7 @@ html, body {
 }
 
 #add-popup .popup {
+  position: relative;
   display: inline-block;
   margin: 0 auto;
   padding: 20px;
@@ -36,4 +37,14 @@ html, body {
 
   background-color: rgba(250, 250, 250, 0.9);
   border-radius: 20px;
+}
+
+#add-popup .popup .close {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  font-size: 18px;
+  line-height: 18px;
+
+  cursor: pointer;
 }
