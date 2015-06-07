@@ -5,6 +5,16 @@ html, body {
   padding: 0;
 }
 
+.vertical-center(@side: 'before') when (@side = 'before') {
+  &::before {
+    // Vertically center #add-popup
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+  }
+}
+
 #add-popup {
   display: none;
 
@@ -18,12 +28,7 @@ html, body {
   text-align: center;
   white-space: nowrap;
 
-  &:before {
-    content: '';
-    display: inline-block;
-    height: 100%;
-    vertical-align: middle;
-  }
+  .vertical-center();
 
   .popup {
     position: relative;
