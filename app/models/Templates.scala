@@ -32,7 +32,7 @@ object TemplateData {
     case class Section(tag: String, title: String, bannerImage: Option[String], content: Widget)
     case class Social(twitter: Option[String], facebook: Option[String], instagram: Option[String], github: Option[String], email: Option[String])
     case class Css(values: JsValue)
-    case class PageData(sections: List[Section], social: Social, sidebar: Sidebar, footer: Footer, css: Option[Css])
+    case class PageData(sandbox: Option[Boolean]=Option.empty, sections: List[Section], social: Social, sidebar: Sidebar, footer: Footer, css: Option[Css])
 
     implicit val jsonFormatHeader = Json.format[Header]
     implicit val jsonFormatFooter = Json.format[Footer]
