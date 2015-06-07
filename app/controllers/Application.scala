@@ -55,7 +55,7 @@ object Application extends BaseController {
 class Application(override implicit val env: RuntimeEnvironment[UserModel]) extends BaseController with SecureSocial[UserModel] {
   val engine = Application.engine
 
-  private[this] def render(domain: String, path: String)(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue) = {
+  private[this] def doRender(domain: String, path: String)(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue): Option[String] = {
     // Only here temporarily
     var r = new RichScriptEngine(engine)
     r.evalResource("public/javascripts/mixins.js")
@@ -63,21 +63,26 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
     r.evalResource("public/javascripts/components/structure.js")
     r.evalResource("public/javascripts/templates.js")
 
+    templateId match {
+      case "html5up_read_only" => Some(views.html.templates.html5up_read_only(engine, saveUrl)(title, data).toString)
+      case "html5up_prologue" => Some(views.html.templates.html5up_prologue(engine, saveUrl)(title, data).toString)
+      case _ => None
+    }
+  }
 
+  private[this] def render(domain: String, path: String)(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue) = {
     val cacheKey = s"$templateId-$domain-$path"
+
     cache.Cache.getAs[String](cacheKey)
       .orElse {
-        val maybeHtml = templateId match {
-          case "html5up_read_only" => Some(views.html.templates.html5up_read_only(engine, saveUrl)(title, data).toString)
-          case "html5up_prologue" => Some(views.html.templates.html5up_prologue(engine, saveUrl)(title, data).toString)
-          case _ => None
-        }
-        maybeHtml
+        val maybeRendered = doRender(domain, path)(saveUrl)(title, templateId, data)
+
+        maybeRendered
           .foreach { value =>
             cache.Cache.set(cacheKey, value)
           }
 
-        maybeHtml
+        maybeRendered
       }
       .map { value: String =>
         Ok(Html(value))
