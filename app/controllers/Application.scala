@@ -34,7 +34,7 @@ object Application extends BaseController {
   import scala.language.implicitConversions
   implicit def liftEngine(e: ScriptEngine): RichScriptEngine = new RichScriptEngine(e)
 
-  lazy val engine = {
+  val engine = {
     log.info("[Core] Starting Nashorn engine...")
     val r = new ScriptEngineManager(null).getEngineByName("nashorn")
     log.debug(s"[Core]: $r")
