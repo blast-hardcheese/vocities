@@ -26,8 +26,7 @@ object Global extends WithFilters() {
     override lazy val userService: PostgresUserService = new PostgresUserService()
 
     override lazy val providers = ListMap(
-      include(new GoogleProvider(routes, cacheService, oauth2ClientFor(GoogleProvider.Google))),
-      include(new FacebookProvider(routes, cacheService, oauth2ClientFor(FacebookProvider.Facebook)))
+      include(new GoogleProvider(routes, cacheService, oauth2ClientFor(GoogleProvider.Google)))
     )
   }
 
