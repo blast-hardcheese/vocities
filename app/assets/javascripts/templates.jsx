@@ -224,8 +224,13 @@ var AddWidgetPopup = React.createClass({
     },
 
     addSection: function() {
-        var title = this.refs.sectionName.getDOMNode().value;
-        var type = this.refs.sectionType.getDOMNode().value;
+        var sectionName = this.refs.sectionName.getDOMNode();
+        var sectionType = this.refs.sectionType.getDOMNode();
+        var title = sectionName.value;
+        var type = sectionType.value;
+
+        sectionName.value = '';
+        sectionType.value = '';
 
         var tag = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
