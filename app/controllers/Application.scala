@@ -63,11 +63,28 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
     r.evalResource("public/javascripts/components/structure.js")
     r.evalResource("public/javascripts/templates.js")
 
-    templateId match {
-      case "html5up-read-only" => Ok(views.html.templates.html5up_read_only(engine, saveUrl)(title, data))
-      case "html5up-prologue" => Ok(views.html.templates.html5up_prologue(engine, saveUrl)(title, data))
-      case _ => NotFound
-    }
+
+    val cacheKey = s"$templateId-$domain-$path"
+    cache.Cache.getAs[String](cacheKey)
+      .orElse {
+        val maybeHtml = templateId match {
+          case "html5up-read-only" => Some(views.html.templates.html5up_read_only(engine, saveUrl)(title, data).toString)
+          case "html5up-prologue" => Some(views.html.templates.html5up_prologue(engine, saveUrl)(title, data).toString)
+          case _ => None
+        }
+        maybeHtml
+          .foreach { value =>
+            cache.Cache.set(cacheKey, value)
+          }
+
+        maybeHtml
+      }
+      .map { value: String =>
+        Ok(Html(value))
+      }
+      .getOrElse {
+        InternalServerError
+      }
   }
 
   def lookup(domain: String, path: String)(handler: (String, String, JsValue) => Result)(implicit request: Request[_]) = {
