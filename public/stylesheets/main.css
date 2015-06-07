@@ -48,3 +48,7 @@ html, body {
 
   cursor: pointer;
 }
+
+#add-popup .popup .buttons {
+  float: right;
+}

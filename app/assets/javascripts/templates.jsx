@@ -291,7 +291,9 @@ var AddWidgetPopup = React.createClass({
                 {options}
             </select>
 
-            <button onClick={this.addSection}>Add Section</button>
+            <div className="buttons">
+                <button onClick={this.addSection}>Add Section</button>
+            </div>
         </div>;
     },
 });
