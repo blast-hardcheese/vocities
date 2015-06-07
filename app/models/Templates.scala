@@ -84,7 +84,7 @@ object TemplateData {
   }
 
   def byName(x: String) = x match {
-    case "html5up-read-only" => Html5Up__sections
-    case "html5up-prologue" => Html5Up__sections
+    case "html5up_read_only" => Html5Up__sections
+    case "html5up_prologue" => Html5Up__sections
   }
 }

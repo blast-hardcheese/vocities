@@ -68,8 +68,8 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
     cache.Cache.getAs[String](cacheKey)
       .orElse {
         val maybeHtml = templateId match {
-          case "html5up-read-only" => Some(views.html.templates.html5up_read_only(engine, saveUrl)(title, data).toString)
-          case "html5up-prologue" => Some(views.html.templates.html5up_prologue(engine, saveUrl)(title, data).toString)
+          case "html5up_read_only" => Some(views.html.templates.html5up_read_only(engine, saveUrl)(title, data).toString)
+          case "html5up_prologue" => Some(views.html.templates.html5up_prologue(engine, saveUrl)(title, data).toString)
           case _ => None
         }
         maybeHtml
@@ -111,12 +111,12 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
   }
 
   def save(domain: String, path: String) = SecuredAction(parse.json) { implicit request =>
-    val key = "html5up-read-only"
+    val templateId = "html5up_read_only"
 
     DB.withSession { implicit s =>
       val userId = request.user.userId
 
-      val parser = models.TemplateData.byName(key)
+      val parser = models.TemplateData.byName(templateId)
 
       parser
         .validate(request.body)

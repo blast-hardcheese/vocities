@@ -37,12 +37,12 @@ class Users(override implicit val env: RuntimeEnvironment[UserModel]) extends Ba
   }
 
   def save(domain: String, path: String) = SecuredAction(parse.json) { implicit request =>
-    val key = "html5up-read-only"
+    val templateId = "html5up_read_only"
 
     DB.withSession { implicit s =>
       val userId = request.user.userId
 
-      val parser = models.TemplateData.byName(key)
+      val parser = models.TemplateData.byName(templateId)
 
       parser
         .validate(request.body)
