@@ -224,8 +224,13 @@ var AddWidgetPopup = React.createClass({
     },
 
     addSection: function() {
-        var title = this.refs.sectionName.getDOMNode().value;
-        var type = this.refs.sectionType.getDOMNode().value;
+        var sectionName = this.refs.sectionName.getDOMNode();
+        var sectionType = this.refs.sectionType.getDOMNode();
+        var title = sectionName.value;
+        var type = sectionType.value;
+
+        sectionName.value = '';
+        sectionType.value = '';
 
         var tag = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
@@ -266,6 +271,10 @@ var AddWidgetPopup = React.createClass({
         $('#add-popup').hide();
     },
 
+    cancel: function() {
+        $('#add-popup').hide();
+    },
+
     render: function() {
         // If we can't save and we're not in a sandbox, don't even show the save buttons
         if (!this.props.saveUrl && !this.props.sandbox) return null;
@@ -277,14 +286,23 @@ var AddWidgetPopup = React.createClass({
         });
 
         return <div className="popup">
+            <div className="close" onClick={this.cancel}>
+                <i className="fa fa-close"></i>
+            </div>
             <h2>Add Section</h2>
             <input ref="sectionName" className="name" placeholder="Enter section name here" />
-            <select ref="sectionType">
-                <option value="" disabled>Select widget type</option>
-                {options}
-            </select>
 
-            <button onClick={this.addSection}>Add Section</button>
+            <span className="styled-select">
+                <i className="arrow fa fa-chevron-down"></i>
+                <select ref="sectionType">
+                    <option value="" disabled>Select widget type</option>
+                    {options}
+                </select>
+            </span>
+
+            <div className="buttons">
+                <button onClick={this.addSection}>Add Section</button>
+            </div>
         </div>;
     },
 });
