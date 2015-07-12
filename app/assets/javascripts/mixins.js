@@ -70,6 +70,7 @@ var Editable = {
         var elem = React.createElement("a", _.extend({}, {
             cursor: 'pointer',
             onClick: target,
+            className: "v-editable",
         }, attrs), label);
 
         return this.props.editable ? elem : null;
@@ -89,7 +90,7 @@ var Editable = {
     },
 
     startEdit: function(e) {
-        if (_.contains(['A'], e.target.tagName)) {
+        if (e.target.tagName === 'A' && ! _.contains(e.target.classList, "v-editable")) {
             return;
         }
 
