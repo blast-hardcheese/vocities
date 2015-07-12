@@ -198,7 +198,6 @@ var SidebarProfile = React.createClass({
         src: React.PropTypes.string.isRequired,
         alt: React.PropTypes.string,
         name: React.PropTypes.string.isRequired,
-        namehref: React.PropTypes.string,
         flavortext: React.PropTypes.string
     },
 
@@ -208,21 +207,14 @@ var SidebarProfile = React.createClass({
         });
     },
 
-    nameHrefUpdated: function (data) {
-        this.props.updated({
-            namehref: data.content,
-        });
-    },
-
     render: function() {
         var name = null;
         if (this.state.editing) {
             name = <h1 id="logo">
                 {React.createElement(TextField, this.buildProps({containerTag: 'div', content: this.props.name, updated: this.nameUpdated}))}
-                {React.createElement(TextField, this.buildProps({containerTag: 'div', content: this.props.namehref, updated: this.nameHrefUpdated}))}
             </h1>;
         } else {
-            name = <h1 id="logo"><a href={this.props.namehref}>{this.props.name}</a></h1>;
+            name = <h1 id="logo">{this.props.name}</h1>;
         }
 
         return (
