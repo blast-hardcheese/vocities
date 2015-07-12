@@ -27,6 +27,28 @@ var Utils = {
     newSectionPopup: function() {
         $('#add-popup').show();
     },
+
+    mapUpdated: function (props) {
+        var newprops = props;
+        if (newprops.valuemap !== undefined) {
+            var map = newprops.valuemap;
+
+            var oldUpdated = props.updated;
+            var wrappedUpdated = function (data) {
+                data = _.extend({}, data);
+                for (var key in map) {
+                    data[map[key]] = data[key];
+                    delete data[key];
+                }
+                oldUpdated(data);
+            }.bind(this);
+
+            newprops = _.extend({}, props);
+            delete newprops.valuemap;
+            newprops.updated = wrappedUpdated;
+        }
+        return newprops;
+    },
 };
 
 var Updatable = {
