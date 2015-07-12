@@ -192,19 +192,13 @@ var HeaderBlock = React.createClass({
 var SidebarProfile = React.createClass({
     mixins: [Updatable, Editable, Utils, Droptarget],
 
-    extendPropsFunctions: [Editable.extendPropsEditable],
+    extendPropsFunctions: [Editable.extendPropsEditable, Updatable.autoUpdated, Utils.mapUpdated],
 
     propTypes: {
         src: React.PropTypes.string.isRequired,
         alt: React.PropTypes.string,
         name: React.PropTypes.string.isRequired,
         flavortext: React.PropTypes.string
-    },
-
-    nameUpdated: function (data) {
-        this.props.updated({
-            name: data.content,
-        });
     },
 
     render: function() {
@@ -217,7 +211,7 @@ var SidebarProfile = React.createClass({
                   margin: '0 auto 2.25em auto',
                 })}
                 <h1 id="logo">
-                    {React.createElement(TextField, this.buildProps({containerTag: 'div', content: this.props.name, updated: this.nameUpdated}))}
+                    {React.createElement(TextField, this.buildProps({containerTag: 'div', content: this.props.name, valuemap: {content: 'name'}}))}
                 </h1>
                 <p>{this.props.flavortext}</p>
             </header>
