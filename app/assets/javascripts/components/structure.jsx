@@ -208,25 +208,17 @@ var SidebarProfile = React.createClass({
     },
 
     render: function() {
-        var name = null;
-        if (this.state.editing) {
-            name = <h1 id="logo">
-                {React.createElement(TextField, this.buildProps({containerTag: 'div', content: this.props.name, updated: this.nameUpdated}))}
-            </h1>;
-        } else {
-            name = <h1 id="logo">{this.props.name}</h1>;
-        }
-
         return (
             <header>
-                {this.buildEditableButton()}
                 {this.buildDroppable('src', null, {
                   borderRadius: '100%',
                   width: '8em',
                   height: '8em',
                   margin: '0 auto 2.25em auto',
                 })}
-                {name}
+                <h1 id="logo">
+                    {React.createElement(TextField, this.buildProps({containerTag: 'div', content: this.props.name, updated: this.nameUpdated}))}
+                </h1>
                 <p>{this.props.flavortext}</p>
             </header>
         );
