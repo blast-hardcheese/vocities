@@ -337,38 +337,46 @@ var sharedTemplateRenderers = [
             };
         }
 
-        target.on('dragenter', function(e) {
-            e.preventDefault();
+        target
+            .off('dragenter.DnD')
+            .on('dragenter.DnD', function(e) {
+                e.preventDefault();
 
-            EventActions.trigger('_dragStatus', 'enter');
+                EventActions.trigger('_dragStatus', 'enter');
 
-            return false;
-        });
+                return false;
+            });
 
-        target.on('dragover', function(e) {
-            e.preventDefault();
+        target
+            .off('dragover.DnD')
+            .on('dragover.DnD', function(e) {
+                e.preventDefault();
 
-            EventActions.trigger('_dragStatus', 'over');
-        });
+                EventActions.trigger('_dragStatus', 'over');
+            });
 
-        target.on('dragleave', function(e) {
-            e.preventDefault();
+        target
+            .off('dragleave.DnD')
+            .on('dragleave.DnD', function(e) {
+                e.preventDefault();
 
-            EventActions.trigger('_dragStatus', 'leave');
+                EventActions.trigger('_dragStatus', 'leave');
 
-            return false;
-        });
+                return false;
+            });
 
-        target.on('drop', function(e) {
-            e.preventDefault();
+        target
+            .off('drop.DnD')
+            .on('drop.DnD', function(e) {
+                e.preventDefault();
 
-            // Workaround for drop targets disappearing before event fires
-            setTimeout(function() {
-                EventActions.trigger('_dragStatus', 'drop');
-            }, 1);
+                // Workaround for drop targets disappearing before event fires
+                setTimeout(function() {
+                    EventActions.trigger('_dragStatus', 'drop');
+                }, 1);
 
-            console.info('Hey!', e.originalEvent.target);
-        });
+                console.info('Hey!', e.originalEvent.target);
+            });
 
         return {
             setProps: function() {},
