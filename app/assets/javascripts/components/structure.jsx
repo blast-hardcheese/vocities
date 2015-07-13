@@ -155,35 +155,18 @@ var SidebarFooter = React.createClass({
 });
 
 var HeaderBlock = React.createClass({
-    titleUpdated: function (data) {
-        this.props.updated({
-            title: data.content,
-            subtitle: this.props.subtitle,
-            text: this.props.text,
-        });
-    },
-    subtitleUpdated: function (data) {
-        this.props.updated({
-            title: this.props.title,
-            subtitle: data.content,
-            text: this.props.text,
-        });
-    },
-    textUpdated: function (data) {
-        this.props.updated({
-            title: this.props.title,
-            subtitle: this.props.subtitle,
-            text: data.content,
-        });
-    },
+    mixins: [Editable, Updatable, Utils],
+
+    extendPropsFunctions: [Editable.extendPropsEditable, Updatable.autoUpdated, Utils.mapUpdated],
+
     render: function() {
         return (
             <div>
                 <header className="major">
-                    <TextField content={this.props.title} updated={this.titleUpdated} editable={this.props.editable} containerTag='h2' />
-                    <Paragraph content={this.props.subtitle} updated={this.subtitleUpdated} editable={this.props.editable} />
+                    {React.createElement(TextField, this.buildProps({content: this.props.title, valuemap: {content: 'title'}, containerTag: 'h2'}))}
+                    {React.createElement(Paragraph, this.buildProps({content: this.props.subtitle, valuemap: {content: 'subtitle'}}))}
                 </header>
-                <Paragraph content={this.props.text} updated={this.textUpdated} editable={this.props.editable} />
+                {React.createElement(Paragraph, this.buildProps({content: this.props.text, valuemap: {content: 'text'}}))}
             </div>
         );
     }
