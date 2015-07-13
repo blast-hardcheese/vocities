@@ -3,48 +3,57 @@ var SidebarNav = React.createClass({
 
     extendPropsFunctions: [Editable.extendPropsEditable],
 
+    indexOffsets: [],
+    lastOffset: 0,
+
+    rebuildOffsets: _.debounce(function () {
+        var self = this;
+        var nav = self.refs.nav.getDOMNode();
+        var anchors = $('a', nav);
+
+        var newOffsets = [];
+
+        anchors.each(function(idx, elem) {
+            var href = elem.getAttribute('href')
+            if (href === null || ! href.startsWith('#')) {
+                newOffsets.push(-1);
+            } else {
+                newOffsets.push($(href).offset().top);
+                self.lastOffset = idx;
+            }
+        });
+
+        self.indexOffsets = newOffsets;
+    }, 50),
+
     initScroller: function() {
-        var $nav = $('#nav'),
-            $nav_a = $nav.find('a[href^=#]');
+        var self = this;
+        self.rebuildOffsets();
 
-        var ids = [];
+        var nav = this.refs.nav.getDOMNode();
+        var anchors = $('a', nav);
 
-        // Set up nav items.
-        $nav_a
-//            .scrolly()
-            .off('click')
-            .on('click', function(event) {
+        $(window)
+            .off('scroll.navbarOffsets')
+            .on('scroll.navbarOffsets', _.throttle(function (e) {
+                var currentIdx = _.findIndex(self.indexOffsets, function(val) {
+                    return val > window.scrollY;
+                });
 
-                var $this = $(this),
-                    href = $this.attr('href');
+                currentIdx = (currentIdx === -1) ? self.lastOffset : currentIdx - 1;
 
-                    // Remove active class from all links and mark them as locked (so scrollzer leaves them alone).
-                    $nav_a.removeClass('active');
-
-                    // Set active class on this link.
-                    $this.addClass('active');
-
-            })
-            .each(function() {
-                var $this = $(this),
-                    href = $this.attr('href'),
-                    id;
-
-                    // Add to scrollzer ID list.
-                    id = href.substring(1);
-                    $this.attr('id', id + '-link');
-                    ids.push(id);
-            });
-
-        // Initialize scrollzer.
-        $.scrollzer(ids, { pad: 300, lastHack: true });
+                $('a.active', nav).removeClass('active');
+                $(anchors[currentIdx]).addClass('active');
+            }, 50))
+            .off('resize.navbarOffsets')
+            .on('resize.navbarOffsets', this.rebuildOffsets);
     },
     componentDidMount: function() {
         this.initScroller();
     },
 
     componentDidUpdate: function() {
-        this.initScroller();
+        this.rebuildOffsets();
     },
 
     renameSection: function(idx, data) {
@@ -98,7 +107,7 @@ var SidebarNav = React.createClass({
         }
 
         return (
-            <nav id="nav" style={{position: 'relative'}}>
+            <nav id="nav" ref="nav" style={{position: 'relative'}}>
                 {toggleEdit}
                 <ul>
                     {sections}
