@@ -12,18 +12,14 @@ var SidebarNav = React.createClass({
         // Set up nav items.
         $nav_a
 //            .scrolly()
+            .off('click')
             .on('click', function(event) {
 
                 var $this = $(this),
                     href = $this.attr('href');
 
-                    // Prevent default behavior.
-                    event.preventDefault();
-
                     // Remove active class from all links and mark them as locked (so scrollzer leaves them alone).
-                    $nav_a
-                        .removeClass('active')
-                        .addClass('scrollzer-locked');
+                    $nav_a.removeClass('active');
 
                     // Set active class on this link.
                     $this.addClass('active');
