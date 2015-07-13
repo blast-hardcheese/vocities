@@ -69,9 +69,11 @@ var Updatable = {
     },
 
     autoUpdated: function(props, path) {
-        return _.extend({}, props, {
-            updated: _.partial(this.deepUpdated, path),
-        });
+        var newProps = _.extend({}, props);
+        if (newProps.updated === undefined) {
+            newProps.updated = _.partial(this.deepUpdated, path);
+        }
+        return newProps;
     }
 };
 
