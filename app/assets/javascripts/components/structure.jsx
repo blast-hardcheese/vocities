@@ -68,15 +68,18 @@ var SidebarNav = React.createClass({
         var _this = this;
 
         var sections = _.map(this.props.sections, function(s, idx) {
-            var link = null;
-            var updated = _.partial(_this.renameSection, idx);
-            if (_this.state.editing) {
-                link = <TextField content={s.title} updated={updated} containerTag='a' href={'#' + s.tag} editable={_this.props.editable} />;
-            } else {
-                link = <a href={'#' + s.tag}>{s.title}</a>;
-            }
-
-            return <li key={s.tag}>{link}</li>;
+            return (
+                <li key={s.tag}>
+                    {React.createElement(TextField, _this.buildProps({
+                        content: s.title,
+                        containerTag: 'a',
+                        className: 'v-editable',
+                        href: '#' + s.tag,
+                        updated: _.partial(_this.renameSection, idx),
+                        editable: _this.state.editing,
+                    }))}
+                </li>
+            );
         });
 
         var toggleEdit = null;
