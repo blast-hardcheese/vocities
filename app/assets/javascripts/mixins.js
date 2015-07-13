@@ -101,10 +101,13 @@ var Editable = {
     },
 
     extendPropsEditable: function(props) {
-        var _this = this;
-        return _.extend({}, props, {
-            editable: _this.props.editable,
-        });
+        var newProps = props;
+        if (props.editable === undefined) {
+            newProps = _.extend({}, props, {
+                editable: this.props.editable,
+            });
+        }
+        return newProps;
     },
 
     getInitialState: function() {
