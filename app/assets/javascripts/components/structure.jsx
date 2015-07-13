@@ -215,25 +215,18 @@ var Sidebar = React.createClass({
 });
 
 var Section = React.createClass({
-    mixins: [Updatable, Editable, Droptarget],
+    mixins: [Updatable, Editable, Droptarget, Utils],
+
+    extendPropsFunctions: [Editable.extendPropsEditable, Updatable.autoUpdated],
+
     render: function() {
         var headerImage = this.buildDroppable('bannerImage');
 
-        var data = _.extend({}, {
-            updated: (function(newProps) {
-                this.props.updated({
-                    tag: this.props.tag,
-                    title: this.props.title,
-                    content: newProps,
-                });
-            }).bind(this),
-            editable: this.props.editable,
-        }, this.props.content);
         return (
             <section id={this.props.tag}>
                 {headerImage}
                 <div className="container">
-                    {React.createElement(WidgetBuilder(), data)}
+                    {React.createElement(WidgetBuilder(), this.buildProps(this.props.content, 'content'))}
                 </div>
             </section>
         );
