@@ -49,7 +49,9 @@ var SidebarNav = React.createClass({
             .off('scroll.navbarOffsets')
             .on('scroll.navbarOffsets', _.throttle(this.handleScroll, 50))
             .off('resize.navbarOffsets')
-            .on('resize.navbarOffsets', this.rebuildOffsets);
+            .on('resize.navbarOffsets', this.rebuildOffsets)
+            .off('load.navbarOffsets')
+            .on('load.navbarOffsets', this.rebuildOffsets);
     },
     componentDidMount: function() {
         this.initScroller();
