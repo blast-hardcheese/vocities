@@ -3,6 +3,7 @@ var SidebarNav = React.createClass({
 
     extendPropsFunctions: [Editable.extendPropsEditable],
 
+    anchors: [],
     indexOffsets: [],
     lastOffset: 0,
 
@@ -18,35 +19,41 @@ var SidebarNav = React.createClass({
             if (href === null || ! href.startsWith('#')) {
                 newOffsets.push(-1);
             } else {
-                newOffsets.push($(href).offset().top);
+                newOffsets.push(parseInt($(href).offset().top));
                 self.lastOffset = idx;
             }
         });
 
+        self.anchors = anchors;
         self.indexOffsets = newOffsets;
+
+        this.handleScroll();
     }, 50),
 
+    handleScroll: function () {
+        var scrollY = parseInt(window.scrollY);
+        var currentIdx = _.findIndex(this.indexOffsets, function(val) {
+            return val > scrollY;
+        });
+
+        currentIdx = (currentIdx === -1) ? self.lastOffset : currentIdx - 1;
+
+        $('a.active', nav).removeClass('active');
+        $(this.anchors[currentIdx]).addClass('active');
+    },
+
     initScroller: function() {
-        var self = this;
-        self.rebuildOffsets();
+        this.rebuildOffsets();
 
         var nav = this.refs.nav.getDOMNode();
-        var anchors = $('a', nav);
 
         $(window)
             .off('scroll.navbarOffsets')
-            .on('scroll.navbarOffsets', _.throttle(function (e) {
-                var currentIdx = _.findIndex(self.indexOffsets, function(val) {
-                    return val > window.scrollY;
-                });
-
-                currentIdx = (currentIdx === -1) ? self.lastOffset : currentIdx - 1;
-
-                $('a.active', nav).removeClass('active');
-                $(anchors[currentIdx]).addClass('active');
-            }, 50))
+            .on('scroll.navbarOffsets', _.throttle(this.handleScroll, 50))
             .off('resize.navbarOffsets')
-            .on('resize.navbarOffsets', this.rebuildOffsets);
+            .on('resize.navbarOffsets', this.rebuildOffsets)
+            .off('load.navbarOffsets')
+            .on('load.navbarOffsets', this.rebuildOffsets);
     },
     componentDidMount: function() {
         this.initScroller();
