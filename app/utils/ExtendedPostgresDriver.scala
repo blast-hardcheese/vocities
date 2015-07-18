@@ -9,6 +9,7 @@ trait ExtendedPostgresDriver extends PostgresDriver
                           with PgRangeSupport
                           with PgHStoreSupport
                           with PgPlayJsonSupport
+                          with PgEnumSupport
                           with PgSearchSupport {
 
   override lazy val Implicit = new ImplicitsPlus {}

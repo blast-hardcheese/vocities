@@ -2,6 +2,7 @@ package models
 
 import play.api.libs.json.{ Json, JsValue }
 import utils.ExtendedPostgresDriver.simple._
+import utils.ExtendedPostgresDriver.createEnumListJdbcType
 
 case class Account(id: Long, name: String, user_ids: List[Long])
 case class Domain(id: Long, account_id: Long, domain: String)
@@ -91,6 +92,15 @@ object Pages {
       .firstOption
   }
 }
+
+object UserRoles extends Enumeration {
+  type UserRole = Value
+  val Admin = Value("admin")
+
+  implicit val listTypeMapper = createEnumListJdbcType("userRole", UserRoles)
+}
+
+import UserRoles.{ UserRole, listTypeMapper }
 
 case class User(id: Long = -1, username: String)
 
