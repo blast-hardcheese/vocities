@@ -1,6 +1,10 @@
 {
   "name": "vocities",
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blast-hardcheese/vocities.git"
+  },
   "dependencies": {
     "jquery": "^2.1.3"
   },
