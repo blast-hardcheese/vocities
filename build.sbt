@@ -13,6 +13,7 @@ resolvers += "google-sedis-fix" at "http://pk11-scratch.googlecode.com/svn/trunk
 libraryDependencies ++= Seq(
   "org.webjars" %% "webjars-play" % "2.3.0-3",
   "org.webjars" % "font-awesome" % "4.3.0-1",
+  "org.webjars" % "react" % "0.12.2",
   "org.webjars" % "tinymce-jquery" % "4.1.7-1",
   "org.webjars.bower" % "bootstrap" % "3.3.4",
   "org.webjars.bower" % "jquery" % "2.1.4",
@@ -24,7 +25,6 @@ libraryDependencies ++= Seq(
   "com.github.tminglei" % "slick-pg_2.11" % "0.8.4",
   "ws.securesocial" % "securesocial_2.11" % "3.0-M3",
   "org.postgresql" % "postgresql" % "9.3-1103-jdbc41",
-  "org.webjars" % "react" % "0.12.2",
   "com.typesafe.play" %% "play-slick" % "0.8.1",
   jdbc,
   anorm,
