@@ -40,11 +40,11 @@ var PageData = _.extend({saveUrl: @Html(Json.stringify(jsSaveUrl)), title: @Html
 window.CloudinarySettings = @{
     val config = play.api.Play.current.configuration
     val maybeCloudinary = for {
-	cloud_name <- config.getString("cloudinary.cloud_name")
-	upload_preset <- config.getString("cloudinary.upload_preset")
+        cloud_name <- config.getString("cloudinary.cloud_name")
+        upload_preset <- config.getString("cloudinary.upload_preset")
     } yield Json.obj(
-	"cloud_name" -> cloud_name,
-	"upload_preset" -> upload_preset
+        "cloud_name" -> cloud_name,
+        "upload_preset" -> upload_preset
     )
 
     Html(Json.stringify(maybeCloudinary getOrElse Json.obj()))
@@ -118,34 +118,34 @@ jQuery(function($) {
 }
 
 @main(title)(header) {
-	<div id="add-popup">
-	    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#add-popup'], _.extend({editable: false}, $pageData)));").toString)
-	</div>
+        <div id="add-popup">
+            @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#add-popup'], _.extend({editable: false}, $pageData)));").toString)
+        </div>
 
         <div id="wrapper">
             <!-- Header -->
                 <div id="header-wrapper" class="skel-layers-fixed">
-		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#header-wrapper'], _.extend({editable: false}, $pageData)));").toString)
+                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#header-wrapper'], _.extend({editable: false}, $pageData)));").toString)
                 </div>
 
             <!-- Main -->
                 <div id="main-wrapper">
-		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#main-wrapper'], _.extend({editable: false}, $pageData)));").toString)
+                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#main-wrapper'], _.extend({editable: false}, $pageData)));").toString)
                 </div>
 
             <!-- Footer -->
                 <section id="footer">
-		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#footer'], _.extend({editable: false}, $pageData)));").toString)
+                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#footer'], _.extend({editable: false}, $pageData)));").toString)
                 </section>
 
 @*
-		<div id="color-picker">
-		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#color-picker'], _.extend({editable: false}, $pageData)));").toString)
-		</div>
+                <div id="color-picker">
+                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#color-picker'], _.extend({editable: false}, $pageData)));").toString)
+                </div>
 *@
 
-		<div id="edit-buttons">
-		    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#edit-buttons'], _.extend({editable: false}, $pageData)));").toString)
-		</div>
+                <div id="edit-buttons">
+                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#edit-buttons'], _.extend({editable: false}, $pageData)));").toString)
+                </div>
         </div>
 }
