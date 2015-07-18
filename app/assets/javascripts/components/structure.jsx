@@ -26,6 +26,8 @@ var SidebarNav = React.createClass({
 
         self.anchors = anchors;
         self.indexOffsets = newOffsets;
+
+        this.handleScroll();
     }, 50),
 
     handleScroll: function () {
