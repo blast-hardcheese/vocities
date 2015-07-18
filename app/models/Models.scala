@@ -104,7 +104,7 @@ import UserRoles.{ UserRole, listTypeMapper }
 
 case class User(id: Long = -1, username: String, roles: List[UserRole] = List.empty)
 
-class Users(tag: Tag) extends Table[User](tag, "user") {
+class Users(tag: Tag) extends Table[User](tag, "users") {
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def username = column[String]("username")
   def roles = column[List[UserRole]]("roles")
