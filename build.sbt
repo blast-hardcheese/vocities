@@ -15,7 +15,7 @@ libraryDependencies ++= Seq(
   "org.webjars" % "font-awesome" % "4.3.0-1",
   "org.webjars" % "tinymce-jquery" % "4.1.7-1",
   "org.webjars.bower" % "bootstrap" % "3.3.4",
-  "org.webjars.bower" % "jquery" % "2.1.3",
+  "org.webjars.bower" % "jquery" % "2.1.4",
   "org.webjars.bower" % "jquery-waypoints" % "3.1.1",
   "org.webjars.bower" % "reflux" % "0.2.7",
   "org.webjars.bower" % "tinycolor" % "1.1.2",
