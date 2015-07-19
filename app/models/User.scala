@@ -91,8 +91,7 @@ object AuthProfiles extends AuthProfileConverters {
       .filter { case (p, _) => p.providerId === profile.providerId && p.providerUserId === profile.userId }
       .map { case (_, u) => u }
       .take(1)
-      .list
-      .headOption
+      .firstOption
       .map { userToUserModel(profile) }
   }
 
