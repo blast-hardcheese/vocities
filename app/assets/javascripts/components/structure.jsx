@@ -1,7 +1,44 @@
-var SidebarNav = React.createClass({
+var SidebarNavRow = React.createClass({
     mixins: [Updatable, Editable, Utils],
 
     extendPropsFunctions: [Editable.extendPropsEditable],
+
+    propTypes: {
+        title: React.PropTypes.string.isRequired,
+        tag: React.PropTypes.string.isRequired,
+    },
+
+    doUpdate: function (data) {
+        var title = data.content;
+        var tag = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+        this.props.updated({
+            tag: tag,
+            title: title
+        });
+        this.stopEdit();
+    },
+
+    render: function () {
+        return (
+            <li key={this.props.tag} style={{position: 'relative'}}>
+                {React.createElement(TextField, this.buildProps({
+                    content: this.props.title,
+                    containerTag: 'a',
+                    className: 'v-editable sidebar-nav-row',
+                    href: '#' + this.props.tag,
+                    editable: this.state.editing,
+                    updated: this.doUpdate,
+                }))}
+            </li>
+        );
+    }
+});
+
+var SidebarNav = React.createClass({
+    mixins: [Updatable, Editable, Utils],
+
+    extendPropsFunctions: [Editable.extendPropsEditable, Updatable.autoUpdated],
 
     anchors: [],
     indexOffsets: [],
@@ -10,7 +47,7 @@ var SidebarNav = React.createClass({
     rebuildOffsets: _.debounce(function () {
         var self = this;
         var nav = self.refs.nav.getDOMNode();
-        var anchors = $('a', nav);
+        var anchors = $('a.sidebar-nav-row', nav);
 
         var newOffsets = [];
 
@@ -63,39 +100,14 @@ var SidebarNav = React.createClass({
         this.rebuildOffsets();
     },
 
-    renameSection: function(idx, data) {
-        var title = data.content;
-        var tag = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-
-        this.props.updated({
-            sections: _.map(this.props.sections, function(data, _idx) {
-                if (_idx === idx) {
-                    data = _.extend({}, data, {
-                        title: title,
-                        tag: tag,
-                    });
-                }
-                return data;
-            }),
-        });
-    },
-
     render: function() {
-        var _this = this;
-
+        var self = this;
         var sections = _.map(this.props.sections, function(s, idx) {
-            return (
-                <li key={s.tag}>
-                    {React.createElement(TextField, _this.buildProps({
-                        content: s.title,
-                        containerTag: 'a',
-                        className: 'v-editable',
-                        href: '#' + s.tag,
-                        updated: _.partial(_this.renameSection, idx),
-                        editable: _this.state.editing,
-                    }))}
-                </li>
-            );
+            return React.createElement(SidebarNavRow, self.buildProps({
+                key: idx,
+                title: s.title,
+                tag: s.tag,
+            }, 'sections.' + idx));
         });
 
         var toggleEdit = null;
