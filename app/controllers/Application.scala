@@ -1,5 +1,7 @@
 package controllers
 
+import scala.util.Try
+
 import java.io.File
 import java.io.{ InputStreamReader, FileReader }
 import javax.script.{ ScriptEngineManager, ScriptEngine }
@@ -155,8 +157,8 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
     maybeUser
       .filter(_.roles.contains(models.UserRoles.Admin))
       .map { _ =>
-        val webjarPath = WebJarAssets.locate(path)
-        val route = routes.WebJarAssets.at(webjarPath)
+        val webjarPath = Try(WebJarAssets.locate(path))
+        val route = webjarPath.flatMap { webjarPath => Try(routes.WebJarAssets.at(webjarPath)) }
 
         Ok(Html(s"<html><body><div><span>path: $webjarPath</span></div><div><span>route: $route</span></div></body></html>"))
       } getOrElse {
