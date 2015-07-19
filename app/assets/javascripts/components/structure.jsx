@@ -28,8 +28,18 @@ var SidebarNavRow = React.createClass({
                     className: 'v-editable sidebar-nav-row',
                     href: '#' + this.props.tag,
                     editable: this.state.editing,
+                    editing: this.state.editing,
                     updated: this.doUpdate,
                 }))}
+                {this.buildEditableButton({
+                    className: 'v-editable sidebar-nav-row-edit',
+                    style: {
+                      position: 'absolute',
+                      right: '0',
+                      top: '0',
+                      backgroundColor: 'red',
+                    }
+                })}
             </li>
         );
     }
@@ -110,24 +120,13 @@ var SidebarNav = React.createClass({
             }, 'sections.' + idx));
         });
 
-        var toggleEdit = null;
         var newSection = null;
         if (this.props.editable) {
-            var style = {
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                borderBottom: 'none',
-            };
-
-            toggleEdit = this.buildEditableButton({style: style});
-
             newSection = <li key="new-section" style={{cursor: 'pointer'}}><a onClick={this.newSectionPopup}>New Section</a></li>;
         }
 
         return (
             <nav id="nav" ref="nav" style={{position: 'relative'}}>
-                {toggleEdit}
                 <ul>
                     {sections}
                     {newSection}
