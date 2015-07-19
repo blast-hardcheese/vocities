@@ -36,7 +36,7 @@ var SidebarNav = React.createClass({
             return val > scrollY;
         });
 
-        currentIdx = (currentIdx === -1) ? self.lastOffset : currentIdx - 1;
+        currentIdx = (currentIdx === -1) ? this.lastOffset : currentIdx - 1;
 
         $('a.active', nav).removeClass('active');
         $(this.anchors[currentIdx]).addClass('active');
