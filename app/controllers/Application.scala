@@ -19,6 +19,8 @@ import models.{ Page, Template }
 import securesocial.core.{ SecureSocial, RuntimeEnvironment }
 import models.{ UserModel, Queries }
 
+import utils.ExtendedPostgresDriver.simple._
+
 class RichScriptEngine(val engine: ScriptEngine) {
   def evalResource(path: String): Object = {
     engine.eval(new InputStreamReader(Play.classloader.getResourceAsStream(path)))
@@ -141,5 +143,24 @@ class Application(override implicit val env: RuntimeEnvironment[UserModel]) exte
           result
       } getOrElse { BadRequest }
     }
+  }
+
+  def lookup(path: String) = SecuredAction { implicit request =>
+    val maybeUser = DB.withSession { implicit s =>
+      models.Users.users
+        .filter(_.id === request.user.userId)
+        .firstOption
+    }
+
+    maybeUser
+      .filter(_.roles.contains(models.UserRoles.Admin))
+      .map { _ =>
+        val webjarPath = WebJarAssets.locate(path)
+        val route = routes.WebJarAssets.at(webjarPath)
+
+        Ok(Html(s"<html><body><div><span>path: $webjarPath</span></div><div><span>route: $route</span></div></body></html>"))
+      } getOrElse {
+        NotFound
+      }
   }
 }

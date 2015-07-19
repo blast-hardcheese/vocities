@@ -1,5 +1,6 @@
 GET     /account                                                     @controllers.Users.index
 
+GET     /lookup/*path                                               @controllers.Application.lookup(path: String)
 GET     /edit/:domain/                                               @controllers.Application.edit(domain: String, path="")
 GET     /edit/:domain/*path                                          @controllers.Application.edit(domain: String, path)
 
