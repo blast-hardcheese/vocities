@@ -39,8 +39,10 @@ object Application extends BaseController {
   implicit def liftEngine(e: ScriptEngine): RichScriptEngine = new RichScriptEngine(e)
 
   val engine = {
-    log.info("[Core] Starting Nashorn engine...")
-    val r = new ScriptEngineManager(null).getEngineByName("nashorn")
+    log.info("[Core] Starting Javascript engine...")
+    val engineManager = new ScriptEngineManager(null)
+    val r = engineManager.getEngineByName("JavaScript")
+
     log.debug(s"[Core]: $r")
     r.eval("var global = this;")
     r.eval("var log = function(x) { java.lang.System.out.println(x); }; var console = { warn: log, info: log, log: log };")
