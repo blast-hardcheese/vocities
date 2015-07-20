@@ -14,7 +14,20 @@ import models.UserModel
 
 object Global extends WithFilters() {
   override def onLoadConfig(config: Configuration, path: File, classloader: ClassLoader, mode: Mode.Mode): Configuration = {
-    val modeSpecificConfig = config ++ Configuration(ConfigFactory.load(s"application.${mode.toString.toLowerCase}.conf"))
+    import collection.JavaConversions._
+
+    def configToMap(config: com.typesafe.config.Config): Map[String, Object] = {
+      config.entrySet.iterator.foldRight(Map.empty[String, Object]) {
+        case (entry, map) => map + (entry.getKey -> entry.getValue.unwrapped)
+      }
+    }
+
+    val base = configToMap(config.underlying)
+    val extraName = s"application.${mode.toString.toLowerCase}.conf"
+    val extraConfig = ConfigFactory.parseResourcesAnySyntax(classloader, extraName)
+    val extra = configToMap(extraConfig.resolve())
+    val modeSpecificConfig = Configuration(ConfigFactory.parseMap(base ++ extra))
+
     super.onLoadConfig(modeSpecificConfig, path, classloader, mode)
   }
 
