@@ -1,5 +1,3 @@
-declare var Reflux;
-
 var EventActions = (function() {
     var store = {};
 

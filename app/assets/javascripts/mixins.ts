@@ -1,8 +1,10 @@
+/// <reference path="dt/all.d.ts" />
+
 var Utils = {
     propAtPath: function (path) {
         var r = this.props;
         if (path !== undefined && path !== null) {
-            r = _.foldl(path.split('.'), function (props, key) {
+            r = _.foldl(path.split('.'), function (props, key: string) {
                 return (props === undefined) ? undefined : props[key];
             }, this.props);
         }
@@ -18,7 +20,7 @@ var Utils = {
     buildProps: function(props, path) {
         var _this = this;
 
-        var r = _.foldl(this.extendPropsFunctions, function(props, func) {
+        var r = _.foldl(this.extendPropsFunctions, function(props, func: Function) {
             return func.apply(_this, [props, path]);
         }, props);
         return r;
@@ -223,10 +225,10 @@ var Droptarget = {
 
             var data = new FormData();
             data.append('file', file);
-            data.append('upload_preset', window.CloudinarySettings.upload_preset);
+            data.append('upload_preset', CloudinarySettings.upload_preset);
 
             jQuery.ajax({
-                url: 'https://api.cloudinary.com/v1_1/' + window.CloudinarySettings.cloud_name + '/image/upload',
+                url: 'https://api.cloudinary.com/v1_1/' + CloudinarySettings.cloud_name + '/image/upload',
                 data: data,
                 cache: false,
                 contentType: false,
