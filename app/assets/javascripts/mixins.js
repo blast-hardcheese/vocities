@@ -165,6 +165,8 @@ var Editable = {
 };
 
 var Droptarget = {
+    propTypes: _.extend({}, Editable.propTypes),
+
     getDefaultProps: function() {
         return {
             dragOver: false,
@@ -172,6 +174,10 @@ var Droptarget = {
     },
 
     dragEnterPage: function(direction) {
+        if (! this.props.editable) {
+            return;
+        }
+
         if (direction === 'enter') {
             this.setState({
                 dragOver: true,
@@ -207,6 +213,10 @@ var Droptarget = {
     onDropUpdateProp: function (propName) {
         var _this = this;
         return function (event) {
+            if (! _this.props.editable) {
+                return;
+            }
+
             event.preventDefault();
 
             var file = event.dataTransfer.files[0];
