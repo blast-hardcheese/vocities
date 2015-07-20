@@ -38,3 +38,5 @@ scalacOptions := Seq("-encoding", "UTF-8", "-Xlint", "-deprecation", "-unchecked
 TwirlKeys.templateImports += "play.api.libs.json.{Json, JsValue, JsObject, JsNull, JsString}"
 
 JsEngineKeys.engineType := JsEngineKeys.EngineType.Node
+
+TypescriptKeys.noImplicitAny := true
