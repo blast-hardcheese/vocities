@@ -263,27 +263,30 @@ var Droptarget = {
                     width: "100%",
                     height: "100%",
                     margin: null,
+                    content: 'initial',
                 }),
             });
             res = React.createElement("div", _.extend({}, {
-                style: _.extend({
+                style: _.extend({}, commonStyles, styles, {
                     backgroundColor: 'gray',
                     backgroundImage: 'url(/assets/images/drop-here.png)',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
                     backgroundSize: 'contain',
+                    content: 'initial',
                     padding: "5px",
-                }, commonStyles, styles),
+                    height: styles.height === 'initial' ? '15em' : styles.height,
+                }),
                 onDrop: this.onDropUpdateProp(propName),
             }, commonAttrs, attrs), dashes);
         } else if(this.props[propName]) {
             res = React.createElement("div", _.extend({}, {
-                style: _.extend({
+                style: _.extend({}, commonStyles, {
                     backgroundImage: 'url(' + this.props[propName] + ')',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
                     backgroundSize: 'cover',
-                }, commonStyles, styles),
+                }, styles),
                 onDrop: this.onDropUpdateProp(propName),
             }, commonAttrs, attrs));
         }
