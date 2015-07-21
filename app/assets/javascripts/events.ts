@@ -1,3 +1,5 @@
+/// <reference path="dt/all.d.ts" />
+
 var EventActions = (function() {
     var store = {};
 

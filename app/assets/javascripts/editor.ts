@@ -1,4 +1,4 @@
-/// <reference path="dt/jquery/jquery.d.ts" />
+/// <reference path="dt/all.d.ts" />
 
 interface PageInfo {
     domain: string;
