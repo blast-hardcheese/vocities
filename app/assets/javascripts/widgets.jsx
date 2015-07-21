@@ -347,29 +347,17 @@ var WidgetBuilder = function(extra) {
     var widgets = _.extend({}, builtins, extra);
 
     return React.createClass({
-        getDefaultProps: function() {
-            return {
-                updated: function(newProps) {
-                    console.error('Widget tried to update:', newProps);
-                }
-            }
-        },
+        mixins: [Updatable, Editable, Utils],
+
+        extendPropsFunctions: [Editable.extendPropsEditable, Updatable.autoUpdated],
+
         render: function() {
             var _this = this;
             var res = null;
 
             var widget = widgets[this.props.type];
             if (widget !== undefined) {
-                var data = _.extend({}, {
-                    updated: function(newProps) {
-                        _this.props.updated({
-                            type: _this.props.type,
-                            data: newProps,
-                        });
-                    },
-                    editable: _this.props.editable,
-                }, this.props.data);
-                res = React.createElement(widget, data);
+                res = React.createElement(widget, this.buildProps(this.props.data, 'data'));
             }
 
             return res;
