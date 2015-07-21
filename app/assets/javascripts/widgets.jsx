@@ -288,12 +288,15 @@ var TextField = React.createClass({
     propTypes: {
         content: React.PropTypes.string.isRequired,
         containerTag: React.PropTypes.string,
+        editTag: React.PropTypes.string,
     },
 
     getDefaultProps: function() {
         return {
+            editTag: 'input',
             containerTag: 'span',
             content: 'Unknown',
+            editStyle: {},
         };
     },
 
@@ -319,7 +322,28 @@ var TextField = React.createClass({
         var r = null;
 
         if (this.state.editing) {
-            r = <input ref="editText" defaultValue={this.props.content} onKeyDown={this.keyDown} />;
+            if (this.props.editTag === 'textarea') {
+                r = React.createElement('div', {
+
+                }, [
+                    React.createElement(this.props.editTag, {
+                        key: '0',
+                        ref: 'editText',
+                        defaultValue: this.props.content,
+                        style: this.props.editStyle,
+                    }),
+                    React.createElement('button', {
+                        key: '1',
+                        onClick: this.stopEdit,
+                    }, 'Save'),
+                ]);
+            } else {
+                r = React.createElement(this.props.editTag, {
+                    ref: 'editText',
+                    defaultValue: this.props.content,
+                    onKeyDown: this.keyDown,
+                });
+            }
         } else {
             var subProps = _.extend({}, this.props);
 
@@ -329,10 +353,53 @@ var TextField = React.createClass({
 
             delete subProps['content'];
 
-            r = React.createElement(this.props.containerTag, subProps, this.props.content);
+            if (this.props.dangerouslySetInnerHTML === true) {
+                r = React.createElement('div', {
+                    style: {
+                        position: 'relative',
+                    }
+                }, [
+                    React.createElement(this.props.containerTag, _.extend({}, subProps, {
+                        key: '0',
+                        dangerouslySetInnerHTML: {__html: this.props.content}
+                    })),
+
+                    React.createElement('button', {
+                        key: '1',
+                        style: {
+                            position: 'absolute',
+                            top: 0,
+                            left: 15,
+                            marginBottom: 10,
+                            transform: 'translateY(calc(-100% - 10px))',
+                        },
+                        onClick: this.startEdit,
+                    }, 'Edit'),
+                ]);
+            } else {
+                r = React.createElement(this.props.containerTag, subProps, this.props.content);
+            }
         }
 
         return r;
+    },
+});
+
+var HtmlEmbed = React.createClass({
+    mixins: [Updatable, Editable, Utils],
+
+    extendPropsFunctions: [Editable.extendPropsEditable, Updatable.autoUpdated],
+
+    render: function () {
+        return React.createElement(TextField, this.buildProps({
+            dangerouslySetInnerHTML: true,
+            editTag: 'textarea',
+            containerTag: 'span',
+            content: this.props.content,
+            editStyle: {
+                fontFamily: 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace',
+            }
+        }));
     },
 });
 
@@ -342,6 +409,7 @@ var WidgetBuilder = function(extra) {
         'paragraph': Paragraph,
         'youtube': YouTube,
         'header': HeaderBlock,
+        'html': HtmlEmbed,
     };
 
     var widgets = _.extend({}, builtins, extra);
