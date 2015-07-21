@@ -239,7 +239,14 @@ var Section = React.createClass({
     extendPropsFunctions: [Editable.extendPropsEditable, Updatable.autoUpdated],
 
     render: function() {
-        var headerImage = this.buildDroppable('bannerImage');
+        var headerImage = this.buildDroppable('bannerImage', null, {
+            content: 'url(' + this.props.bannerImage + ')',
+            height: 'initial',
+            backgroundImage: 'initial',
+            backgroundPosition: 'initial',
+            backgroundRepeat: 'initial',
+            backgroundSize: 'initial',
+        });
 
         return (
             <section id={this.props.tag}>
