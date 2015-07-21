@@ -324,7 +324,9 @@ var TextField = React.createClass({
         if (this.state.editing) {
             if (this.props.editTag === 'textarea') {
                 r = React.createElement('div', {
-
+                    style: {
+                        width: '100%',
+                    }
                 }, [
                     React.createElement(this.props.editTag, {
                         key: '0',
@@ -335,6 +337,9 @@ var TextField = React.createClass({
                     React.createElement('button', {
                         key: '1',
                         onClick: this.stopEdit,
+                        style: {
+                            float: 'right',
+                        }
                     }, 'Save'),
                 ]);
             } else {
@@ -398,6 +403,9 @@ var HtmlEmbed = React.createClass({
             content: this.props.content,
             editStyle: {
                 fontFamily: 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace',
+                fontSize: '1.4ex',
+                width: '100%',
+                height: '20ex',
             }
         }));
     },
