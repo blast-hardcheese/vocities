@@ -385,12 +385,31 @@ var TextField = React.createClass({
     },
 });
 
+var HtmlEmbed = React.createClass({
+    mixins: [Updatable, Editable, Utils],
+
+    extendPropsFunctions: [Editable.extendPropsEditable, Updatable.autoUpdated],
+
+    render: function () {
+        return React.createElement(TextField, this.buildProps({
+            dangerouslySetInnerHTML: true,
+            editTag: 'textarea',
+            containerTag: 'span',
+            content: this.props.content,
+            editStyle: {
+                fontFamily: 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace',
+            }
+        }));
+    },
+});
+
 var WidgetBuilder = function(extra) {
     var builtins = {
         //'soundcloud': SoundCloudPlayer,
         'paragraph': Paragraph,
         'youtube': YouTube,
         'header': HeaderBlock,
+        'html': HtmlEmbed,
     };
 
     var widgets = _.extend({}, builtins, extra);
