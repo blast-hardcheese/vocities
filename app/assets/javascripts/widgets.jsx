@@ -513,7 +513,7 @@ var TextField = React.createClass({
         } else {
             var subProps = _.extend({}, this.props);
 
-            if (this.props.editable) {
+            if (this.props.editable === true) {
                 subProps.onClick = this.startEdit;
             }
 
