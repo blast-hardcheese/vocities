@@ -221,6 +221,11 @@ var AddWidgetPopup = React.createClass({
             'class': HeaderBlock,
             'name': 'Section Header',
         },
+
+        'html': {
+            'class': HtmlEmbed,
+            'name': 'Raw HTML',
+        }
     },
 
     addSection: function() {
@@ -258,6 +263,11 @@ var AddWidgetPopup = React.createClass({
                     title: title,
                     text: '<p>Lorem ipsum sit dolor amet</p>',
                     subtitle: '<p>Nunc convallis dictum consectetur</p>',
+                };
+                break;
+            case 'html':
+                section.content.data = {
+                    content: '<iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d59324099.36051832!2d-43.36801133170003!3d24.834608821223174!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sus!4v1437466329052" height="450" frameborder="0" style="border:0; width: 100%;" allowfullscreen></iframe>',
                 };
                 break;
         }
