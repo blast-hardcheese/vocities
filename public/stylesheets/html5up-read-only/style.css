@@ -1080,3 +1080,10 @@
 				#footer .copyright li a {
 					color: inherit;
 				}
+
+/* VOCities */
+
+#nav ul li input {
+  margin: 0.6em;
+  padding: 0.1em;
+}
