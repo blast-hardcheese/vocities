@@ -210,21 +210,35 @@ var AddWidgetPopup = React.createClass({
         'paragraph': {
             'class': Paragraph,
             'name': 'Paragraph',
+            'default': {
+                content: '<p>Lorem ipsum sit dolor amet</p>',
+            }
         },
 
         'youtube': {
             'class': YouTube,
             'name': 'YouTube Video',
+            'default': {
+                videoId: 'vSjX02FIZCk',
+            }
         },
 
         'header': {
             'class': HeaderBlock,
             'name': 'Section Header',
+            'default': {
+                title: 'Header Text',
+                text: '<p>Lorem ipsum sit dolor amet</p>',
+                subtitle: '<p>Nunc convallis dictum consectetur</p>',
+            }
         },
 
         'html': {
             'class': HtmlEmbed,
             'name': 'Raw HTML',
+            'default': {
+                content: '<iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d59324099.36051832!2d-43.36801133170003!3d24.834608821223174!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sus!4v1437466329052" height="450" frameborder="0" style="border:0; width: 100%;" allowfullscreen></iframe>',
+            }
         }
     },
 
@@ -244,36 +258,12 @@ var AddWidgetPopup = React.createClass({
             title: title,
             content: {
                 type: type,
+                data: this.availableTypes[type]['default'],
             }
         };
 
-        switch(type) {
-            case 'paragraph':
-                section.content.data = {
-                    content: '<p>Lorem ipsum sit dolor amet</p>',
-                };
-                break;
-            case 'youtube':
-                section.content.data = {
-                    videoId: 'vSjX02FIZCk',
-                };
-                break;
-            case 'header':
-                section.content.data = {
-                    title: title,
-                    text: '<p>Lorem ipsum sit dolor amet</p>',
-                    subtitle: '<p>Nunc convallis dictum consectetur</p>',
-                };
-                break;
-            case 'html':
-                section.content.data = {
-                    content: '<iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d59324099.36051832!2d-43.36801133170003!3d24.834608821223174!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sus!4v1437466329052" height="450" frameborder="0" style="border:0; width: 100%;" allowfullscreen></iframe>',
-                };
-                break;
-        }
-
         var data = _.extend({}, this.props, {
-            sections: _.flatten([this.props.sections || [], [section]]),
+            sections: (this.props.sections || []).concat([section]),
         });
 
         this.props.updated(data);
