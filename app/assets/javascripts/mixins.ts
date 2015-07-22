@@ -59,7 +59,9 @@ var Updatable = {
     },
 
     deepUpdated: function (key, data) {
-        this.props.updated(deepExtend(key, this.props, data));
+        var newProps = deepExtend(key, this.props, data);
+        delete newProps['updated'];
+        this.props.updated(newProps);
     },
 
     getDefaultProps: function() {
