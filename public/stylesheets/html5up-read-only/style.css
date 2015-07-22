@@ -1088,7 +1088,13 @@
   padding: 0.1em;
 }
 
+body.is-touch #nav ul li .sidebar-nav-row-edit,
+#nav ul li:hover .sidebar-nav-row-edit {
+	display: block;
+}
+
 #nav ul li .sidebar-nav-row-edit {
+	display: none;
 	position: absolute;
 	top: 0;
   right: 1ex;
