@@ -46,12 +46,6 @@ var SidebarNavRow = React.createClass({
                 }))}
                 {this.buildEditableButton({
                     className: 'v-editable sidebar-nav-row-edit',
-                    style: {
-                      position: 'absolute',
-                      right: '0',
-                      top: '0',
-                      backgroundColor: 'red',
-                    }
                 })}
             </li>
         );
