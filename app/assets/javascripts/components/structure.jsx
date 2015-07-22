@@ -8,6 +8,12 @@ var SidebarNavRow = React.createClass({
         tag: React.PropTypes.string.isRequired,
     },
 
+    getInitialState: function () {
+        return {
+            editing: false,
+        };
+    },
+
     doUpdate: function (data) {
         var title = data.content;
         var tag = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
