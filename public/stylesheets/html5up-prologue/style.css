@@ -782,3 +782,25 @@
 			{
 				background-color: #e8edec;
 			}
+
+/* VOCities */
+
+#nav ul li input {
+	margin: 0.4em 1.5em;
+	border: 0;
+	padding: 0.1em;
+	margin-left: 6ex;
+}
+
+#nav ul li .sidebar-nav-row-edit {
+	position: absolute;
+	top: 0;
+  left: 1ex;
+	text-shadow: 1px 1px 2px black, 1px -1px 2px black, -1px -1px 2px black, -1px 1px 2px black;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+#add-popup .styled-select select {
+		width: 100%;
+}

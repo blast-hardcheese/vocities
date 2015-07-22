@@ -59,7 +59,9 @@ var Updatable = {
     },
 
     deepUpdated: function (key, data) {
-        this.props.updated(deepExtend(key, this.props, data));
+        var newProps = deepExtend(key, this.props, data);
+        delete newProps['updated'];
+        this.props.updated(newProps);
     },
 
     getDefaultProps: function() {
@@ -82,6 +84,9 @@ var Updatable = {
 var Editable = {
     propTypes: {
         editable: React.PropTypes.bool.isRequired,
+        forceEditing: React.PropTypes.bool,
+        editStarted: React.PropTypes.func,
+        editStopped: React.PropTypes.func,
     },
 
     buildEditableButton: function (attrs) {
@@ -114,8 +119,16 @@ var Editable = {
 
     getInitialState: function() {
         return {
-            editing: false,
+            editing: this.props.forceEditing,
         };
+    },
+
+    componentWillReceiveProps: function (nextProps) {
+        if (nextProps.forceEditing !== undefined) {
+            this.setState({
+                editing: nextProps.forceEditing,
+            });
+        }
     },
 
     startEdit: function(e) {
@@ -152,6 +165,10 @@ var Editable = {
             } else {
                 console.info(this.getDOMNode(), 'editStarted');
             }
+
+            if(this.props.editStarted !== undefined) {
+                this.props.editStarted(this.props, this.state);
+            }
         }
     },
 
@@ -161,6 +178,10 @@ var Editable = {
                 this.editStopped();
             } else {
                 console.info(this.getDOMNode(), 'editStopped');
+            }
+
+            if(this.props.editStopped !== undefined) {
+                this.props.editStopped(this.props, this.state);
             }
         }
     },

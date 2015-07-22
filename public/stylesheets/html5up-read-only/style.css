@@ -1080,3 +1080,21 @@
 				#footer .copyright li a {
 					color: inherit;
 				}
+
+/* VOCities */
+
+#nav ul li input {
+  margin: 0.6em;
+  padding: 0.1em;
+}
+
+#nav ul li .sidebar-nav-row-edit {
+	position: absolute;
+	top: 0;
+  right: 1ex;
+	text-shadow: 1px 1px 2px black, 1px -1px 2px black, -1px -1px 2px black, -1px 1px 2px black;
+}
+
+#add-popup .styled-select select {
+		width: 100%;
+}
