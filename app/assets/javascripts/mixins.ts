@@ -82,6 +82,7 @@ var Updatable = {
 var Editable = {
     propTypes: {
         editable: React.PropTypes.bool.isRequired,
+        forceEditing: React.PropTypes.bool,
     },
 
     buildEditableButton: function (attrs) {
@@ -114,8 +115,16 @@ var Editable = {
 
     getInitialState: function() {
         return {
-            editing: false,
+            editing: this.props.forceEditing,
         };
+    },
+
+    componentWillReceiveProps: function (nextProps) {
+        if (nextProps.forceEditing !== undefined) {
+            this.setState({
+                editing: nextProps.forceEditing,
+            });
+        }
     },
 
     startEdit: function(e) {
