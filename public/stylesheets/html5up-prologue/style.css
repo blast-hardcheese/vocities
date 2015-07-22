@@ -800,3 +800,7 @@
 	padding-left: 0;
 	padding-right: 0;
 }
+
+#add-popup .styled-select select {
+		width: 100%;
+}
