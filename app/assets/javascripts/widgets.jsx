@@ -347,6 +347,7 @@ var TextField = React.createClass({
                     ref: 'editText',
                     defaultValue: this.props.content,
                     onKeyDown: this.keyDown,
+                    style: this.props.editStyle,
                 });
             }
         } else {
