@@ -25,6 +25,12 @@ var SidebarNavRow = React.createClass({
         this.stopEdit();
     },
 
+    textFieldEditStopped: function(props, state) {
+        this.setState({
+            editing: false,
+        });
+    },
+
     render: function () {
         return (
             <li key={this.props.tag} style={{position: 'relative'}}>
@@ -34,7 +40,8 @@ var SidebarNavRow = React.createClass({
                     className: 'v-editable sidebar-nav-row',
                     href: '#' + this.props.tag,
                     editable: this.state.editing,
-                    editing: this.state.editing,
+                    forceEditing: this.state.editing,
+                    editStopped: this.textFieldEditStopped,
                     updated: this.doUpdate,
                 }))}
                 {this.buildEditableButton({
