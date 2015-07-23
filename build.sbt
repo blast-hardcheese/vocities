@@ -40,3 +40,5 @@ TwirlKeys.templateImports += "play.api.libs.json.{Json, JsValue, JsObject, JsNul
 JsEngineKeys.engineType := JsEngineKeys.EngineType.Node
 
 TypescriptKeys.noImplicitAny := true
+
+includeFilter in (Assets, LessKeys.less) := "*.less"
