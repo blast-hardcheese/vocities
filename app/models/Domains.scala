@@ -2,7 +2,11 @@ package models
 
 import utils.ExtendedPostgresDriver.simple._
 
-case class Domain(id: Long, account_id: Long, domain: String)
+case class Domain(
+  id: Long,
+  account_id: Long,
+  domain: String
+)
 
 class DomainTable(tag: Tag) extends Table[Domain](tag, "domains") {
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
