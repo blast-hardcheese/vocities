@@ -11,13 +11,21 @@ object DomainClasses extends Enumeration {
 
   implicit val typeMapper = createEnumJdbcType("domain_class", DomainClasses)
 }
+import DomainClasses.{ Value => _, _ }
 
 case class Domain(
   id: Long,
   account_id: Long,
   domain: String,
-  domainClass: DomainClasses.Value = DomainClasses.Basic
-)
+  domainClass: DomainClasses.Value = Basic
+) {
+  val maxPages = domainClass match {
+    case Basic => 1
+    case Advanced => 3
+    case Premium => 10
+    case Unlimited => 65535 // Should be enough pages for anybody
+  }
+}
 
 class DomainTable(tag: Tag) extends Table[Domain](tag, "domains") {
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
