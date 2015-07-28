@@ -17,14 +17,16 @@
     <body>
         <div class="container accounts">
             @for(account <- vm.accounts) {
+            @defining(vm.domains.filter(_.account_id == account.id)) { domains =>
                 <div class="row account">
                     <div class="col-xs-3 name">@{account.name}</div>
                     <div class="col-xs-9 domains">
-                        @for(domain <- vm.domains.filter(_.account_id == account.id)) {
+                        @for(domain <- domains) {
+                        @defining(vm.pages.filter(p => p.account_id == account.id && p.domain_id == domain.id)) { pages =>
                             <div class="row domain">
                                 <div class="col-xs-5 name">@{domain.domain}</div>
                                 <div class="col-xs-7 pages">
-                                    @for(page <- vm.pages.filter(p => p.account_id == account.id && p.domain_id == domain.id)) {
+                                    @for(page <- pages) {
                                         <div class="row page">
                                             <div class="col-xs-5 name">@{page.title}</div>
                                             <div class="col-xs-5 path">/@{page.path}</div>
@@ -33,7 +35,8 @@
                                     }
                                 </div>
                             </div>
-@*
+
+                            @if(domain.maxPages > pages.length) {
                             <div class="row">
                                 <form class="new-page-form" method="POST" action="@routes.Users.newPage">
                                     <input name="domain_id" type="hidden" value="@{domain.id}" />
@@ -48,10 +51,13 @@
                                     <button type="submit">Create Page</button>
                                 </form>
                             </div>
-*@
+                            }
+                        }
                         }
                     </div>
                 </div>
+
+                @if(account.credits > domains.length) {
                 <div class="row">
                     <form class="new-domain-form" method="POST" action="@routes.Users.newDomain">
                         <input name="account_id" type="hidden" value="@{account.id}" />
@@ -64,6 +70,8 @@
                         <button type="submit">Create Domain</button>
                     </form>
                 </div>
+                }
+            }
             }
         </div>
         @if(vm.accounts.isEmpty) {
