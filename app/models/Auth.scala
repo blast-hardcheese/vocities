@@ -1,6 +1,6 @@
 package models
 
-import securesocial.core.{ BasicProfile, AuthenticationMethod }
+import securesocial.core.{ BasicProfile, AuthenticationMethod, PasswordInfo }
 
 import utils.ExtendedPostgresDriver.simple._
 
@@ -15,7 +15,8 @@ case class AuthProfile(
   fullName: Option[String],
   email: Option[String],
   avatarUrl: Option[String],
-  authMethod: AuthenticationMethod
+  authMethod: AuthenticationMethod,
+  passwordInfo: Option[PasswordInfo]
 )
 
 class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "auth_profile") {
@@ -28,6 +29,7 @@ class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "auth_profile") {
   def email = column[Option[String]]("email", O.Nullable)
   def avatarUrl = column[Option[String]]("avatarUrl", O.Nullable)
   def authMethod = column[AuthenticationMethod]("authMethod", O.NotNull)
+  def passwordInfo = column[Option[PasswordInfo]]("password_info", O.Nullable)
 
   def * = (
     userId,
@@ -38,7 +40,8 @@ class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "auth_profile") {
     fullName,
     email,
     avatarUrl,
-    authMethod
+    authMethod,
+    passwordInfo
   ) <> (AuthProfile.tupled, AuthProfile.unapply _)
 }
 
@@ -106,7 +109,8 @@ trait AuthProfileConverters {
       fullName = profile.fullName,
       email = profile.email,
       avatarUrl = profile.avatarUrl,
-      authMethod = profile.authMethod
+      authMethod = profile.authMethod,
+      passwordInfo = profile.passwordInfo
     )
   }
 
@@ -120,7 +124,8 @@ trait AuthProfileConverters {
         fullName = ap.fullName,
         email = ap.email,
         avatarUrl = ap.avatarUrl,
-        authMethod = ap.authMethod
+        authMethod = ap.authMethod,
+        passwordInfo = ap.passwordInfo
       )
     )
   }
