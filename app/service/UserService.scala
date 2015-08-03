@@ -8,7 +8,7 @@ import securesocial.core.providers.{ UsernamePasswordProvider, MailToken }
 import scala.concurrent.Future
 import securesocial.core.services.{ UserService, SaveMode }
 
-import models.{ UserModel, AuthProfiles }
+import models.{ UserModel, AuthProfiles, MailTokens }
 
 class PostgresUserService extends UserService[UserModel] {
   val log = Logger("application.services.UserService")
@@ -86,8 +86,27 @@ class PostgresUserService extends UserService[UserModel] {
     }
   }
 
-  def deleteExpiredTokens(): Unit = ???
-  def deleteToken(uuid: String): scala.concurrent.Future[Option[securesocial.core.providers.MailToken]] = ???
-  def findToken(token: String): scala.concurrent.Future[Option[securesocial.core.providers.MailToken]] = ???
-  def saveToken(token: securesocial.core.providers.MailToken): scala.concurrent.Future[securesocial.core.providers.MailToken] = ???
+  def deleteExpiredTokens(): Unit = {
+    DB.withSession { implicit s =>
+      MailTokens.deleteExpired()
+    }
+  }
+
+  def deleteToken(token: String): scala.concurrent.Future[Option[securesocial.core.providers.MailToken]] = {
+    DB.withSession { implicit s =>
+      Future.successful(MailTokens.deleteToken(token))
+    }
+  }
+
+  def findToken(token: String): scala.concurrent.Future[Option[securesocial.core.providers.MailToken]] = {
+    DB.withSession { implicit s =>
+      Future.successful(MailTokens.findByToken(token))
+    }
+  }
+
+  def saveToken(token: securesocial.core.providers.MailToken): scala.concurrent.Future[securesocial.core.providers.MailToken] = {
+    DB.withSession { implicit s =>
+      Future.successful(MailTokens.save(token))
+    }
+  }
 }
