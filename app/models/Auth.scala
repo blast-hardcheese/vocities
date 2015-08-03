@@ -1,6 +1,6 @@
 package models
 
-import securesocial.core.{ BasicProfile, AuthenticationMethod, PasswordInfo }
+import securesocial.core.{ BasicProfile, AuthenticationMethod, PasswordInfo, OAuth1Info, OAuth2Info }
 
 import utils.ExtendedPostgresDriver.simple._
 
@@ -29,6 +29,8 @@ class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "auth_profile") {
   def email = column[Option[String]]("email", O.Nullable)
   def avatarUrl = column[Option[String]]("avatarUrl", O.Nullable)
   def authMethod = column[AuthenticationMethod]("authMethod", O.NotNull)
+  def oAuth1Info = column[Option[OAuth1Info]]("oauth1info", O.Nullable)
+  def oAuth2Info = column[Option[OAuth2Info]]("oauth2info", O.Nullable)
   def passwordInfo = column[Option[PasswordInfo]]("password_info", O.Nullable)
 
   def * = (
@@ -43,6 +45,8 @@ class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "auth_profile") {
     authMethod,
     passwordInfo
   ) <> (AuthProfile.tupled, AuthProfile.unapply _)
+
+  def basicProfile = (providerId, providerUserId, firstName, lastName, fullName, email, avatarUrl, authMethod, oAuth1Info, oAuth2Info, passwordInfo) <> (BasicProfile.tupled, BasicProfile.unapply _)
 }
 
 object AuthProfiles extends AuthProfileConverters {
