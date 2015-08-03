@@ -4,13 +4,6 @@ import securesocial.core.{ BasicProfile, AuthenticationMethod }
 
 import utils.ExtendedPostgresDriver.simple._
 
-trait AuthenticationMethodMixin {
-  implicit val authMethodMapper = MappedColumnType.base[AuthenticationMethod, String](
-    { _.method },
-    AuthenticationMethod.apply _
-  )
-}
-
 case class UserModel(main: BasicProfile, identities: List[BasicProfile], userId: Long)
 
 case class AuthProfile(
@@ -25,7 +18,7 @@ case class AuthProfile(
   authMethod: AuthenticationMethod
 )
 
-class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "auth_profile") with AuthenticationMethodMixin {
+class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "auth_profile") {
   def userId = column[Long]("userId", O.NotNull)
   def providerId = column[String]("providerId", O.NotNull)
   def providerUserId = column[String]("providerUserId", O.NotNull)
