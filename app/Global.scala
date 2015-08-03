@@ -5,7 +5,7 @@ import play.api.mvc.Results._
 import play.api.mvc._
 import scala.concurrent.Future
 import scala.collection.immutable.ListMap
-import securesocial.core.providers.{ GoogleProvider, FacebookProvider }
+import securesocial.core.providers.{ GoogleProvider, FacebookProvider, UsernamePasswordProvider }
 
 import java.lang.reflect.Constructor
 import securesocial.core.{ RuntimeEnvironment, OAuth2Provider }
@@ -39,7 +39,8 @@ object Global extends WithFilters() {
     override lazy val userService: PostgresUserService = new PostgresUserService()
 
     override lazy val providers = ListMap(
-      include(new GoogleProvider(routes, cacheService, oauth2ClientFor(GoogleProvider.Google)))
+      include(new GoogleProvider(routes, cacheService, oauth2ClientFor(GoogleProvider.Google))),
+      include(new UsernamePasswordProvider[UserModel](userService, avatarService, viewTemplates, passwordHashers))
     )
   }
 
