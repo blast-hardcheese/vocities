@@ -37,7 +37,13 @@ class PostgresUserService extends UserService[UserModel] {
             }
           )
         }
-      case SaveMode.PasswordChange => throw new Exception("Password changes unsupported")
+      case SaveMode.PasswordChange =>
+        DB.withSession { implicit s =>
+          AuthProfiles.updatePassword(profile)
+          Future.successful(
+            AuthProfiles.modelForProfile(profile).get
+          )
+        }
     }
   }
 
@@ -47,8 +53,23 @@ class PostgresUserService extends UserService[UserModel] {
     }
   }
 
-  // Since we're not using email authentication, let's keep these as stubs for now.
-  def updatePasswordInfo(user: UserModel, info: PasswordInfo): Future[Option[BasicProfile]] = ???
+  def updatePasswordInfo(user: UserModel, info: PasswordInfo): Future[Option[BasicProfile]] = {
+    Future.successful(
+      user
+        .identities
+        .filter(_.providerId == UsernamePasswordProvider.UsernamePassword)
+        .headOption
+        .flatMap { basicProfile =>
+          DB.withSession { implicit s =>
+            AuthProfiles.updatePassword(
+              basicProfile
+                .copy(passwordInfo = Some(info))
+            )
+          }
+        }
+    )
+  }
+
   def passwordInfoFor(user: UserModel): Future[Option[PasswordInfo]] = ???
   def findByEmailAndProvider(email: String, providerId: String): Future[Option[BasicProfile]] = ???
   def deleteExpiredTokens(): Unit = ???

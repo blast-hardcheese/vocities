@@ -100,6 +100,19 @@ object AuthProfiles extends AuthProfileConverters {
       .insert(basicToAuth(user.userId)(to))
     user.copy(identities = to +: user.identities)
   }
+
+  def updatePassword(profile: BasicProfile)(implicit s: Session): Option[BasicProfile] = {
+    val count = (
+      basicProfiles
+        .filter(_.providerId === profile.providerId)
+        .filter(_.providerUserId === profile.userId)
+        .map(_.basicProfile)
+        .update(profile)
+    )
+
+    Some(profile)
+      .filter(_ => count == 1)
+  }
 }
 
 trait AuthProfileConverters {
