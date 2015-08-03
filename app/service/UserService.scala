@@ -8,14 +8,14 @@ import securesocial.core.providers.{ UsernamePasswordProvider, MailToken }
 import scala.concurrent.Future
 import securesocial.core.services.{ UserService, SaveMode }
 
-import models.UserModel
+import models.{ UserModel, AuthProfiles }
 
 class PostgresUserService extends UserService[UserModel] {
   val log = Logger("application.services.UserService")
 
   def find(providerId: String, userId: String): Future[Option[BasicProfile]] = {
     DB.withSession { implicit s =>
-      Future.successful(models.AuthProfiles.lookupProfile(providerId, userId))
+      Future.successful(AuthProfiles.lookupProfile(providerId, userId))
     }
   }
 
@@ -25,15 +25,15 @@ class PostgresUserService extends UserService[UserModel] {
       case SaveMode.SignUp =>
         log.info(s"Sign in for ${profile.fullName}")
         DB.withTransaction { implicit s =>
-          Future.successful(models.AuthProfiles.newUser(profile))
+          Future.successful(AuthProfiles.newUser(profile))
         }
       case SaveMode.LoggedIn =>
         log.info(s"Logged in for ${profile.fullName}")
         DB.withTransaction { implicit s =>
           Future.successful(
-            models.AuthProfiles.modelForProfile(profile).getOrElse {
+            AuthProfiles.modelForProfile(profile).getOrElse {
               // If we couldn't find this auth, create a new user
-              models.AuthProfiles.newUser(profile)
+              AuthProfiles.newUser(profile)
             }
           )
         }
@@ -43,7 +43,7 @@ class PostgresUserService extends UserService[UserModel] {
 
   def link(currentUser: UserModel, to: BasicProfile): Future[UserModel] = {
     DB.withTransaction { implicit s =>
-      Future.successful(models.AuthProfiles.associateProfile(currentUser, to))
+      Future.successful(AuthProfiles.associateProfile(currentUser, to))
     }
   }
 
