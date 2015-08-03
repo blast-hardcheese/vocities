@@ -70,8 +70,22 @@ class PostgresUserService extends UserService[UserModel] {
     )
   }
 
-  def passwordInfoFor(user: UserModel): Future[Option[PasswordInfo]] = ???
-  def findByEmailAndProvider(email: String, providerId: String): Future[Option[BasicProfile]] = ???
+  def passwordInfoFor(user: UserModel): Future[Option[PasswordInfo]] = {
+    Future.successful(
+      user
+        .identities
+        .filter(_.providerId == UsernamePasswordProvider.UsernamePassword)
+        .headOption
+        .flatMap { _.passwordInfo }
+    )
+  }
+
+  def findByEmailAndProvider(email: String, providerId: String): Future[Option[BasicProfile]] = {
+    DB.withSession { implicit s =>
+      Future.successful(AuthProfiles.lookupProfile(providerId, email))
+    }
+  }
+
   def deleteExpiredTokens(): Unit = ???
   def deleteToken(uuid: String): scala.concurrent.Future[Option[securesocial.core.providers.MailToken]] = ???
   def findToken(token: String): scala.concurrent.Future[Option[securesocial.core.providers.MailToken]] = ???
