@@ -1,15 +1,8 @@
 package models
 
-import securesocial.core.{ BasicProfile, AuthenticationMethod }
+import securesocial.core.{ BasicProfile, AuthenticationMethod, PasswordInfo, OAuth1Info, OAuth2Info }
 
 import utils.ExtendedPostgresDriver.simple._
-
-trait AuthenticationMethodMixin {
-  implicit val authMethodMapper = MappedColumnType.base[AuthenticationMethod, String](
-    { _.method },
-    AuthenticationMethod.apply _
-  )
-}
 
 case class UserModel(main: BasicProfile, identities: List[BasicProfile], userId: Long)
 
@@ -22,10 +15,11 @@ case class AuthProfile(
   fullName: Option[String],
   email: Option[String],
   avatarUrl: Option[String],
-  authMethod: AuthenticationMethod
+  authMethod: AuthenticationMethod,
+  passwordInfo: Option[PasswordInfo]
 )
 
-class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "auth_profile") with AuthenticationMethodMixin {
+class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "auth_profile") {
   def userId = column[Long]("userId", O.NotNull)
   def providerId = column[String]("providerId", O.NotNull)
   def providerUserId = column[String]("providerUserId", O.NotNull)
@@ -35,6 +29,9 @@ class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "auth_profile") wit
   def email = column[Option[String]]("email", O.Nullable)
   def avatarUrl = column[Option[String]]("avatarUrl", O.Nullable)
   def authMethod = column[AuthenticationMethod]("authMethod", O.NotNull)
+  def oAuth1Info = column[Option[OAuth1Info]]("oauth1info", O.Nullable)
+  def oAuth2Info = column[Option[OAuth2Info]]("oauth2info", O.Nullable)
+  def passwordInfo = column[Option[PasswordInfo]]("password_info", O.Nullable)
 
   def * = (
     userId,
@@ -45,8 +42,11 @@ class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "auth_profile") wit
     fullName,
     email,
     avatarUrl,
-    authMethod
+    authMethod,
+    passwordInfo
   ) <> (AuthProfile.tupled, AuthProfile.unapply _)
+
+  def basicProfile = (providerId, providerUserId, firstName, lastName, fullName, email, avatarUrl, authMethod, oAuth1Info, oAuth2Info, passwordInfo) <> (BasicProfile.tupled, BasicProfile.unapply _)
 }
 
 object AuthProfiles extends AuthProfileConverters {
@@ -100,6 +100,19 @@ object AuthProfiles extends AuthProfileConverters {
       .insert(basicToAuth(user.userId)(to))
     user.copy(identities = to +: user.identities)
   }
+
+  def updatePassword(profile: BasicProfile)(implicit s: Session): Option[BasicProfile] = {
+    val count = (
+      basicProfiles
+        .filter(_.providerId === profile.providerId)
+        .filter(_.providerUserId === profile.userId)
+        .map(_.basicProfile)
+        .update(profile)
+    )
+
+    Some(profile)
+      .filter(_ => count == 1)
+  }
 }
 
 trait AuthProfileConverters {
@@ -113,7 +126,8 @@ trait AuthProfileConverters {
       fullName = profile.fullName,
       email = profile.email,
       avatarUrl = profile.avatarUrl,
-      authMethod = profile.authMethod
+      authMethod = profile.authMethod,
+      passwordInfo = profile.passwordInfo
     )
   }
 
@@ -127,7 +141,8 @@ trait AuthProfileConverters {
         fullName = ap.fullName,
         email = ap.email,
         avatarUrl = ap.avatarUrl,
-        authMethod = ap.authMethod
+        authMethod = ap.authMethod,
+        passwordInfo = ap.passwordInfo
       )
     )
   }
