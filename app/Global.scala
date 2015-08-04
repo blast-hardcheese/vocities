@@ -6,7 +6,7 @@ import play.api.mvc._
 import scala.concurrent.Future
 import scala.collection.immutable.ListMap
 import scala.collection.mutable.{ Set => MutableSet }
-import securesocial.core.providers.{ GoogleProvider, FacebookProvider, UsernamePasswordProvider }
+import securesocial.core.providers._
 
 import java.lang.reflect.Constructor
 import securesocial.core.{ RuntimeEnvironment, OAuth2Provider }
@@ -49,7 +49,24 @@ object Global extends WithFilters() {
     override lazy val userService: PostgresUserService = new PostgresUserService()
 
     private[this] def availableProviders: ListMap[String, securesocial.core.IdentityProvider] = ListMap(
+      // oauth 2 client providers
+      include(new FacebookProvider(routes, cacheService, oauth2ClientFor(FacebookProvider.Facebook))),
+      include(new FoursquareProvider(routes, cacheService, oauth2ClientFor(FoursquareProvider.Foursquare))),
+      include(new GitHubProvider(routes, cacheService, oauth2ClientFor(GitHubProvider.GitHub))),
       include(new GoogleProvider(routes, cacheService, oauth2ClientFor(GoogleProvider.Google))),
+      include(new InstagramProvider(routes, cacheService, oauth2ClientFor(InstagramProvider.Instagram))),
+      include(new ConcurProvider(routes, cacheService, oauth2ClientFor(ConcurProvider.Concur))),
+      include(new SoundcloudProvider(routes, cacheService, oauth2ClientFor(SoundcloudProvider.Soundcloud))),
+      //include(new LinkedInOAuth2Provider(routes, cacheService,oauth2ClientFor(LinkedInOAuth2Provider.LinkedIn))),
+      include(new VkProvider(routes, cacheService, oauth2ClientFor(VkProvider.Vk))),
+      include(new DropboxProvider(routes, cacheService, oauth2ClientFor(DropboxProvider.Dropbox))),
+      include(new WeiboProvider(routes, cacheService, oauth2ClientFor(WeiboProvider.Weibo))),
+      include(new ConcurProvider(routes, cacheService, oauth2ClientFor(ConcurProvider.Concur))),
+      // oauth 1 client providers
+      include(new LinkedInProvider(routes, cacheService, oauth1ClientFor(LinkedInProvider.LinkedIn))),
+      include(new TwitterProvider(routes, cacheService, oauth1ClientFor(TwitterProvider.Twitter))),
+      include(new XingProvider(routes, cacheService, oauth1ClientFor(XingProvider.Xing))),
+      // username password
       include(new UsernamePasswordProvider[UserModel](userService, avatarService, viewTemplates, passwordHashers))
     )
 
