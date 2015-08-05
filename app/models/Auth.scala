@@ -50,7 +50,7 @@ class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "auth_profile") {
 }
 
 object AuthProfiles extends AuthProfileConverters {
-  val basicProfiles = TableQuery[AuthProfiles]
+  val authProfiles = TableQuery[AuthProfiles]
 
   def newUser(profile: BasicProfile)(implicit s: Session): UserModel = {
     val username = profile.fullName
@@ -63,14 +63,14 @@ object AuthProfiles extends AuthProfileConverters {
       .returning(Users.users.map(_.id))
       .insert(User(username=username))
 
-    basicProfiles
+    authProfiles
       .insert(basicToAuth(id)(profile))
 
     UserModel(profile, List(profile), id)
   }
 
   def lookupProfile(providerId: String, providerUserId: String)(implicit s: Session): Option[BasicProfile] = {
-    basicProfiles
+    authProfiles
       .filter(r => r.providerId === providerId && r.providerUserId === providerUserId)
       .map(_.basicProfile)
       .firstOption
@@ -79,7 +79,7 @@ object AuthProfiles extends AuthProfileConverters {
   def lookupUser(profile: BasicProfile)(implicit s: Session): Option[UserModel] = {
     for {
       user <- (
-        basicProfiles
+        authProfiles
           .innerJoin(Users.users)
           .on { case (p, u) => p.userId === u.id }
           .filter { case (p, _) => p.providerId === profile.providerId && p.providerUserId === profile.userId }
@@ -88,7 +88,7 @@ object AuthProfiles extends AuthProfileConverters {
       )
 
       identities = (
-        basicProfiles
+        authProfiles
           .filter { _.userId === user.id }
           .map { _.basicProfile }
           .list
@@ -103,14 +103,14 @@ object AuthProfiles extends AuthProfileConverters {
   }
 
   def associateProfile(user: UserModel, to: BasicProfile)(implicit s: Session): UserModel = {
-    basicProfiles
+    authProfiles
       .insert(basicToAuth(user.userId)(to))
     user.copy(identities = to +: user.identities)
   }
 
   def updateProfile(profile: BasicProfile)(implicit s: Session): Option[BasicProfile] = {
     val count = (
-      basicProfiles
+      authProfiles
         .filter(_.providerId === profile.providerId)
         .filter(_.providerUserId === profile.userId)
         .map(_.basicProfile)
