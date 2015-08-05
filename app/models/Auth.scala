@@ -102,7 +102,11 @@ object AuthProfiles extends AuthProfileConverters {
           .list
       )
     } yield {
-      userToUserModel(profile, identities)(user)
+      UserModel(
+        main=profile,
+        identities=identities,
+        userId=user.id
+      )
     }
   }
 
@@ -157,13 +161,4 @@ trait AuthProfileConverters {
       )
     )
   }
-
-  def userToUserModel(profile: BasicProfile, identities: List[BasicProfile] = List.empty)(user: User): UserModel = {
-    UserModel(
-      main=profile,
-      identities=identities,
-      userId=user.id
-    )
-  }
 }
-
