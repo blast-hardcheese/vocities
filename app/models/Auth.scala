@@ -69,11 +69,6 @@ object AuthProfiles extends AuthProfileConverters {
     UserModel(profile, List(profile), id)
   }
 
-  def save(userId: Long, p: BasicProfile)(implicit s: Session) {
-    basicProfiles
-      .insert(basicToAuth(userId)(p))
-  }
-
   def lookupProfile(providerId: String, providerUserId: String)(implicit s: Session): Option[BasicProfile] = {
     basicProfiles
       .filter(r => r.providerId === providerId && r.providerUserId === providerUserId)
