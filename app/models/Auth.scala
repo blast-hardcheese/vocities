@@ -85,14 +85,25 @@ object AuthProfiles extends AuthProfileConverters {
   }
 
   def modelForProfile(profile: BasicProfile)(implicit s: Session): Option[UserModel] = {
-    basicProfiles
-      .innerJoin(Users.users)
-      .on { case (p, u) => p.userId === u.id }
-      .filter { case (p, _) => p.providerId === profile.providerId && p.providerUserId === profile.userId }
-      .map { case (_, u) => u }
-      .take(1)
-      .firstOption
-      .map { userToUserModel(profile) }
+    for {
+      user <- (
+        basicProfiles
+          .innerJoin(Users.users)
+          .on { case (p, u) => p.userId === u.id }
+          .filter { case (p, _) => p.providerId === profile.providerId && p.providerUserId === profile.userId }
+          .map { case (_, u) => u }
+          .firstOption
+      )
+
+      identities = (
+        basicProfiles
+          .filter { _.userId === user.id }
+          .map { _.basicProfile }
+          .list
+      )
+    } yield {
+      userToUserModel(profile, identities)(user)
+    }
   }
 
   def associateProfile(user: UserModel, to: BasicProfile)(implicit s: Session): UserModel = {
@@ -147,11 +158,12 @@ trait AuthProfileConverters {
     )
   }
 
-  def userToUserModel(profile: BasicProfile)(user: User): UserModel = {
+  def userToUserModel(profile: BasicProfile, identities: List[BasicProfile] = List.empty)(user: User): UserModel = {
     UserModel(
       main=profile,
-      identities=List(profile),
-      userId=user.id)
+      identities=identities,
+      userId=user.id
+    )
   }
 }
 
