@@ -19,8 +19,7 @@ class PostgresUserService extends UserService[UserModel] {
     }
   }
 
-  def save(user: BasicProfile, mode: SaveMode): Future[UserModel] = {
-    val profile = user
+  def save(profile: BasicProfile, mode: SaveMode): Future[UserModel] = {
     mode match {
       case SaveMode.SignUp =>
         log.info(s"Sign in for ${profile.fullName}")
