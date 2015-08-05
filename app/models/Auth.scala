@@ -77,11 +77,8 @@ object AuthProfiles extends AuthProfileConverters {
   def lookupProfile(providerId: String, providerUserId: String)(implicit s: Session): Option[BasicProfile] = {
     basicProfiles
       .filter(r => r.providerId === providerId && r.providerUserId === providerUserId)
-      .take(1)
-      .list
-      .headOption
-      .map(authToBasic)
-      .map(_._2)
+      .map(_.basicProfile)
+      .firstOption
   }
 
   def modelForProfile(profile: BasicProfile)(implicit s: Session): Option[UserModel] = {
@@ -143,22 +140,6 @@ trait AuthProfileConverters {
       avatarUrl = profile.avatarUrl,
       authMethod = profile.authMethod,
       passwordInfo = profile.passwordInfo
-    )
-  }
-
-  def authToBasic(ap: AuthProfile): (Long, BasicProfile) = {
-    (ap.userId,
-      BasicProfile(
-        providerId = ap.providerId,
-        userId = ap.providerUserId,
-        firstName = ap.firstName,
-        lastName = ap.lastName,
-        fullName = ap.fullName,
-        email = ap.email,
-        avatarUrl = ap.avatarUrl,
-        authMethod = ap.authMethod,
-        passwordInfo = ap.passwordInfo
-      )
     )
   }
 }
