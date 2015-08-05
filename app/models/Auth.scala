@@ -81,7 +81,7 @@ object AuthProfiles extends AuthProfileConverters {
       .firstOption
   }
 
-  def modelForProfile(profile: BasicProfile)(implicit s: Session): Option[UserModel] = {
+  def lookupUser(profile: BasicProfile)(implicit s: Session): Option[UserModel] = {
     for {
       user <- (
         basicProfiles
@@ -113,7 +113,7 @@ object AuthProfiles extends AuthProfileConverters {
     user.copy(identities = to +: user.identities)
   }
 
-  def updatePassword(profile: BasicProfile)(implicit s: Session): Option[BasicProfile] = {
+  def updateProfile(profile: BasicProfile)(implicit s: Session): Option[BasicProfile] = {
     val count = (
       basicProfiles
         .filter(_.providerId === profile.providerId)

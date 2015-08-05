@@ -30,17 +30,20 @@ class PostgresUserService extends UserService[UserModel] {
         log.info(s"Logged in for ${profile.fullName}")
         DB.withTransaction { implicit s =>
           Future.successful(
-            AuthProfiles.modelForProfile(profile).getOrElse {
-              // If we couldn't find this auth, create a new user
-              AuthProfiles.newUser(profile)
-            }
+            AuthProfiles.updateProfile(profile)
+              .flatMap(AuthProfiles.lookupUser)
+              .getOrElse {
+                // If we couldn't find this auth, create a new user
+                AuthProfiles.newUser(profile)
+              }
           )
         }
       case SaveMode.PasswordChange =>
         DB.withSession { implicit s =>
-          AuthProfiles.updatePassword(profile)
           Future.successful(
-            AuthProfiles.modelForProfile(profile).get
+            AuthProfiles.updateProfile(profile)
+              .flatMap(AuthProfiles.lookupUser)
+              .get
           )
         }
     }
@@ -60,7 +63,7 @@ class PostgresUserService extends UserService[UserModel] {
         .headOption
         .flatMap { basicProfile =>
           DB.withSession { implicit s =>
-            AuthProfiles.updatePassword(
+            AuthProfiles.updateProfile(
               basicProfile
                 .copy(passwordInfo = Some(info))
             )
