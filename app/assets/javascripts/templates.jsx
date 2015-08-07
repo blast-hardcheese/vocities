@@ -1,3 +1,8 @@
+var dynamicTplValues = function(selector) {
+    var values = $(selector).text()
+    return JSON.parse(values || '{}');
+};
+
 function TemplateManager(key, data) {
     var _this = this;
 
@@ -57,7 +62,7 @@ var Main = React.createClass({
 
 var ColorPicker = React.createClass({
     getSchemes: function () {
-        var dynamicCssValues = JSON.parse($('#dynamic-tpl-values').text());
+        var dynamicCssValues = dynamicTplValues('#dynamic-tpl-values');
         return dynamicCssValues['schemes'];
     },
     schemes: [
@@ -310,7 +315,7 @@ var AddWidgetPopup = React.createClass({
 var sharedTemplateRenderers = [
     function(vm) {
         var dynamicCss = _.template($('#dynamic-tpl').text());
-        var dynamicCssValues = JSON.parse($('#dynamic-tpl-values').text());
+        var dynamicCssValues = dynamicTplValues('#dynamic-tpl-values');
 
         var target = $('style#dynamic')
 
