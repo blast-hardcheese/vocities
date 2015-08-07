@@ -16,6 +16,8 @@ case class AuthProfile(
   email: Option[String],
   avatarUrl: Option[String],
   authMethod: AuthenticationMethod,
+  oAuth1Info: Option[OAuth1Info],
+  oAuth2Info: Option[OAuth2Info],
   passwordInfo: Option[PasswordInfo]
 )
 
@@ -43,6 +45,8 @@ class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "auth_profile") {
     email,
     avatarUrl,
     authMethod,
+    oAuth1Info,
+    oAuth2Info,
     passwordInfo
   ) <> (AuthProfile.tupled, AuthProfile.unapply _)
 
@@ -134,6 +138,8 @@ trait AuthProfileConverters {
       email = profile.email,
       avatarUrl = profile.avatarUrl,
       authMethod = profile.authMethod,
+      oAuth1Info = profile.oAuth1Info,
+      oAuth2Info = profile.oAuth2Info,
       passwordInfo = profile.passwordInfo
     )
   }
