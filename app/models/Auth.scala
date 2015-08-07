@@ -112,6 +112,22 @@ object AuthProfiles extends AuthProfileConverters {
     user.copy(identities = to +: user.identities)
   }
 
+  def disassociateProvider(user: UserModel, providerId: String)(implicit s: Session): UserModel = {
+    assume(user.main.providerId != providerId, "Attempted to disassociate current profile")
+
+    val count = (
+      authProfiles
+        .filter { p => p.providerId === providerId && p.userId === user.userId }
+        .delete
+    )
+
+    assume(count == 1, "Attempted to disassociate disassociated provider")
+
+    user.copy(
+      identities = user.identities.filterNot(_.providerId == providerId)
+    )
+  }
+
   def updateProfile(profile: BasicProfile)(implicit s: Session): Option[BasicProfile] = {
     val count = (
       authProfiles

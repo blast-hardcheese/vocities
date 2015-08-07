@@ -1,0 +1,15 @@
+@()(implicit request: controllers.Users.SecuredRequest[_], env: securesocial.core.RuntimeEnvironment[UserModel])
+
+@base("Auth - Link")() {
+    <h3>Link accounts</h3>
+
+    @env.providers.values.filter(_.id != request.user.main.providerId).map { provider =>
+        @defining( "images/providers/%s.png".format(provider.id) ) { imageUrl =>
+            @if(request.user.identities.exists(_.providerId == provider.id)) {
+                <a href="@routes.Users.disassociate(provider.id)">Disassociate @{provider.id}</a>
+            } else {
+                <a href="@env.routes.authenticationUrl(provider.id, Some(routes.Users.associateResult(provider.id).toString))"> <img src="@securesocial.controllers.routes.Assets.at(imageUrl)"/></a>
+            }
+        }
+    }
+}

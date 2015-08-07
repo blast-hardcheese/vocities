@@ -1,4 +1,7 @@
 GET     /account                                                      controllers.Users.index
+GET     /user/link                                                    controllers.Users.associate()
+GET     /user/link/:id                                                controllers.Users.associateResult(id: String)
+GET     /user/unlink/:id                                              controllers.Users.disassociate(id: String)
 
 GET     /lookup/*path                                                 controllers.Application.lookup(path: String)
 GET     /edit/:domain/                                                controllers.Application.edit(domain: String, path="")
