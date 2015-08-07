@@ -22,7 +22,7 @@ class PostgresUserService extends UserService[UserModel] {
   def save(profile: BasicProfile, mode: SaveMode): Future[UserModel] = {
     mode match {
       case SaveMode.SignUp =>
-        log.info(s"Sign in for ${profile.fullName}")
+        log.info(s"Sign up for ${profile.fullName}")
         DB.withTransaction { implicit s =>
           Future.successful(AuthProfiles.newUser(profile))
         }
@@ -39,6 +39,7 @@ class PostgresUserService extends UserService[UserModel] {
           )
         }
       case SaveMode.PasswordChange =>
+        log.info(s"Password change for ${profile.fullName}")
         DB.withSession { implicit s =>
           Future.successful(
             AuthProfiles.updateProfile(profile)
@@ -50,6 +51,7 @@ class PostgresUserService extends UserService[UserModel] {
   }
 
   def link(currentUser: UserModel, to: BasicProfile): Future[UserModel] = {
+    log.info(s"Linking ${currentUser.main.fullName} to (${to.providerId}, ${to.userId})")
     DB.withTransaction { implicit s =>
       Future.successful(AuthProfiles.associateProfile(currentUser, to))
     }
