@@ -143,7 +143,6 @@ var EditButtons = React.createClass({
     },
 
     performSave: function () {
-        console.info('Save stub');
         var pageData = _.extend({}, this.props);
 
         var templateId = pageData.templateId;
@@ -374,8 +373,6 @@ var sharedTemplateRenderers = [
                 setTimeout(function() {
                     EventActions.trigger('_dragStatus', 'drop');
                 }, 1);
-
-                console.info('Hey!', e.originalEvent.target);
             });
 
         return {
@@ -451,9 +448,7 @@ var Templates = {
     })({}),
 
     "plain": (function(self) {
-        console.info('plain init');
         var render = function(sel, data, clazz) {
-            console.info('render hey');
             var factory = React.createFactory(clazz)(data);
             var target = $(sel)[0];
             var react = React.render(factory, target);
@@ -470,9 +465,7 @@ var Templates = {
         };
 
         var classRenderers = _.map(classes, function(reactClass, id) {
-            console.info('class renderers:', id);
             return function(vm) {
-                console.info('here:', id, vm);
                 return render(id, vm, reactClass);
             };
         })
@@ -483,7 +476,6 @@ var Templates = {
         self.sequences = sequences;
         self.classes = classes;
 
-        console.info('self:', self);
         return self;
     })({})
 }
