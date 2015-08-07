@@ -67,6 +67,7 @@ object Application extends SecureController {
     templateId match {
       case "html5up_read_only" => Some(views.html.templates.html5up_read_only(engine, saveUrl)(title, data))
       case "html5up_prologue" => Some(views.html.templates.html5up_prologue(engine, saveUrl)(title, data))
+      case "plain" => Some(views.html.templates.plain(engine, saveUrl)(title, data))
       case _ => None
     }
   }

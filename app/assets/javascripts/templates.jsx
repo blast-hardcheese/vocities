@@ -448,5 +448,42 @@ var Templates = {
         self.classes = classes;
 
         return self;
+    })({}),
+
+    "plain": (function(self) {
+        console.info('plain init');
+        var render = function(sel, data, clazz) {
+            console.info('render hey');
+            var factory = React.createFactory(clazz)(data);
+            var target = $(sel)[0];
+            var react = React.render(factory, target);
+            react.setProps(data);
+            return react;
+        };
+
+        var classes = {
+            '#sidebar': Sidebar,
+            '#main-content': Main,
+            '#footer': Footer,
+            '#edit-buttons': EditButtons,
+            '#add-popup': AddWidgetPopup,
+        };
+
+        var classRenderers = _.map(classes, function(reactClass, id) {
+            console.info('class renderers:', id);
+            return function(vm) {
+                console.info('here:', id, vm);
+                return render(id, vm, reactClass);
+            };
+        })
+
+        var sequences = classRenderers.concat(sharedTemplateRenderers);
+
+        self.render = render;
+        self.sequences = sequences;
+        self.classes = classes;
+
+        console.info('self:', self);
+        return self;
     })({})
 }
