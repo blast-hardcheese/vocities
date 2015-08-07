@@ -10,15 +10,10 @@ import play.twirl.api.Html
 
 import models.{ Accounts, Page, Template, UserModel, Queries }
 
-import securesocial.core.{ SecureSocial, RuntimeEnvironment }
-
-object Users extends BaseController {
-}
-
 case class NewDomainForm(account_id: Long, domain: String, template: String)
 case class NewPageForm(account_id: Long, domain_id: Long, path: String, name: String, template: String)
 
-class Users(override implicit val env: RuntimeEnvironment[UserModel]) extends BaseController with SecureSocial[UserModel] {
+object Users extends SecureController {
 
   def index = SecuredAction { implicit request =>
     DB.withSession { implicit s =>

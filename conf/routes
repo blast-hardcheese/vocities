@@ -1,25 +1,25 @@
-GET     /account                                                     @controllers.Users.index
+GET     /account                                                      controllers.Users.index
 
-GET     /lookup/*path                                               @controllers.Application.lookup(path: String)
-GET     /edit/:domain/                                               @controllers.Application.edit(domain: String, path="")
-GET     /edit/:domain/*path                                          @controllers.Application.edit(domain: String, path)
+GET     /lookup/*path                                                 controllers.Application.lookup(path: String)
+GET     /edit/:domain/                                                controllers.Application.edit(domain: String, path="")
+GET     /edit/:domain/*path                                           controllers.Application.edit(domain: String, path)
 
-PUT     /edit/:domain/                                               @controllers.Application.save(domain: String, path="", templateId: String ?= "")
-PUT     /edit/:domain/*path                                          @controllers.Application.save(domain: String, path, templateId: String ?= "")
+PUT     /edit/:domain/                                                controllers.Application.save(domain: String, path="", templateId: String ?= "")
+PUT     /edit/:domain/*path                                           controllers.Application.save(domain: String, path, templateId: String ?= "")
 
-GET     /account/edit/:domain/                                       @controllers.Users.edit(domain: String, path="")
-GET     /account/edit/:domain/*path                                  @controllers.Users.edit(domain: String, path)
+GET     /account/edit/:domain/                                        controllers.Users.edit(domain: String, path="")
+GET     /account/edit/:domain/*path                                   controllers.Users.edit(domain: String, path)
 
-PUT     /account/edit/:domain/                                       @controllers.Users.save(domain: String, path="")
-PUT     /account/edit/:domain/*path                                  @controllers.Users.save(domain: String, path)
+PUT     /account/edit/:domain/                                        controllers.Users.save(domain: String, path="")
+PUT     /account/edit/:domain/*path                                   controllers.Users.save(domain: String, path)
 
-POST    /account/new-domain                                          @controllers.Users.newDomain
-POST    /account/new-page                                            @controllers.Users.newPage
+POST    /account/new-domain                                           controllers.Users.newDomain
+POST    /account/new-page                                             controllers.Users.newPage
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file                                                controllers.Assets.at(path="/public", file)
-GET     /webjars/*file                                               controllers.WebJarAssets.at(file)
-->      /auth                                                        securesocial.Routes
+GET     /assets/*file                                                 controllers.Assets.at(path="/public", file)
+GET     /webjars/*file                                                controllers.WebJarAssets.at(file)
+->      /auth                                                         securesocial.Routes
 
-GET     /                                                            @controllers.Application.route(path = "")
-GET     /*path                                                       @controllers.Application.route(path: String)
+GET     /                                                             controllers.Application.route(path = "")
+GET     /*path                                                        controllers.Application.route(path: String)
