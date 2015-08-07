@@ -56,7 +56,7 @@ object Application extends SecureController {
     r
   }
 
-  private[this] def doRender(domain: String, path: String)(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue): Option[String] = {
+  private[this] def doRender(domain: String, path: String)(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue): Option[Html] = {
     // Only here temporarily
     var r = new RichScriptEngine(engine)
     r.evalResource("public/javascripts/mixins.js")
@@ -65,23 +65,24 @@ object Application extends SecureController {
     r.evalResource("public/javascripts/templates.js")
 
     templateId match {
-      case "html5up_read_only" => Some(views.html.templates.html5up_read_only(engine, saveUrl)(title, data).toString)
-      case "html5up_prologue" => Some(views.html.templates.html5up_prologue(engine, saveUrl)(title, data).toString)
+      case "html5up_read_only" => Some(views.html.templates.html5up_read_only(engine, saveUrl)(title, data))
+      case "html5up_prologue" => Some(views.html.templates.html5up_prologue(engine, saveUrl)(title, data))
       case _ => None
     }
   }
 
-  private[this] def render(domain: String, path: String)(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue) = {
+  private[this] def render(domain: String, path: String)(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue): Result = {
     val cacheKey = s"$templateId-$domain-$path"
 
     val maybeHtml = if (saveUrl.isEmpty) {
       cache.Cache.getAs[String](cacheKey)
+        .map(Html(_))
         .orElse {
           val maybeRendered = doRender(domain, path)(saveUrl)(title, templateId, data)
 
           maybeRendered
             .foreach { value =>
-              cache.Cache.set(cacheKey, value)
+              cache.Cache.set(cacheKey, value.toString)
             }
 
           maybeRendered
@@ -91,8 +92,8 @@ object Application extends SecureController {
     }
 
     maybeHtml
-      .map { value: String =>
-        Ok(Html(value))
+      .map { value =>
+        Ok(value)
       }
       .getOrElse {
         InternalServerError
@@ -136,7 +137,7 @@ object Application extends SecureController {
           val cacheKey = s"$templateId-$domain-$path"
           doRender(domain, path)(None)(title, templateId, data)
             .foreach { html =>
-              cache.Cache.set(cacheKey, html)
+              cache.Cache.set(cacheKey, html.toString)
             }
 
           result
