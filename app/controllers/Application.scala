@@ -18,7 +18,6 @@ import org.webjars.WebJarAssetLocator
 
 import models.{ Page, Template }
 
-import securesocial.core.{ SecureSocial, RuntimeEnvironment }
 import models.{ UserModel, Queries }
 
 import utils.ExtendedPostgresDriver.simple._
@@ -34,7 +33,7 @@ class RichScriptEngine(val engine: ScriptEngine) {
   }
 }
 
-object Application extends BaseController {
+object Application extends SecureController {
   import scala.language.implicitConversions
   implicit def liftEngine(e: ScriptEngine): RichScriptEngine = new RichScriptEngine(e)
 
@@ -56,10 +55,6 @@ object Application extends BaseController {
 
     r
   }
-}
-
-class Application(override implicit val env: RuntimeEnvironment[UserModel]) extends BaseController with SecureSocial[UserModel] {
-  val engine = Application.engine
 
   private[this] def doRender(domain: String, path: String)(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue): Option[String] = {
     // Only here temporarily

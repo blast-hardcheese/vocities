@@ -9,7 +9,7 @@ import scala.collection.mutable.{ Set => MutableSet }
 import securesocial.core.providers._
 
 import java.lang.reflect.Constructor
-import securesocial.core.{ RuntimeEnvironment, OAuth2Provider }
+import securesocial.core.RuntimeEnvironment
 import service.PostgresUserService
 import models.UserModel
 

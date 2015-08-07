@@ -8,18 +8,14 @@ import play.api.libs.json.{ Json, JsValue }
 
 import play.twirl.api.Html
 
-import models.{ Accounts, Page, Template, UserModel, Queries }
+import securesocial.core.utils._
 
-import securesocial.core.{ SecureSocial, RuntimeEnvironment }
-
-object Users extends BaseController {
-}
+import models.{ Accounts, Page, Template, UserModel, Queries, AuthProfiles }
 
 case class NewDomainForm(account_id: Long, domain: String, template: String)
 case class NewPageForm(account_id: Long, domain_id: Long, path: String, name: String, template: String)
 
-class Users(override implicit val env: RuntimeEnvironment[UserModel]) extends BaseController with SecureSocial[UserModel] {
-
+object Users extends SecureController {
   def index = SecuredAction { implicit request =>
     DB.withSession { implicit s =>
       val vm = Queries.accountsIndex(request.user.userId)
@@ -83,6 +79,28 @@ class Users(override implicit val env: RuntimeEnvironment[UserModel]) extends Ba
       } getOrElse {
         BadRequest
       }
+    }
+  }
+
+  def associate = SecuredAction { implicit request =>
+    Ok(views.html.account.associate())
+  }
+
+  def associateResult(id: String) = SecuredAction { implicit request =>
+    Ok(views.html.account.associate())
+  }
+
+  def disassociate(id: String) = SecuredAction(WithSecondaryProvider(id)).async { implicit request =>
+    val newUser = DB.withSession { implicit s =>
+      AuthProfiles.disassociateProvider(request.user, id)
+    }
+
+    for {
+      updatedAuthenticator <- request.authenticator.updateUser(newUser)
+      result <- Redirect(routes.Users.associate).touchingAuthenticator(updatedAuthenticator)
+    } yield {
+      log.info(s"Disassociated ${newUser.main.fullName} from $id")
+      result
     }
   }
 }

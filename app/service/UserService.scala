@@ -19,11 +19,10 @@ class PostgresUserService extends UserService[UserModel] {
     }
   }
 
-  def save(user: BasicProfile, mode: SaveMode): Future[UserModel] = {
-    val profile = user
+  def save(profile: BasicProfile, mode: SaveMode): Future[UserModel] = {
     mode match {
       case SaveMode.SignUp =>
-        log.info(s"Sign in for ${profile.fullName}")
+        log.info(s"Sign up for ${profile.fullName}")
         DB.withTransaction { implicit s =>
           Future.successful(AuthProfiles.newUser(profile))
         }
@@ -31,23 +30,28 @@ class PostgresUserService extends UserService[UserModel] {
         log.info(s"Logged in for ${profile.fullName}")
         DB.withTransaction { implicit s =>
           Future.successful(
-            AuthProfiles.modelForProfile(profile).getOrElse {
-              // If we couldn't find this auth, create a new user
-              AuthProfiles.newUser(profile)
-            }
+            AuthProfiles.updateProfile(profile)
+              .flatMap(AuthProfiles.lookupUser)
+              .getOrElse {
+                // If we couldn't find this auth, create a new user
+                AuthProfiles.newUser(profile)
+              }
           )
         }
       case SaveMode.PasswordChange =>
+        log.info(s"Password change for ${profile.fullName}")
         DB.withSession { implicit s =>
-          AuthProfiles.updatePassword(profile)
           Future.successful(
-            AuthProfiles.modelForProfile(profile).get
+            AuthProfiles.updateProfile(profile)
+              .flatMap(AuthProfiles.lookupUser)
+              .get
           )
         }
     }
   }
 
   def link(currentUser: UserModel, to: BasicProfile): Future[UserModel] = {
+    log.info(s"Linking ${currentUser.main.fullName} to (${to.providerId}, ${to.userId})")
     DB.withTransaction { implicit s =>
       Future.successful(AuthProfiles.associateProfile(currentUser, to))
     }
@@ -61,7 +65,7 @@ class PostgresUserService extends UserService[UserModel] {
         .headOption
         .flatMap { basicProfile =>
           DB.withSession { implicit s =>
-            AuthProfiles.updatePassword(
+            AuthProfiles.updateProfile(
               basicProfile
                 .copy(passwordInfo = Some(info))
             )

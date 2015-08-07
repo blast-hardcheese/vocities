@@ -16,6 +16,8 @@ case class AuthProfile(
   email: Option[String],
   avatarUrl: Option[String],
   authMethod: AuthenticationMethod,
+  oAuth1Info: Option[OAuth1Info],
+  oAuth2Info: Option[OAuth2Info],
   passwordInfo: Option[PasswordInfo]
 )
 
@@ -43,6 +45,8 @@ class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "auth_profile") {
     email,
     avatarUrl,
     authMethod,
+    oAuth1Info,
+    oAuth2Info,
     passwordInfo
   ) <> (AuthProfile.tupled, AuthProfile.unapply _)
 
@@ -50,7 +54,7 @@ class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "auth_profile") {
 }
 
 object AuthProfiles extends AuthProfileConverters {
-  val basicProfiles = TableQuery[AuthProfiles]
+  val authProfiles = TableQuery[AuthProfiles]
 
   def newUser(profile: BasicProfile)(implicit s: Session): UserModel = {
     val username = profile.fullName
@@ -63,47 +67,70 @@ object AuthProfiles extends AuthProfileConverters {
       .returning(Users.users.map(_.id))
       .insert(User(username=username))
 
-    basicProfiles
+    authProfiles
       .insert(basicToAuth(id)(profile))
 
     UserModel(profile, List(profile), id)
   }
 
-  def save(userId: Long, p: BasicProfile)(implicit s: Session) {
-    basicProfiles
-      .insert(basicToAuth(userId)(p))
-  }
-
   def lookupProfile(providerId: String, providerUserId: String)(implicit s: Session): Option[BasicProfile] = {
-    basicProfiles
+    authProfiles
       .filter(r => r.providerId === providerId && r.providerUserId === providerUserId)
-      .take(1)
-      .list
-      .headOption
-      .map(authToBasic)
-      .map(_._2)
+      .map(_.basicProfile)
+      .firstOption
   }
 
-  def modelForProfile(profile: BasicProfile)(implicit s: Session): Option[UserModel] = {
-    basicProfiles
-      .innerJoin(Users.users)
-      .on { case (p, u) => p.userId === u.id }
-      .filter { case (p, _) => p.providerId === profile.providerId && p.providerUserId === profile.userId }
-      .map { case (_, u) => u }
-      .take(1)
-      .firstOption
-      .map { userToUserModel(profile) }
+  def lookupUser(profile: BasicProfile)(implicit s: Session): Option[UserModel] = {
+    for {
+      user <- (
+        authProfiles
+          .innerJoin(Users.users)
+          .on { case (p, u) => p.userId === u.id }
+          .filter { case (p, _) => p.providerId === profile.providerId && p.providerUserId === profile.userId }
+          .map { case (_, u) => u }
+          .firstOption
+      )
+
+      identities = (
+        authProfiles
+          .filter { _.userId === user.id }
+          .map { _.basicProfile }
+          .list
+      )
+    } yield {
+      UserModel(
+        main=profile,
+        identities=identities,
+        userId=user.id
+      )
+    }
   }
 
   def associateProfile(user: UserModel, to: BasicProfile)(implicit s: Session): UserModel = {
-    basicProfiles
+    authProfiles
       .insert(basicToAuth(user.userId)(to))
     user.copy(identities = to +: user.identities)
   }
 
-  def updatePassword(profile: BasicProfile)(implicit s: Session): Option[BasicProfile] = {
+  def disassociateProvider(user: UserModel, providerId: String)(implicit s: Session): UserModel = {
+    assume(user.main.providerId != providerId, "Attempted to disassociate current profile")
+
     val count = (
-      basicProfiles
+      authProfiles
+        .filter { p => p.providerId === providerId && p.userId === user.userId }
+        .delete
+    )
+
+    assume(count == 1, "Attempted to disassociate disassociated provider")
+
+    user.copy(
+      identities = user.identities.filterNot(_.providerId == providerId)
+    )
+  }
+
+  def updateProfile(profile: BasicProfile)(implicit s: Session): Option[BasicProfile] = {
+    val count = (
+      authProfiles
         .filter(_.providerId === profile.providerId)
         .filter(_.providerUserId === profile.userId)
         .map(_.basicProfile)
@@ -127,31 +154,9 @@ trait AuthProfileConverters {
       email = profile.email,
       avatarUrl = profile.avatarUrl,
       authMethod = profile.authMethod,
+      oAuth1Info = profile.oAuth1Info,
+      oAuth2Info = profile.oAuth2Info,
       passwordInfo = profile.passwordInfo
     )
   }
-
-  def authToBasic(ap: AuthProfile): (Long, BasicProfile) = {
-    (ap.userId,
-      BasicProfile(
-        providerId = ap.providerId,
-        userId = ap.providerUserId,
-        firstName = ap.firstName,
-        lastName = ap.lastName,
-        fullName = ap.fullName,
-        email = ap.email,
-        avatarUrl = ap.avatarUrl,
-        authMethod = ap.authMethod,
-        passwordInfo = ap.passwordInfo
-      )
-    )
-  }
-
-  def userToUserModel(profile: BasicProfile)(user: User): UserModel = {
-    UserModel(
-      main=profile,
-      identities=List(profile),
-      userId=user.id)
-  }
 }
-
