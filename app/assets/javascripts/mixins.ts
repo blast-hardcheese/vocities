@@ -267,49 +267,42 @@ var Droptarget = {
         };
     },
 
-    buildDroppable: function(propName, attrs, styles) {
+    buildDroppable: function(propName, attrs) {
         var res = null;
-        var commonStyles = {
-            height: '15em',
-            width: '100%',
-        };
-
-        var commonAttrs = {
-        };
 
         if (this.state.dragOver) {
             var dashes = React.createElement("div", {
-                style: _.extend({}, commonStyles, styles, {
+                style: {
                     border: "3px dashed black",
                     width: "100%",
                     height: "100%",
                     margin: null,
-                    content: 'initial',
-                }),
+                },
             });
             res = React.createElement("div", _.extend({}, {
-                style: _.extend({}, commonStyles, styles, {
+                className: 'droppable',
+                style: {
                     backgroundColor: 'gray',
                     backgroundImage: 'url(/assets/images/drop-here.png)',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
                     backgroundSize: 'contain',
-                    content: 'initial',
                     padding: "5px",
-                    height: styles.height === 'initial' ? '15em' : styles.height,
-                }),
+                },
                 onDrop: this.onDropUpdateProp(propName),
-            }, commonAttrs, attrs), dashes);
+            }, attrs), dashes);
         } else if(this.props[propName]) {
             res = React.createElement("div", _.extend({}, {
-                style: _.extend({}, commonStyles, {
+                className: 'droppable',
+                style: {
+                    content: 'url(' + this.props[propName] + ')',
                     backgroundImage: 'url(' + this.props[propName] + ')',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
                     backgroundSize: 'cover',
-                }, styles),
+                },
                 onDrop: this.onDropUpdateProp(propName),
-            }, commonAttrs, attrs));
+            }, attrs));
         }
 
         return res;

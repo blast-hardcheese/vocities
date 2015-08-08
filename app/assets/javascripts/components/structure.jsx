@@ -220,12 +220,7 @@ var SidebarProfile = React.createClass({
     render: function() {
         return (
             <header>
-                {this.buildDroppable('src', null, {
-                  borderRadius: '100%',
-                  width: '8em',
-                  height: '8em',
-                  margin: '0 auto 2.25em auto',
-                })}
+                {this.buildDroppable('src', null)}
                 <h1 id="logo">
                     {React.createElement(TextField, this.buildProps({containerTag: 'div', content: this.props.name, valuemap: {content: 'name'}}))}
                 </h1>
@@ -257,14 +252,7 @@ var Section = React.createClass({
     extendPropsFunctions: [Editable.extendPropsEditable, Updatable.autoUpdated],
 
     render: function() {
-        var headerImage = this.buildDroppable('bannerImage', null, {
-            content: 'url(' + this.props.bannerImage + ')',
-            height: 'initial',
-            backgroundImage: 'initial',
-            backgroundPosition: 'initial',
-            backgroundRepeat: 'initial',
-            backgroundSize: 'initial',
-        });
+        var headerImage = this.buildDroppable('bannerImage', null);
 
         return (
             <section id={this.props.tag}>
