@@ -1,7 +1,5 @@
 package controllers
 
-import scala.util.Try
-
 import java.io.File
 import java.io.{ InputStreamReader, FileReader }
 import javax.script.{ ScriptEngineManager, ScriptEngine }
@@ -151,24 +149,5 @@ object Application extends SecureController {
           result
       }
     } getOrElse { BadRequest }
-  }
-
-  def lookup(path: String) = SecuredAction { implicit request =>
-    val maybeUser = DB.withSession { implicit s =>
-      models.Users.users
-        .filter(_.id === request.user.user.id)
-        .firstOption
-    }
-
-    maybeUser
-      .filter(_.roles.contains(models.UserRoles.Admin))
-      .map { _ =>
-        val webjarPath = Try(WebJarAssets.locate(path))
-        val route = webjarPath.flatMap { webjarPath => Try(routes.WebJarAssets.at(webjarPath)) }
-
-        Ok(Html(s"<html><body><div><span>path: $webjarPath</span></div><div><span>route: $route</span></div></body></html>"))
-      } getOrElse {
-        NotFound
-      }
   }
 }

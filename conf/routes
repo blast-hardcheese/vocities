@@ -3,7 +3,6 @@ GET     /user/link                                                    controller
 GET     /user/link/:id                                                controllers.Users.associateResult(id: String)
 GET     /user/unlink/:id                                              controllers.Users.disassociate(id: String)
 
-GET     /lookup/*path                                                 controllers.Application.lookup(path: String)
 GET     /edit/:domain/                                                controllers.Application.edit(domain: String, path="")
 GET     /edit/:domain/*path                                           controllers.Application.edit(domain: String, path)
 
@@ -20,6 +19,8 @@ POST    /account/new-page                                             controller
 GET     /assets/*file                                                 controllers.Assets.at(path="/public", file)
 GET     /webjars/*file                                                controllers.WebJarAssets.at(file)
 ->      /auth                                                         securesocial.Routes
+
+GET     /admin/lookup/*path                                           controllers.Admin.lookup(path: String)
 
 GET     /                                                             controllers.Application.route(path = "")
 GET     /*path                                                        controllers.Application.route(path: String)
