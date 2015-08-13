@@ -70,8 +70,7 @@ object Queries {
         p.path === path
       }
       .map { case ((a, d), p) => p }
-      .run
-      .headOption
+      .firstOption
       .map { page =>
         Pages.pages
           .filter(p =>
