@@ -32,21 +32,6 @@ object Users extends SecureController {
     }
   }
 
-  def save(domain: String, path: String) = SecuredAction(parse.json) { implicit request =>
-    val templateId = "html5up_read_only"
-
-    DB.withSession { implicit s =>
-      val userId = request.user.userId
-
-      val parser = models.TemplateData.byName(templateId)
-
-      parser
-        .validate(request.body)
-        .map { case (title, data) => Ok(Queries.pageSave(userId, domain, path)(title, data).toString)
-      } getOrElse { BadRequest }
-    }
-  }
-
   implicit val readsNewDomainForm = Json.reads[NewDomainForm]
   def newDomain = SecuredAction(parse.json[NewDomainForm]) { implicit request =>
     // TODO: Once multi-page is supported, remove "template" parameter and initial page creation in newDomain

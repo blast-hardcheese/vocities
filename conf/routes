@@ -13,9 +13,6 @@ PUT     /edit/:domain/*path                                           controller
 GET     /account/edit/:domain/                                        controllers.Users.edit(domain: String, path="")
 GET     /account/edit/:domain/*path                                   controllers.Users.edit(domain: String, path)
 
-PUT     /account/edit/:domain/                                        controllers.Users.save(domain: String, path="")
-PUT     /account/edit/:domain/*path                                   controllers.Users.save(domain: String, path)
-
 POST    /account/new-domain                                           controllers.Users.newDomain
 POST    /account/new-page                                             controllers.Users.newPage
 
