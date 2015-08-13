@@ -69,7 +69,7 @@ object Queries {
         p.domain_id === d.id &&
         p.path === path
       }
-      .map { case ((a, d), p) => p }
+      .map { case ((a, d), p) => p.info }
       .firstOption
       .map { page =>
         Pages.pages
