@@ -104,10 +104,10 @@ object Application extends SecureController {
   def lookup(domain: String, path: String)(handler: (String, String, JsValue) => Result)(implicit request: Request[_]) = {
     DB.withSession { implicit s =>
       models.Pages.lookup(domain, path) map {
-          case (_, Some(title), Some(data), Some(templateId)) => handler(title, templateId, data)
-          case (_, None,        None,       _               ) => BadRequest("404")
-          case (_, _,           _,          None            ) => InternalServerError("Can't find template!")
-          case (a, b,           c,          d               ) => { log.error(s"Route match failure: $a $b $c $d"); InternalServerError("Unknown error") }
+          case (Some(title), Some(data), Some(templateId)) => handler(title, templateId, data)
+          case (None,        None,       _               ) => BadRequest("Page not found")
+          case (_,           _,          None            ) => InternalServerError("Can't find template!")
+          case (b,           c,          d               ) => { log.error(s"Route match failure: $b $c $d"); InternalServerError("Unknown error") }
       } getOrElse {
         BadRequest("unknown domain")
       }
