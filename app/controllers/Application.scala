@@ -126,7 +126,7 @@ object Application extends SecureController {
 
   def save(domain: String, path: String, templateId: String) = SecuredAction(parse.json) { implicit request =>
     DB.withSession { implicit s =>
-      val userId = request.user.userId
+      val userId = request.user.user.id
 
       val parser = models.TemplateData.byName(templateId)
 
@@ -156,7 +156,7 @@ object Application extends SecureController {
   def lookup(path: String) = SecuredAction { implicit request =>
     val maybeUser = DB.withSession { implicit s =>
       models.Users.users
-        .filter(_.id === request.user.userId)
+        .filter(_.id === request.user.user.id)
         .firstOption
     }
 

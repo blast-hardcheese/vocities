@@ -18,14 +18,14 @@ case class NewPageForm(account_id: Long, domain_id: Long, path: String, name: St
 object Users extends SecureController {
   def index = SecuredAction { implicit request =>
     DB.withSession { implicit s =>
-      val vm = Queries.accountsIndex(request.user.userId)
+      val vm = Queries.accountsIndex(request.user.user.id)
       Ok(views.html.account.index(vm))
     }
   }
 
   def edit(domain: String, path: String) = SecuredAction { implicit request =>
     DB.withSession { implicit s =>
-      val userId = request.user.userId
+      val userId = request.user.user.id
       Queries.pageEdit(userId, domain, path)
         .map(vm => Ok(views.html.account.edit(domain, vm)))
         .getOrElse(NotFound)
@@ -38,7 +38,7 @@ object Users extends SecureController {
     val json = request.body
 
     DB.withSession { implicit s =>
-      Queries.newDomain(request.user.userId, json.account_id, json.domain)(json.template).map { domain =>
+      Queries.newDomain(request.user.user.id, json.account_id, json.domain)(json.template).map { domain =>
         Ok(Json.obj(
           "account_id" -> domain.account_id,
           "domain" -> domain.id
@@ -54,7 +54,7 @@ object Users extends SecureController {
     val json = request.body
 
     DB.withSession { implicit s =>
-      Queries.newPage(request.user.userId, json.account_id, json.domain_id)(json.path, json.name, json.template).map { page =>
+      Queries.newPage(request.user.user.id, json.account_id, json.domain_id)(json.path, json.name, json.template).map { page =>
         Ok(Json.obj(
           "account_id" -> page.account_id,
           "domain_id" -> page.domain_id,
