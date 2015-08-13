@@ -57,7 +57,7 @@ object Queries {
       .map(PageEditViewModel.tupled)
   }
 
-  def pageSave(user_id: Long, domain: String, path: String)(title: String, data: JsValue)(implicit s: Session): Boolean = {
+  def pageSave(user_id: Long, domain: String, path: String)(title: String, data: JsValue)(implicit s: Session): Option[Boolean] = {
     Accounts.accounts
       .innerJoin(Domains.domains)
       .innerJoin(Pages.pages)
@@ -82,7 +82,6 @@ object Queries {
           .update((title, data))
           .run == 1
       }
-      .getOrElse(false)
   }
 
   def newDomain(user_id: Long, account_id: Long, domain: String)(template_key: String)(implicit s: Session): Option[Domain] = {

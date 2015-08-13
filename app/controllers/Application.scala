@@ -133,7 +133,14 @@ object Application extends SecureController {
       parser
         .validate(request.body)
         .map { case (title, data) =>
-          val result = Ok(Queries.pageSave(userId, domain, path)(title, data).toString)
+          val result = {
+            Queries.pageSave(userId, domain, path)(title, data)
+              .map {
+                case true => Ok
+                case false => NotFound
+              }
+              .getOrElse(Unauthorized)
+          }
 
           val cacheKey = s"$templateId-$domain-$path"
           doRender(domain, path)(None)(title, templateId, data)
