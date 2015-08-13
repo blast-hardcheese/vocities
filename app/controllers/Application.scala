@@ -125,14 +125,14 @@ object Application extends SecureController {
   }
 
   def save(domain: String, path: String, templateId: String) = SecuredAction(parse.json) { implicit request =>
-    DB.withSession { implicit s =>
-      val userId = request.user.user.id
+    val userId = request.user.user.id
 
-      val parser = models.TemplateData.byName(templateId)
+    val parser = models.TemplateData.byName(templateId)
 
-      parser
-        .validate(request.body)
-        .map { case (title, data) =>
+    parser
+      .validate(request.body)
+      .map { case (title, data) =>
+        DB.withSession { implicit s =>
           val result = {
             Queries.pageSave(userId, domain, path)(title, data)
               .map {
@@ -149,8 +149,8 @@ object Application extends SecureController {
             }
 
           result
-      } getOrElse { BadRequest }
-    }
+      }
+    } getOrElse { BadRequest }
   }
 
   def lookup(path: String) = SecuredAction { implicit request =>
