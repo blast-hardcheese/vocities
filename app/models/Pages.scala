@@ -3,6 +3,8 @@ package models
 import play.api.libs.json.JsValue
 import utils.ExtendedPostgresDriver.simple._
 
+import types._
+
 case class Page(account_id: Long, domain_id: Long, path: String, template_id: Long, title: String, data: JsValue)
 case class PageInfo(account_id: Long, domain_id: Long, path: String, template_id: Long, title: String)
 
@@ -27,7 +29,7 @@ object Pages {
       .insert(p)
   }
 
-  type LookupResult = Option[(Option[String], Option[JsValue], Option[String])]
+  type LookupResult = Option[(Option[PageTitle], Option[PageData], Option[TemplateKey])]
   def lookup(maybeUserId: Option[Long], domain: String, path: String)(implicit s: Session): LookupResult = {
     val domainQuery = maybeUserId.map { userId =>
       Accounts.accounts
@@ -44,5 +46,6 @@ object Pages {
       .leftJoin(Templates.templates).on({ case ((d, p), t) => t.id === p.template_id })
       .map { case ((_, p), t) => (p.title.?, p.data.?, t.key.?) }
       .firstOption
+      .map(tag)
   }
 }
