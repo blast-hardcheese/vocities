@@ -54,7 +54,7 @@ object Application extends SecureController {
     r
   }
 
-  private[this] def doRender(domain: String, path: String)(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue): Option[Html] = {
+  private[this] def doRender(domain: String, path: String)(saveUrl: Option[String] = None)(renderModel: RenderModel): Option[Html] = {
     // Only here temporarily
     var r = new RichScriptEngine(engine)
     r.evalResource("public/javascripts/mixins.js")
@@ -62,22 +62,23 @@ object Application extends SecureController {
     r.evalResource("public/javascripts/components/structure.js")
     r.evalResource("public/javascripts/templates.js")
 
-    templateId match {
-      case "html5up_read_only" => Some(views.html.templates.html5up_read_only(engine, saveUrl)(title, data))
-      case "html5up_prologue" => Some(views.html.templates.html5up_prologue(engine, saveUrl)(title, data))
-      case "plain" => Some(views.html.templates.plain(engine, saveUrl)(title, data))
+    renderModel.templateId match {
+      case "html5up_read_only" => Some(views.html.templates.html5up_read_only(engine, saveUrl)(renderModel))
+      case "html5up_prologue" => Some(views.html.templates.html5up_prologue(engine, saveUrl)(renderModel))
+      case "plain" => Some(views.html.templates.plain(engine, saveUrl)(renderModel))
       case _ => None
     }
   }
 
-  private[this] def render(domain: String, path: String)(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue): Result = {
+  private[this] def render(domain: String, path: String)(saveUrl: Option[String] = None)(renderModel: RenderModel): Result = {
+    val templateId = renderModel.templateId
     val cacheKey = s"$templateId-$domain-$path"
 
     val maybeHtml = if (saveUrl.isEmpty) {
       cache.Cache.getAs[String](cacheKey)
         .map(Html(_))
         .orElse {
-          val maybeRendered = doRender(domain, path)(saveUrl)(title, templateId, data)
+          val maybeRendered = doRender(domain, path)(saveUrl)(renderModel)
 
           maybeRendered
             .foreach { value =>
@@ -87,7 +88,7 @@ object Application extends SecureController {
           maybeRendered
         }
     } else {
-      doRender(domain, path)(saveUrl)(title, templateId, data)
+      doRender(domain, path)(saveUrl)(renderModel)
     }
 
     maybeHtml
@@ -99,10 +100,10 @@ object Application extends SecureController {
       }
   }
 
-  def lookup(maybeUserId: Option[Long], domain: String, path: String)(handler: (String, String, JsValue) => Result)(implicit request: Request[_]) = {
+  def lookup(maybeUserId: Option[Long], domain: String, path: String)(handler: RenderModel => Result)(implicit request: Request[_]) = {
     DB.withSession { implicit s =>
       models.Pages.lookup(maybeUserId, domain, path) map {
-          case (Some(title), Some(data), Some(templateId)) => handler(title, templateId, data)
+          case (Some(title), Some(data), Some(templateId)) => handler(RenderModel(title=title, templateId=templateId, pageData=data))
           case (None,        None,       _               ) => BadRequest("Page not found")
           case (_,           _,          None            ) => InternalServerError("Can't find template!")
           case (b,           c,          d               ) => { log.error(s"Route match failure: $b $c $d"); InternalServerError("Unknown error") }
@@ -141,8 +142,13 @@ object Application extends SecureController {
               .getOrElse(Unauthorized)
           }
 
+          val renderModel = RenderModel(
+            title=title,
+            templateId=templateId,
+            pageData=data
+          )
           val cacheKey = s"$templateId-$domain-$path"
-          doRender(domain, path)(None)(title, templateId, data)
+          doRender(domain, path)(None)(renderModel)
             .foreach { html =>
               cache.Cache.set(cacheKey, html.toString)
             }
@@ -152,3 +158,9 @@ object Application extends SecureController {
     } getOrElse { BadRequest }
   }
 }
+
+case class RenderModel(
+  title: String,
+  templateId: String,
+  pageData: JsValue
+)

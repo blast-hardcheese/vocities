@@ -1,4 +1,6 @@
-@(engine: javax.script.ScriptEngine, saveUrl: Option[String])(title: String, pageData: JsValue)
+@(engine: javax.script.ScriptEngine, saveUrl: Option[String])(renderModel: RenderModel)
+
+@pageData = @{ renderModel.pageData }
 
 @templateId = @{ Html(Json.stringify(JsString("html5up_read_only"))) }
 
@@ -106,7 +108,7 @@ body, input, select, textarea {
         </script>
 
     <script type="text/javascript">
-var PageData = _.extend({saveUrl: @Html(Json.stringify(jsSaveUrl)), title: @Html(Json.stringify(JsString(title)))}, @Html(Json.stringify(pageData)));
+var PageData = _.extend({saveUrl: @Html(Json.stringify(jsSaveUrl)), title: @Html(Json.stringify(JsString(renderModel.title)))}, @Html(Json.stringify(pageData)));
 window.CloudinarySettings = @{
     val config = play.api.Play.current.configuration
     val maybeCloudinary = for {
@@ -186,7 +188,7 @@ jQuery(function($) {
         </script>
 }
 
-@main(title)(header) {
+@main(renderModel.title)(header) {
         <div id="add-popup">
             @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#add-popup'], _.extend({editable: false}, $pageData)));").toString)
         </div>
