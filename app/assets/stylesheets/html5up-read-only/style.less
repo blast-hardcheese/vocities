@@ -828,13 +828,6 @@ input[type="button"],
             font-style: italic;
             margin: 1em 0 0 0;
         }
-
-        .droppable {
-            border-radius: 100%;
-            width: 8em;
-            height: 8em;
-            margin: 0 auto 2.25em auto;
-        }
     }
 
     > footer {
@@ -916,11 +909,6 @@ input[type="button"],
     > section:first-child {
         border-top: 0;
     }
-
-    > section > .droppable {
-        content: initial !important;
-        max-height: 15em;
-    }
 }
 
 #one:before {
@@ -962,6 +950,8 @@ input[type="button"],
     }
 }
 
+/* VOCities */
+
 #nav ul li {
     input {
         margin: 0.6em;
@@ -984,4 +974,16 @@ body.is-touch #nav ul li .sidebar-nav-row-edit,
 
 #add-popup .styled-select select {
     width: 100%;
+}
+
+#header > header .droppable {
+    border-radius: 100%;
+    width: 8em;
+    height: 8em;
+    margin: 0 auto 2.25em auto;
+}
+
+#main > section > .droppable {
+    content: initial !important;
+    max-height: 15em;
 }

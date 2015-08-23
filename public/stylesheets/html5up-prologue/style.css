@@ -808,5 +808,17 @@ body.is-touch #nav ul li .sidebar-nav-row-edit,
 }
 
 #add-popup .styled-select select {
-		width: 100%;
+	width: 100%;
+}
+
+#header > header .droppable {
+	border-radius: 100%;
+	width: 8em;
+	height: 8em;
+	margin: 0 auto 2.25em auto;
+}
+
+#main > section > .droppable {
+	content: initial !important;
+	max-height: 15em;
 }
