@@ -1,6 +1,8 @@
-@(engine: javax.script.ScriptEngine, saveUrl: Option[String])(title: String, pageData: JsValue)
+@(engine: javax.script.ScriptEngine, saveUrl: Option[String])(renderModel: RenderModel)
 
+@pageData = @{ renderModel.pageData }
 @templateId = @{ "plain" }
+
 @templateIdJson = @{ Html(Json.stringify(JsString(templateId))) }
 
 @import play.api.libs.json.Json
@@ -15,7 +17,7 @@
     <style id="dynamic" type="text/css"></style>
 
     <script type="text/javascript">
-var PageData = _.extend({saveUrl: @Html(Json.stringify(jsSaveUrl)), title: @Html(Json.stringify(JsString(title)))}, @Html(Json.stringify(pageData)));
+var PageData = _.extend({saveUrl: @Html(Json.stringify(jsSaveUrl)), title: @Html(Json.stringify(JsString(renderModel.title)))}, @Html(Json.stringify(pageData)));
 window.CloudinarySettings = @{
     val config = play.api.Play.current.configuration
     val maybeCloudinary = for {
@@ -38,7 +40,7 @@ jQuery(function($) {
         </script>
 }
 
-@main(title)(header) {
+@main(renderModel.title)(header) {
     <div id="sidebar">
         @Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'].classes['#sidebar'], _.extend({editable: false}, $pageData)));").toString)
     </div>
