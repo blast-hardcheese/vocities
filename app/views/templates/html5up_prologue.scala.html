@@ -1,15 +1,16 @@
 @(engine: javax.script.ScriptEngine, saveUrl: Option[String])(renderModel: RenderModel)
 
 @pageData = @{ renderModel.pageData }
+@templateId = @{ "html5up_prologue" }
 
-@templateId = @{ Html(Json.stringify(JsString("html5up_prologue"))) }
+@templateIdJson = @{ Html(Json.stringify(JsString(templateId))) }
 
 @import play.api.libs.json.Json
 
-@sharedCssPath(path: String) = @{ routes.Assets.at("javascripts/html5up/" + path) }
-@cssPath(path: String) = @{ routes.Assets.at("stylesheets/html5up-prologue/" + path) }
-
 @jsSaveUrl = @{ saveUrl.map(JsString.apply _).getOrElse(JsNull) }
+
+@sharedCssPath(path: String) = @{ routes.Assets.at("stylesheets/html5up/" + path) }
+@cssPath(path: String) = @{ routes.Assets.at(s"stylesheets/$templateId/" + path) }
 
 @header = {
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -55,7 +56,7 @@ window.CloudinarySettings = @{
 
 jQuery(function($) {
 
-    new TemplateManager(@templateId, PageData);
+    new TemplateManager(@templateIdJson, PageData);
 
     skel.init({
             reset: 'full',
@@ -121,33 +122,33 @@ jQuery(function($) {
 
 @main(renderModel.title)(header) {
         <div id="add-popup">
-            @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#add-popup'], _.extend({editable: false}, $pageData)));").toString)
+            @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#add-popup'], _.extend({editable: false}, $pageData)));").toString)
         </div>
 
         <div id="wrapper">
             <!-- Header -->
                 <div id="header-wrapper" class="skel-layers-fixed">
-                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#header-wrapper'], _.extend({editable: false}, $pageData)));").toString)
+                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#header-wrapper'], _.extend({editable: false}, $pageData)));").toString)
                 </div>
 
             <!-- Main -->
                 <div id="main-wrapper">
-                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#main-wrapper'], _.extend({editable: false}, $pageData)));").toString)
+                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#main-wrapper'], _.extend({editable: false}, $pageData)));").toString)
                 </div>
 
             <!-- Footer -->
                 <section id="footer">
-                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#footer'], _.extend({editable: false}, $pageData)));").toString)
+                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#footer'], _.extend({editable: false}, $pageData)));").toString)
                 </section>
 
 @*
                 <div id="color-picker">
-                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#color-picker'], _.extend({editable: false}, $pageData)));").toString)
+                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#color-picker'], _.extend({editable: false}, $pageData)));").toString)
                 </div>
 *@
 
                 <div id="edit-buttons">
-                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes['#edit-buttons'], _.extend({editable: false}, $pageData)));").toString)
+                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#edit-buttons'], _.extend({editable: false}, $pageData)));").toString)
                 </div>
         </div>
 }
