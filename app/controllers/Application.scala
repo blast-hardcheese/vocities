@@ -99,9 +99,9 @@ object Application extends SecureController {
       }
   }
 
-  def lookup(domain: String, path: String)(handler: (String, String, JsValue) => Result)(implicit request: Request[_]) = {
+  def lookup(maybeUserId: Option[Long], domain: String, path: String)(handler: (String, String, JsValue) => Result)(implicit request: Request[_]) = {
     DB.withSession { implicit s =>
-      models.Pages.lookup(domain, path) map {
+      models.Pages.lookup(maybeUserId, domain, path) map {
           case (Some(title), Some(data), Some(templateId)) => handler(title, templateId, data)
           case (None,        None,       _               ) => BadRequest("Page not found")
           case (_,           _,          None            ) => InternalServerError("Can't find template!")
@@ -113,13 +113,14 @@ object Application extends SecureController {
   }
 
   def route(path: String) = Action { implicit request =>
-    lookup(request.domain, path)(render(request.domain, path)())
+    lookup(None, request.domain, path)(render(request.domain, path)())
   }
 
   def edit(domain: String, path: String) = SecuredAction { implicit request =>
     val route = routes.Application.save(domain, path).toString
+    val maybeUserId = Some(request.user.user.id)
 
-    lookup(domain, path)(render(domain, path)(saveUrl=Some(route)))
+    lookup(maybeUserId, domain, path)(render(domain, path)(saveUrl=Some(route)))
   }
 
   def save(domain: String, path: String, templateId: String) = SecuredAction(parse.json) { implicit request =>
