@@ -1,3 +1,8 @@
+var dynamicTplValues = function(selector) {
+    var values = $(selector).text()
+    return JSON.parse(values || '{}');
+};
+
 function TemplateManager(key, data) {
     var _this = this;
 
@@ -57,7 +62,7 @@ var Main = React.createClass({
 
 var ColorPicker = React.createClass({
     getSchemes: function () {
-        var dynamicCssValues = JSON.parse($('#dynamic-tpl-values').text());
+        var dynamicCssValues = dynamicTplValues('#dynamic-tpl-values');
         return dynamicCssValues['schemes'];
     },
     schemes: [
@@ -143,7 +148,6 @@ var EditButtons = React.createClass({
     },
 
     performSave: function () {
-        console.info('Save stub');
         var pageData = _.extend({}, this.props);
 
         var templateId = pageData.templateId;
@@ -311,7 +315,7 @@ var AddWidgetPopup = React.createClass({
 var sharedTemplateRenderers = [
     function(vm) {
         var dynamicCss = _.template($('#dynamic-tpl').text());
-        var dynamicCssValues = JSON.parse($('#dynamic-tpl-values').text());
+        var dynamicCssValues = dynamicTplValues('#dynamic-tpl-values');
 
         var target = $('style#dynamic')
 
@@ -374,8 +378,6 @@ var sharedTemplateRenderers = [
                 setTimeout(function() {
                     EventActions.trigger('_dragStatus', 'drop');
                 }, 1);
-
-                console.info('Hey!', e.originalEvent.target);
             });
 
         return {
@@ -430,6 +432,38 @@ var Templates = {
         var classes = {
             '#header-wrapper': Sidebar,
             '#main-wrapper': Main,
+            '#footer': Footer,
+            '#edit-buttons': EditButtons,
+            '#add-popup': AddWidgetPopup,
+        };
+
+        var classRenderers = _.map(classes, function(reactClass, id) {
+            return function(vm) {
+                return render(id, vm, reactClass);
+            };
+        })
+
+        var sequences = classRenderers.concat(sharedTemplateRenderers);
+
+        self.render = render;
+        self.sequences = sequences;
+        self.classes = classes;
+
+        return self;
+    })({}),
+
+    "plain": (function(self) {
+        var render = function(sel, data, clazz) {
+            var factory = React.createFactory(clazz)(data);
+            var target = $(sel)[0];
+            var react = React.render(factory, target);
+            react.setProps(data);
+            return react;
+        };
+
+        var classes = {
+            '#sidebar': Sidebar,
+            '#main-content': Main,
             '#footer': Footer,
             '#edit-buttons': EditButtons,
             '#add-popup': AddWidgetPopup,

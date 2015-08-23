@@ -4,7 +4,11 @@ import securesocial.core.{ BasicProfile, AuthenticationMethod, PasswordInfo, OAu
 
 import utils.ExtendedPostgresDriver.simple._
 
-case class UserModel(main: BasicProfile, identities: List[BasicProfile], userId: Long)
+case class UserModel(
+  main: BasicProfile,
+  identities: List[BasicProfile],
+  user: User
+)
 
 case class AuthProfile(
   userId: Long,
@@ -62,15 +66,15 @@ object AuthProfiles extends AuthProfileConverters {
       .orElse(profile.email)
       .getOrElse("New User")
 
-    val id = Users
+    val user = Users
       .users
-      .returning(Users.users.map(_.id))
+      .returning(Users.users)
       .insert(User(username=username))
 
     authProfiles
-      .insert(basicToAuth(id)(profile))
+      .insert(basicToAuth(user.id)(profile))
 
-    UserModel(profile, List(profile), id)
+    UserModel(profile, List(profile), user)
   }
 
   def lookupProfile(providerId: String, providerUserId: String)(implicit s: Session): Option[BasicProfile] = {
@@ -101,14 +105,14 @@ object AuthProfiles extends AuthProfileConverters {
       UserModel(
         main=profile,
         identities=identities,
-        userId=user.id
+        user=user
       )
     }
   }
 
   def associateProfile(user: UserModel, to: BasicProfile)(implicit s: Session): UserModel = {
     authProfiles
-      .insert(basicToAuth(user.userId)(to))
+      .insert(basicToAuth(user.user.id)(to))
     user.copy(identities = to +: user.identities)
   }
 
@@ -117,7 +121,7 @@ object AuthProfiles extends AuthProfileConverters {
 
     val count = (
       authProfiles
-        .filter { p => p.providerId === providerId && p.userId === user.userId }
+        .filter { p => p.providerId === providerId && p.userId === user.user.id }
         .delete
     )
 

@@ -1,0 +1,61 @@
+@(engine: javax.script.ScriptEngine, saveUrl: Option[String])(title: String, pageData: JsValue)
+
+@templateId = @{ "plain" }
+@templateIdJson = @{ Html(Json.stringify(JsString(templateId))) }
+
+@import play.api.libs.json.Json
+
+@jsSaveUrl = @{ saveUrl.map(JsString.apply _).getOrElse(JsNull) }
+
+@header = {
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+
+    <style id="dynamic" type="text/css"></style>
+
+    <script type="text/javascript">
+var PageData = _.extend({saveUrl: @Html(Json.stringify(jsSaveUrl)), title: @Html(Json.stringify(JsString(title)))}, @Html(Json.stringify(pageData)));
+window.CloudinarySettings = @{
+    val config = play.api.Play.current.configuration
+    val maybeCloudinary = for {
+        cloud_name <- config.getString("cloudinary.cloud_name")
+        upload_preset <- config.getString("cloudinary.upload_preset")
+    } yield Json.obj(
+        "cloud_name" -> cloud_name,
+        "upload_preset" -> upload_preset
+    )
+
+    Html(Json.stringify(maybeCloudinary getOrElse Json.obj()))
+};
+
+jQuery(function($) {
+
+    var mgr = new TemplateManager(@templateIdJson, PageData);
+    window.mgr = mgr;
+
+});
+        </script>
+}
+
+@main(title)(header) {
+    <div id="sidebar">
+        @Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'].classes['#sidebar'], _.extend({editable: false}, $pageData)));").toString)
+    </div>
+
+    <div id="main-content">
+        @Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'].classes['#main-content'], _.extend({editable: false}, $pageData)));").toString)
+    </div>
+
+    <section id="footer">
+        @Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'].classes['#footer'], _.extend({editable: false}, $pageData)));").toString)
+    </section>
+
+    <div id="edit-buttons">
+        @Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'].classes['#edit-buttons'], _.extend({editable: false}, $pageData)));").toString)
+    </div>
+
+    <div id="add-popup">
+        @Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'].classes['#add-popup'], _.extend({editable: false}, $pageData)));").toString)
+    </div>
+}

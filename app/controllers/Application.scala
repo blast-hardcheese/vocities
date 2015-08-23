@@ -1,7 +1,5 @@
 package controllers
 
-import scala.util.Try
-
 import java.io.File
 import java.io.{ InputStreamReader, FileReader }
 import javax.script.{ ScriptEngineManager, ScriptEngine }
@@ -56,7 +54,7 @@ object Application extends SecureController {
     r
   }
 
-  private[this] def doRender(domain: String, path: String)(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue): Option[String] = {
+  private[this] def doRender(domain: String, path: String)(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue): Option[Html] = {
     // Only here temporarily
     var r = new RichScriptEngine(engine)
     r.evalResource("public/javascripts/mixins.js")
@@ -65,23 +63,25 @@ object Application extends SecureController {
     r.evalResource("public/javascripts/templates.js")
 
     templateId match {
-      case "html5up_read_only" => Some(views.html.templates.html5up_read_only(engine, saveUrl)(title, data).toString)
-      case "html5up_prologue" => Some(views.html.templates.html5up_prologue(engine, saveUrl)(title, data).toString)
+      case "html5up_read_only" => Some(views.html.templates.html5up_read_only(engine, saveUrl)(title, data))
+      case "html5up_prologue" => Some(views.html.templates.html5up_prologue(engine, saveUrl)(title, data))
+      case "plain" => Some(views.html.templates.plain(engine, saveUrl)(title, data))
       case _ => None
     }
   }
 
-  private[this] def render(domain: String, path: String)(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue) = {
+  private[this] def render(domain: String, path: String)(saveUrl: Option[String] = None)(title: String, templateId: String, data: JsValue): Result = {
     val cacheKey = s"$templateId-$domain-$path"
 
     val maybeHtml = if (saveUrl.isEmpty) {
       cache.Cache.getAs[String](cacheKey)
+        .map(Html(_))
         .orElse {
           val maybeRendered = doRender(domain, path)(saveUrl)(title, templateId, data)
 
           maybeRendered
             .foreach { value =>
-              cache.Cache.set(cacheKey, value)
+              cache.Cache.set(cacheKey, value.toString)
             }
 
           maybeRendered
@@ -91,21 +91,21 @@ object Application extends SecureController {
     }
 
     maybeHtml
-      .map { value: String =>
-        Ok(Html(value))
+      .map { value =>
+        Ok(value)
       }
       .getOrElse {
         InternalServerError
       }
   }
 
-  def lookup(domain: String, path: String)(handler: (String, String, JsValue) => Result)(implicit request: Request[_]) = {
+  def lookup(maybeUserId: Option[Long], domain: String, path: String)(handler: (String, String, JsValue) => Result)(implicit request: Request[_]) = {
     DB.withSession { implicit s =>
-      models.Pages.lookup(domain, path) map {
-          case (_, Some(title), Some(data), Some(templateId)) => handler(title, templateId, data)
-          case (_, None,        None,       _               ) => BadRequest("404")
-          case (_, _,           _,          None            ) => InternalServerError("Can't find template!")
-          case (a, b,           c,          d               ) => { log.error(s"Route match failure: $a $b $c $d"); InternalServerError("Unknown error") }
+      models.Pages.lookup(maybeUserId, domain, path) map {
+          case (Some(title), Some(data), Some(templateId)) => handler(title, templateId, data)
+          case (None,        None,       _               ) => BadRequest("Page not found")
+          case (_,           _,          None            ) => InternalServerError("Can't find template!")
+          case (b,           c,          d               ) => { log.error(s"Route match failure: $b $c $d"); InternalServerError("Unknown error") }
       } getOrElse {
         BadRequest("unknown domain")
       }
@@ -113,53 +113,42 @@ object Application extends SecureController {
   }
 
   def route(path: String) = Action { implicit request =>
-    lookup(request.domain, path)(render(request.domain, path)())
+    lookup(None, request.domain, path)(render(request.domain, path)())
   }
 
   def edit(domain: String, path: String) = SecuredAction { implicit request =>
     val route = routes.Application.save(domain, path).toString
+    val maybeUserId = Some(request.user.user.id)
 
-    lookup(domain, path)(render(domain, path)(saveUrl=Some(route)))
+    lookup(maybeUserId, domain, path)(render(domain, path)(saveUrl=Some(route)))
   }
 
   def save(domain: String, path: String, templateId: String) = SecuredAction(parse.json) { implicit request =>
-    DB.withSession { implicit s =>
-      val userId = request.user.userId
+    val userId = request.user.user.id
 
-      val parser = models.TemplateData.byName(templateId)
+    val parser = models.TemplateData.byName(templateId)
 
-      parser
-        .validate(request.body)
-        .map { case (title, data) =>
-          val result = Ok(Queries.pageSave(userId, domain, path)(title, data).toString)
+    parser
+      .validate(request.body)
+      .map { case (title, data) =>
+        DB.withSession { implicit s =>
+          val result = {
+            Queries.pageSave(userId, domain, path)(title, data)
+              .map {
+                case true => Ok
+                case false => NotFound
+              }
+              .getOrElse(Unauthorized)
+          }
 
           val cacheKey = s"$templateId-$domain-$path"
           doRender(domain, path)(None)(title, templateId, data)
             .foreach { html =>
-              cache.Cache.set(cacheKey, html)
+              cache.Cache.set(cacheKey, html.toString)
             }
 
           result
-      } getOrElse { BadRequest }
-    }
-  }
-
-  def lookup(path: String) = SecuredAction { implicit request =>
-    val maybeUser = DB.withSession { implicit s =>
-      models.Users.users
-        .filter(_.id === request.user.userId)
-        .firstOption
-    }
-
-    maybeUser
-      .filter(_.roles.contains(models.UserRoles.Admin))
-      .map { _ =>
-        val webjarPath = Try(WebJarAssets.locate(path))
-        val route = webjarPath.flatMap { webjarPath => Try(routes.WebJarAssets.at(webjarPath)) }
-
-        Ok(Html(s"<html><body><div><span>path: $webjarPath</span></div><div><span>route: $route</span></div></body></html>"))
-      } getOrElse {
-        NotFound
       }
+    } getOrElse { BadRequest }
   }
 }

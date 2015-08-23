@@ -27,13 +27,22 @@ object Pages {
       .insert(p)
   }
 
-  type LookupResult = Option[(Long, Option[String], Option[JsValue], Option[String])]
-  def lookup(domain: String, path: String)(implicit s: Session): LookupResult = {
-    Domains.domains
+  type LookupResult = Option[(Option[String], Option[JsValue], Option[String])]
+  def lookup(maybeUserId: Option[Long], domain: String, path: String)(implicit s: Session): LookupResult = {
+    val domainQuery = maybeUserId.map { userId =>
+      Accounts.accounts
+        .filter { userId.bind === _.user_ids.any }
+        .innerJoin(Domains.domains).on({ case (a, d) => d.account_id === a.id })
+        .map { case (a, d) => d }
+    } getOrElse {
+      Domains.domains
+    }
+
+    domainQuery
       .filter(_.domain === domain)
       .leftJoin(pages).on({ case (d, p) => d.id === p.domain_id && p.account_id === d.account_id && p.path === path })
       .leftJoin(Templates.templates).on({ case ((d, p), t) => t.id === p.template_id })
-      .map { case ((d, p), t) => (d.id, p.title.?, p.data.?, t.key.?) }
+      .map { case ((_, p), t) => (p.title.?, p.data.?, t.key.?) }
       .firstOption
   }
 }

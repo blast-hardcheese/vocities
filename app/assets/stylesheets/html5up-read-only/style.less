@@ -386,9 +386,9 @@ input[type="radio"] + label:before {
     margin-bottom: 2.25em;
     padding: 1.5em;
 
-    & > :last-child,
-    & > :last-child > :last-child,
-    & > :last-child > :last-child > :last-child {
+    > :last-child,
+    > :last-child > :last-child,
+    > :last-child > :last-child > :last-child {
         margin-bottom: 0;
     }
 
@@ -403,7 +403,7 @@ input[type="radio"] + label:before {
     text-decoration: none;
     border-bottom: none;
     position: relative;
-    & > .label {
+    > .label {
         display: none;
     }
 
@@ -563,7 +563,7 @@ ul.actions.vertical {
     li {
         display: block;
         padding: 1.125em 0 0 0;
-        & > * {
+        > * {
             margin-bottom: 0;
         }
     }
@@ -590,7 +590,7 @@ ul.actions.fit {
     li {
         display: table-cell;
         padding: 0 0 0 1.125em;
-        & > * {
+        > * {
             margin-bottom: 0;
         }
     }
@@ -780,7 +780,7 @@ input[type="button"],
             display: inline-block;
             vertical-align: middle;
             width: 50%;
-            & > :last-child {
+            > :last-child {
                 margin-bottom: 0;
             }
         }
@@ -801,10 +801,6 @@ input[type="button"],
     width: 23em;
     right: 0;
 
-    header p {
-        color: #b6e9dc;
-    }
-
     a {
         color: #d1f1e9;
 
@@ -813,7 +809,7 @@ input[type="button"],
         }
     }
 
-    & > header {
+    > header {
         padding: 3em;
 
         .avatar {
@@ -832,9 +828,16 @@ input[type="button"],
             font-style: italic;
             margin: 1em 0 0 0;
         }
+
+        .droppable {
+            border-radius: 100%;
+            width: 8em;
+            height: 8em;
+            margin: 0 auto 2.25em auto;
+        }
     }
 
-    & > footer {
+    > footer {
         bottom: 0;
         left: 0;
         padding: 2em;
@@ -850,7 +853,7 @@ input[type="button"],
         }
     }
 
-    & > nav {
+    > nav {
         ul {
             list-style: none;
             margin: 0;
@@ -904,14 +907,19 @@ input[type="button"],
 }
 
 #main {
-    & > section {
+    > section {
         border-top: solid 6px #f4f4f4;
-        & > .container {
+        > .container {
             padding: 6em 0 4em 0;
         }
     }
-    & > section:first-child {
+    > section:first-child {
         border-top: 0;
+    }
+
+    > section > .droppable {
+        content: initial !important;
+        max-height: 15em;
     }
 }
 

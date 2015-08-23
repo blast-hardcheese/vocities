@@ -1,0 +1,19 @@
+.vertical-center(@side: 'before') when (@side = 'before') {
+  &::before {
+    // Vertically center #add-popup
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+  }
+}
+
+.vertical-center(@side) when (@side = 'after') {
+  &::after {
+    // Vertically center #add-popup
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+  }
+}
