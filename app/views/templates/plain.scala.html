@@ -53,11 +53,11 @@ jQuery(function($) {
         @Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'].classes['#footer'], _.extend({editable: false}, $pageData)));").toString)
     </section>
 
-    <div id="edit-buttons">
-        @Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'].classes['#edit-buttons'], _.extend({editable: false}, $pageData)));").toString)
-    </div>
-
     <div id="add-popup">
         @Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'].classes['#add-popup'], _.extend({editable: false}, $pageData)));").toString)
+    </div>
+
+    <div id="admin-buttons">
+        @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#admin-buttons'], _.extend({editable: false}, $pageData)));").toString)
     </div>
 }

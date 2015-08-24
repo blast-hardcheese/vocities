@@ -31,10 +31,6 @@
 }
         </style>
 
-        <style id="dynamic" type="text/css"></style>
-        <style id="dynamic-tpl" type="text/underscore">
-        </style>
-
     <script type="text/javascript">
 var PageData = _.extend({saveUrl: @Html(Json.stringify(jsSaveUrl)), title: @Html(Json.stringify(JsString(renderModel.title)))}, @Html(Json.stringify(renderModel.pageData)));
 window.CloudinarySettings = @{
@@ -138,14 +134,8 @@ jQuery(function($) {
                     @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#footer'], _.extend({editable: false}, $pageData)));").toString)
                 </section>
 
-@*
-                <div id="color-picker">
-                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#color-picker'], _.extend({editable: false}, $pageData)));").toString)
-                </div>
-*@
-
-                <div id="edit-buttons">
-                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#edit-buttons'], _.extend({editable: false}, $pageData)));").toString)
+                <div id="admin-buttons">
+                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#admin-buttons'], _.extend({editable: false}, $pageData)));").toString)
                 </div>
         </div>
 }

@@ -246,12 +246,8 @@ jQuery(function($) {
                     @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#footer'], _.extend({editable: false}, $pageData)));").toString)
                 </section>
 
-                <div id="color-picker">
-                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#color-picker'], _.extend({editable: false}, $pageData)));").toString)
-                </div>
-
-                <div id="edit-buttons">
-                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#edit-buttons'], _.extend({editable: false}, $pageData)));").toString)
+                <div id="admin-buttons">
+                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#admin-buttons'], _.extend({editable: false}, $pageData)));").toString)
                 </div>
         </div>
 }

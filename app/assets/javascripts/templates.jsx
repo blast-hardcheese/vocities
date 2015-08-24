@@ -124,6 +124,7 @@ var ColorPicker = React.createClass({
     render: function() {
         // If we can't save and we're not in a sandbox, don't even show the save buttons
         if (!this.props.saveUrl && !this.props.sandbox) return null;
+        if ($('style#dynamic').length === 0) return null;
 
         var _this = this;
 
@@ -140,9 +141,7 @@ var ColorPicker = React.createClass({
 
         var choices = this.getSchemes().map(function(o, idx) {
             return (
-                <div style={{
-                    marginTop: 5,
-                    border: '1px solid black',
+                <div className='color-set' style={{
                     overflow: 'auto',
                 }} key={idx} onClick={function() { return _this.select(idx); }}>
                     {build(o.primary_bg)}
@@ -154,8 +153,7 @@ var ColorPicker = React.createClass({
         });
 
         var defaultValues = this.getDefaultCssValues();
-        choices.push(<div style={{
-            marginTop: 5,
+        choices.push(<div className='color-customizer' style={{
             border: '1px solid black',
             overflow: 'auto',
         }} key={-1}>
@@ -189,12 +187,7 @@ var ColorPicker = React.createClass({
         </div>);
 
         return (
-            <div style={{
-                position: 'fixed',
-                top: 10,
-                left: 10,
-                zIndex: 1,
-            }}>
+            <div className='color-picker' style={{float: 'left'}}>
                 {choices}
             </div>
         );
@@ -244,13 +237,6 @@ var EditButtons = React.createClass({
         var toggleEditButton = null;
         var saveButton = null;
 
-        var style = {
-            position: 'fixed',
-            top: 15,
-            left: 97,
-            zIndex: 1,
-        };
-
         var buttonStyle = {
             display: 'block',
         };
@@ -265,9 +251,25 @@ var EditButtons = React.createClass({
             saveButton = <button style={buttonStyle} onClick={this.performSave}>Save</button>;
         }
 
-        return <div style={style}>
+        return <div style={{float: 'left'}}>
             {toggleEditButton}
             {saveButton}
+        </div>;
+    }
+});
+
+var AdminButtons = React.createClass({
+    render: function() {
+        var editButtons = React.createElement(EditButtons, this.props)
+        var colorPicker = React.createElement(ColorPicker, this.props);
+
+        return <div style={{
+            position: 'fixed',
+            top: 5,
+            left: 5
+        }}>
+            {editButtons}
+            {colorPicker}
         </div>;
     }
 });
@@ -383,7 +385,10 @@ var sharedTemplateRenderers = [
                 var _props = _.extend({css: {}}, newProps);
                 this.props = _props;
 
-                $('style#dynamic').text(this.getDynamicTemplateContent());
+                var dynamicTarget = $('style#dynamic');
+                if (dynamicTarget.length !== 0) {
+                    dynamicTarget.text(this.getDynamicTemplateContent());
+                }
             },
         }, Utils, TemplateHelperMixin);
     },
@@ -455,8 +460,7 @@ var Templates = {
             '#header-wrapper': Sidebar,
             '#main-wrapper': Main,
             '#footer': Footer,
-            '#color-picker': ColorPicker,
-            '#edit-buttons': EditButtons,
+            '#admin-buttons': AdminButtons,
             '#add-popup': AddWidgetPopup,
         };
 
@@ -488,7 +492,7 @@ var Templates = {
             '#header-wrapper': Sidebar,
             '#main-wrapper': Main,
             '#footer': Footer,
-            '#edit-buttons': EditButtons,
+            '#admin-buttons': AdminButtons,
             '#add-popup': AddWidgetPopup,
         };
 
@@ -520,7 +524,7 @@ var Templates = {
             '#sidebar': Sidebar,
             '#main-content': Main,
             '#footer': Footer,
-            '#edit-buttons': EditButtons,
+            '#admin-buttons': AdminButtons,
             '#add-popup': AddWidgetPopup,
         };
 

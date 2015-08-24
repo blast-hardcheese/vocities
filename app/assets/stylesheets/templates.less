@@ -82,3 +82,26 @@
     }
   }
 }
+
+.color-picker {
+  margin-left: 5px;
+  z-index: 1;
+
+  .color-set {
+    margin: 2px 0;
+    > * {
+      border-top: 1px solid black;
+      border-bottom: 1px solid black;
+    }
+    > *:first-child {
+      border-left: 1px solid black;
+    }
+    > *:last-child {
+      border-right: 1px solid black;
+    }
+  }
+
+  .color-customizer {
+    margin-top: 2px;
+  }
+}
