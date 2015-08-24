@@ -96,15 +96,33 @@ body, input, select, textarea {
         </style>
         <script id="dynamic-tpl-values" type="text/json">
 {
-    "primary_bg": "#4acaa8",
-    "primary_fg": "#d1f1e9",
-    "secondary_fg": "#b6e9dc",
-    "accent": "#5ccfb0",
-    "nav_active_bg": "white",
-    "nav_active_fg": "#4acaa8",
+    "css": {
+        "scheme": 0,
 
-    "dark_text": "#777777",
-    "normal_text": "#888888"
+        "values": {
+            "dark_text": "#777777",
+            "normal_text": "#888888"
+        },
+
+        "schemes": [
+            {
+                "primary_bg":    "#4acaa8",
+                "primary_fg":    "#d1f1e9",
+                "secondary_fg":  "#b6e9dc",
+                "accent":        "#5ccfb0",
+                "nav_active_bg": "#ffffff",
+                "nav_active_fg": "#4acaa8"
+            },
+            {
+                "primary_bg":    "#BD4ACA",
+                "primary_fg":    "#EDD1F1",
+                "secondary_fg":  "#DEB6E9",
+                "accent":        "#C85CCF",
+                "nav_active_bg": "#ffffff",
+                "nav_active_fg": "#BD4ACA"
+            }
+        ]
+    }
 }
         </script>
 
@@ -136,7 +154,7 @@ jQuery(function($) {
             "primary_fg":    '#' + tinycolor({h: x, s: 0.1327800829875518, v: y, a: 1}).toHex(),
             "secondary_fg":  '#' + tinycolor({h: x, s: 0.2188841201716737, v: y, a: 1}).toHex(),
             "accent":        '#' + tinycolor({h: x, s: 0.5555555555555556, v: y, a: 1}).toHex(),
-            "nav_active_bg": 'white',
+            "nav_active_bg": '#ffffff',
             "nav_active_fg": '#' + tinycolor({h: x, s: 0.6336633663366337, v: y, a: 1}).toHex(),
         }}});
     }

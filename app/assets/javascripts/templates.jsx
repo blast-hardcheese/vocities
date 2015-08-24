@@ -62,36 +62,17 @@ var Main = React.createClass({
 
 var ColorPicker = React.createClass({
     getSchemes: function () {
-        var dynamicCssValues = dynamicTplValues('#dynamic-tpl-values');
-        return dynamicCssValues['schemes'];
+        return dynamicTplValues('#dynamic-tpl-values').css.schemes || [];
     },
-    schemes: [
-        {
-            "primary_bg": "#4acaa8",
-            "primary_fg": "#d1f1e9",
-            "secondary_fg": "#b6e9dc",
-            "accent": "#5ccfb0",
-        },
-        {
-            "primary_bg": "#BD4ACA",
-            "primary_fg": "#EDD1F1",
-            "secondary_fg": "#DEB6E9",
-            "accent": "#C85CCF",
-        },
-    ],
-    update: function (data) {
-        this.props.updated(
-            deepExtend("css.values", this.props, {
-                "primary_bg": data.primary_bg,
-                "primary_fg": data.primary_fg,
-                "secondary_fg": data.secondary_fg,
-                "accent": data.accent,
-                "nav_active_bg": "white",
-                "nav_active_fg": data.primary_fg
-            }));
+    update: function (idx) {
+        this.props.updated({
+            css: {
+                scheme: idx
+            }
+        });
     },
     select: function (idx) {
-        this.update(this.schemes[idx]);
+        this.update(idx);
     },
     render: function() {
         // If we can't save and we're not in a sandbox, don't even show the save buttons
@@ -99,7 +80,7 @@ var ColorPicker = React.createClass({
 
         var _this = this;
 
-        var choices = this.schemes.map(function(o, idx) {
+        var choices = this.getSchemes().map(function(o, idx) {
             var build = function (color) {
                 return (
                     <div style={{
@@ -315,20 +296,23 @@ var AddWidgetPopup = React.createClass({
 var sharedTemplateRenderers = [
     function(vm) {
         var dynamicCss = _.template($('#dynamic-tpl').text());
-        var dynamicCssValues = dynamicTplValues('#dynamic-tpl-values');
+        var dynamicCssValues = dynamicTplValues('#dynamic-tpl-values').css;
 
-        var target = $('style#dynamic')
+        var cssBase = dynamicCssValues.values;
+        var defaultSchemeIdx = dynamicCssValues.scheme || 0;
 
-        var setDynamicTemplate = function(template, userValues) {
-            var values = _.extend({}, dynamicCssValues, userValues);
-            var overrides = template === undefined ? "" : (_.template(template)(values));
-            target.text(dynamicCss(values) + overrides);
+        var setDynamicTemplate = function(selectedSchemeIdx, userValues) {
+            var schemeIdx = selectedSchemeIdx !== undefined ? selectedSchemeIdx : defaultSchemeIdx
+            var selectedScheme = dynamicCssValues.schemes[schemeIdx];
+            var values = _.extend({}, cssBase, selectedScheme, userValues);
+            $('style#dynamic').text(dynamicCss(values));
         };
 
         return {
             setProps: function(newProps) {
-                var _props = _.extend({}, {css:{}}, newProps)
-                setDynamicTemplate(_props.css.template, _props.css.values);
+                var _props = _.extend({css: {}}, newProps);
+
+                setDynamicTemplate(_props.css.scheme, _props.css.values);
             },
         };
     },
