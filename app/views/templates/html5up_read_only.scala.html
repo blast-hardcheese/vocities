@@ -35,24 +35,24 @@
         <style id="dynamic-tpl" type="text/underscore">
 #header {
     background: <%= primary_bg %>;
-    color: <%= primary_color %>;
+    color: <%= primary_fg %>;
 }
 
 #header > nav ul li a.active {
     background: <%= nav_active_bg %>;
-    color: <%= nav_active_color %> !important;
+    color: <%= nav_active_fg %> !important;
 }
 
 #header > footer .icons li a {
-    color: <%= hilight_color %>;
+    color: <%= secondary_fg %>;
 }
 
 #header > nav ul li {
-    border-top: solid 2px <%= accent_color %>;
+    border-top: solid 2px <%= accent %>;
 }
 
 #header > header p {
-    color: <%= primary_color %>;
+    color: <%= primary_fg %>;
 }
 
 header.major h2 {
@@ -97,11 +97,11 @@ body, input, select, textarea {
         <script id="dynamic-tpl-values" type="text/json">
 {
     "primary_bg": "#4acaa8",
-    "primary_color": "#d1f1e9",
-    "hilight_color": "#b6e9dc",
-    "accent_color": "#5ccfb0",
+    "primary_fg": "#d1f1e9",
+    "secondary_fg": "#b6e9dc",
+    "accent": "#5ccfb0",
     "nav_active_bg": "white",
-    "nav_active_color": "#4acaa8",
+    "nav_active_fg": "#4acaa8",
 
     "dark_text": "#777777",
     "normal_text": "#888888"

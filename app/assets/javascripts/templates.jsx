@@ -69,13 +69,13 @@ var ColorPicker = React.createClass({
         {
             "primary_bg": "#4acaa8",
             "primary_fg": "#d1f1e9",
-            "secondary": "#b6e9dc",
+            "secondary_fg": "#b6e9dc",
             "accent": "#5ccfb0",
         },
         {
             "primary_bg": "#BD4ACA",
             "primary_fg": "#EDD1F1",
-            "secondary": "#DEB6E9",
+            "secondary_fg": "#DEB6E9",
             "accent": "#C85CCF",
         },
     ],
@@ -83,11 +83,11 @@ var ColorPicker = React.createClass({
         this.props.updated(
             deepExtend("css.values", this.props, {
                 "primary_bg": data.primary_bg,
-                "primary_color": data.primary_fg,
-                "hilight_color": data.secondary,
-                "accent_color": data.accent,
+                "primary_fg": data.primary_fg,
+                "secondary_fg": data.secondary_fg,
+                "accent": data.accent,
                 "nav_active_bg": "white",
-                "nav_active_color": data.primary_bg,
+                "nav_active_fg": data.primary_fg
             }));
     },
     select: function (idx) {
@@ -119,7 +119,7 @@ var ColorPicker = React.createClass({
                 }} key={idx} onClick={function() { return _this.select(idx); }}>
                     {build(o.primary_bg)}
                     {build(o.primary_fg)}
-                    {build(o.secondary)}
+                    {build(o.secondary_fg)}
                     {build(o.accent)}
                 </div>
             );
