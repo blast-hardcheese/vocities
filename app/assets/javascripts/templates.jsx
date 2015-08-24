@@ -1,5 +1,5 @@
 var dynamicTplValues = function(selector) {
-    var values = $(selector).text()
+    var values = $(selector).text();
     return JSON.parse(values || '{}');
 };
 
@@ -60,78 +60,134 @@ var Main = React.createClass({
     },
 });
 
+var TemplateHelperMixin = {
+        getDynamicTemplateContent: function() {
+            var values = this.getCssValues();
+
+            return this.getDynamicTemplate()(values);
+        },
+        getDefaultCssValues: function() {
+            var cssBase = this.getDynamicTemplateValues().css.values;
+            var selectedScheme = this.getSchemes()[this.getSchemeIdx()];
+
+            return _.extend({}, cssBase, selectedScheme);
+        },
+        getCssValues: function() {
+            return _.extend(this.getDefaultCssValues(), this.propAtPath('css.values'));
+        },
+
+        getDynamicTemplate: _.memoize(function() {
+            return _.template($('#dynamic-tpl').text());
+        }),
+        getDynamicTemplateValues: _.memoize(function() {
+            return dynamicTplValues('#dynamic-tpl-values');
+        }),
+
+        getSchemeIdx: function() {
+            var defaultSchemeIdx = this.getDynamicTemplateValues().scheme || 0;
+            return this.propAtPath('css.scheme') !== undefined ? this.propAtPath('css.scheme') : defaultSchemeIdx;
+        },
+        getSchemes: function() {
+            return this.getDynamicTemplateValues().css.schemes;
+        }
+};
+
 var ColorPicker = React.createClass({
-    getSchemes: function () {
-        var dynamicCssValues = dynamicTplValues('#dynamic-tpl-values');
-        return dynamicCssValues['schemes'];
-    },
-    schemes: [
-        {
-            "primary_bg": "#4acaa8",
-            "primary_fg": "#d1f1e9",
-            "secondary": "#b6e9dc",
-            "accent": "#5ccfb0",
-        },
-        {
-            "primary_bg": "#BD4ACA",
-            "primary_fg": "#EDD1F1",
-            "secondary": "#DEB6E9",
-            "accent": "#C85CCF",
-        },
-    ],
-    update: function (data) {
-        this.props.updated(
-            deepExtend("css.values", this.props, {
-                "primary_bg": data.primary_bg,
-                "primary_color": data.primary_fg,
-                "hilight_color": data.secondary,
-                "accent_color": data.accent,
-                "nav_active_bg": "white",
-                "nav_active_color": data.primary_bg,
-            }));
+    mixins: [Utils, Updatable, TemplateHelperMixin],
+
+    update: function (idx) {
+        this.deepUpdated('css', {
+            scheme: idx
+        });
     },
     select: function (idx) {
-        this.update(this.schemes[idx]);
+        this.update(idx);
     },
+
+    colorChanged: function(key) {
+        var _this = this;
+        return function(event) {
+            var data = {};
+            data[key] = event.target.value;
+            _this.deepUpdated('css.values', data);
+        };
+    },
+    clearKey: function(key) {
+        var _this = this;
+        return function() {
+            var values = _.extend({}, _this.props.css.values);
+            values[key] = '__clear__';
+            _this.deepUpdated('css.values', values);
+        };
+    },
+
     render: function() {
         // If we can't save and we're not in a sandbox, don't even show the save buttons
         if (!this.props.saveUrl && !this.props.sandbox) return null;
+        if ($('style#dynamic').length === 0) return null;
 
         var _this = this;
 
-        var choices = this.schemes.map(function(o, idx) {
-            var build = function (color) {
-                return (
-                    <div style={{
-                        width: 20,
-                        height: 20,
-                        float: 'left',
-                        backgroundColor: color,
-                    }} />
-                );
-            };
-
+        var build = function (color) {
             return (
                 <div style={{
-                    marginTop: 5,
-                    border: '1px solid black',
+                    width: 20,
+                    height: 20,
+                    float: 'left',
+                    backgroundColor: color,
+                }} />
+            );
+        };
+
+        var choices = this.getSchemes().map(function(o, idx) {
+            return (
+                <div className='color-set' style={{
                     overflow: 'auto',
                 }} key={idx} onClick={function() { return _this.select(idx); }}>
                     {build(o.primary_bg)}
                     {build(o.primary_fg)}
-                    {build(o.secondary)}
+                    {build(o.secondary_fg)}
                     {build(o.accent)}
                 </div>
             );
         });
 
+        var defaultValues = this.getDefaultCssValues();
+        choices.push(<div className='color-customizer' style={{
+            border: '1px solid black',
+            overflow: 'auto',
+        }} key={-1}>
+            {_.map(this.getCssValues(), function(value, key) {
+                return <div key={key} style={{
+                    margin: '4px 0',
+                    lineHeight: '20px',
+                }}>
+                    <span style={{
+                        color: '#222',
+                        marginRight: '0.5ex',
+                        marginLeft: '0.5ex',
+                    }}>{key}:</span>
+                    <input
+                        style={{
+                            float: 'right',
+                            width: 20,
+                            height: 20,
+                            border: 'none',
+                            padding: 0,
+                            margin: 0,
+                            marginRight: '1ex'
+                        }}
+                        type="color"
+                        value={value}
+                        onChange={_this.colorChanged(key)}
+                    />
+                    {(defaultValues[key] !== value) ? <i className="fa fa-trash-o" style={{float: 'right', marginRight: 5}} onClick={_this.clearKey(key)} /> : null}
+                </div>;
+            })}
+        </div>);
+
         return (
-            <div style={{
-                position: 'fixed',
-                top: 10,
-                left: 10,
-                zIndex: 1,
-            }}>
+            <div className='color-picker' style={{float: 'left'}}>
                 {choices}
             </div>
         );
@@ -181,13 +237,6 @@ var EditButtons = React.createClass({
         var toggleEditButton = null;
         var saveButton = null;
 
-        var style = {
-            position: 'fixed',
-            top: 15,
-            left: 97,
-            zIndex: 1,
-        };
-
         var buttonStyle = {
             display: 'block',
         };
@@ -202,9 +251,25 @@ var EditButtons = React.createClass({
             saveButton = <button style={buttonStyle} onClick={this.performSave}>Save</button>;
         }
 
-        return <div style={style}>
+        return <div style={{float: 'left'}}>
             {toggleEditButton}
             {saveButton}
+        </div>;
+    }
+});
+
+var AdminButtons = React.createClass({
+    render: function() {
+        var editButtons = React.createElement(EditButtons, this.props)
+        var colorPicker = React.createElement(ColorPicker, this.props);
+
+        return <div style={{
+            position: 'fixed',
+            top: 5,
+            left: 5
+        }}>
+            {editButtons}
+            {colorPicker}
         </div>;
     }
 });
@@ -314,23 +379,18 @@ var AddWidgetPopup = React.createClass({
 
 var sharedTemplateRenderers = [
     function(vm) {
-        var dynamicCss = _.template($('#dynamic-tpl').text());
-        var dynamicCssValues = dynamicTplValues('#dynamic-tpl-values');
-
-        var target = $('style#dynamic')
-
-        var setDynamicTemplate = function(template, userValues) {
-            var values = _.extend({}, dynamicCssValues, userValues);
-            var overrides = template === undefined ? "" : (_.template(template)(values));
-            target.text(dynamicCss(values) + overrides);
-        };
-
-        return {
+        return _.extend({
+            props: null,
             setProps: function(newProps) {
-                var _props = _.extend({}, {css:{}}, newProps)
-                setDynamicTemplate(_props.css.template, _props.css.values);
+                var _props = _.extend({css: {}}, newProps);
+                this.props = _props;
+
+                var dynamicTarget = $('style#dynamic');
+                if (dynamicTarget.length !== 0) {
+                    dynamicTarget.text(this.getDynamicTemplateContent());
+                }
             },
-        };
+        }, Utils, TemplateHelperMixin);
     },
     function(vm) {
         var target = $('html');
@@ -400,8 +460,7 @@ var Templates = {
             '#header-wrapper': Sidebar,
             '#main-wrapper': Main,
             '#footer': Footer,
-            '#color-picker': ColorPicker,
-            '#edit-buttons': EditButtons,
+            '#admin-buttons': AdminButtons,
             '#add-popup': AddWidgetPopup,
         };
 
@@ -433,7 +492,7 @@ var Templates = {
             '#header-wrapper': Sidebar,
             '#main-wrapper': Main,
             '#footer': Footer,
-            '#edit-buttons': EditButtons,
+            '#admin-buttons': AdminButtons,
             '#add-popup': AddWidgetPopup,
         };
 
@@ -465,7 +524,7 @@ var Templates = {
             '#sidebar': Sidebar,
             '#main-content': Main,
             '#footer': Footer,
-            '#edit-buttons': EditButtons,
+            '#admin-buttons': AdminButtons,
             '#add-popup': AddWidgetPopup,
         };
 

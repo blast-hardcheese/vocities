@@ -35,24 +35,24 @@
         <style id="dynamic-tpl" type="text/underscore">
 #header {
     background: <%= primary_bg %>;
-    color: <%= primary_color %>;
+    color: <%= primary_fg %>;
 }
 
 #header > nav ul li a.active {
     background: <%= nav_active_bg %>;
-    color: <%= nav_active_color %> !important;
+    color: <%= nav_active_fg %> !important;
 }
 
 #header > footer .icons li a {
-    color: <%= hilight_color %>;
+    color: <%= secondary_fg %>;
 }
 
 #header > nav ul li {
-    border-top: solid 2px <%= accent_color %>;
+    border-top: solid 2px <%= accent %>;
 }
 
 #header > header p {
-    color: <%= primary_color %>;
+    color: <%= primary_fg %>;
 }
 
 header.major h2 {
@@ -96,15 +96,33 @@ body, input, select, textarea {
         </style>
         <script id="dynamic-tpl-values" type="text/json">
 {
-    "primary_bg": "#4acaa8",
-    "primary_color": "#d1f1e9",
-    "hilight_color": "#b6e9dc",
-    "accent_color": "#5ccfb0",
-    "nav_active_bg": "white",
-    "nav_active_color": "#4acaa8",
+    "css": {
+        "scheme": 0,
 
-    "dark_text": "#777777",
-    "normal_text": "#888888"
+        "values": {
+            "dark_text": "#777777",
+            "normal_text": "#888888"
+        },
+
+        "schemes": [
+            {
+                "primary_bg":    "#4acaa8",
+                "primary_fg":    "#d1f1e9",
+                "secondary_fg":  "#b6e9dc",
+                "accent":        "#5ccfb0",
+                "nav_active_bg": "#ffffff",
+                "nav_active_fg": "#4acaa8"
+            },
+            {
+                "primary_bg":    "#BD4ACA",
+                "primary_fg":    "#EDD1F1",
+                "secondary_fg":  "#DEB6E9",
+                "accent":        "#C85CCF",
+                "nav_active_bg": "#ffffff",
+                "nav_active_fg": "#BD4ACA"
+            }
+        ]
+    }
 }
         </script>
 
@@ -125,7 +143,25 @@ window.CloudinarySettings = @{
 
 jQuery(function($) {
 
-    new TemplateManager(@templateIdJson, PageData);
+    var mgr = window.mgr = new TemplateManager(@templateIdJson, PageData);
+
+    window.adjust = function (x, y) {
+        x = x || 165;
+        y = y || 0.7921568627450981;
+
+        mgr.refresh({css: {values: {
+            "primary_bg":    '#' + tinycolor({h: x, s: 0.6336633663366337, v: y, a: 1}).toHex(),
+            "primary_fg":    '#' + tinycolor({h: x, s: 0.1327800829875518, v: y, a: 1}).toHex(),
+            "secondary_fg":  '#' + tinycolor({h: x, s: 0.2188841201716737, v: y, a: 1}).toHex(),
+            "accent":        '#' + tinycolor({h: x, s: 0.5555555555555556, v: y, a: 1}).toHex(),
+            "nav_active_bg": '#ffffff',
+            "nav_active_fg": '#' + tinycolor({h: x, s: 0.6336633663366337, v: y, a: 1}).toHex(),
+        }}});
+    }
+
+//    $(document).on('mousemove', function (event) {
+//        adjust( event.pageX / window.innerWidth * 255, (event.pageY - window.scrollY) / window.innerHeight);
+//    });
 
     skel.init({
         reset: 'full',
@@ -210,12 +246,8 @@ jQuery(function($) {
                     @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#footer'], _.extend({editable: false}, $pageData)));").toString)
                 </section>
 
-                <div id="color-picker">
-                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#color-picker'], _.extend({editable: false}, $pageData)));").toString)
-                </div>
-
-                <div id="edit-buttons">
-                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#edit-buttons'], _.extend({editable: false}, $pageData)));").toString)
+                <div id="admin-buttons">
+                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#admin-buttons'], _.extend({editable: false}, $pageData)));").toString)
                 </div>
         </div>
 }
