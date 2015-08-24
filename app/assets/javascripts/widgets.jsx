@@ -3,7 +3,13 @@
 
 var deepExtend = function (key, data, newData) {
     if (key === undefined || key === null || key.length === 0) {
-        return _.extend({}, data, newData);
+        var res = _.extend({}, data, newData);
+        for (var _key in newData) {
+            if (newData[_key] === '__clear__') {
+                delete res[_key];
+            }
+        }
+        return res;
     } else {
         var splitKey = key.split('.');
         var subkey = splitKey[0];
