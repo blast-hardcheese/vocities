@@ -153,6 +153,41 @@ var ColorPicker = React.createClass({
             );
         });
 
+        var defaultValues = this.getDefaultCssValues();
+        choices.push(<div style={{
+            marginTop: 5,
+            border: '1px solid black',
+            overflow: 'auto',
+        }} key={-1}>
+            {_.map(this.getCssValues(), function(value, key) {
+                return <div key={key} style={{
+                    margin: '4px 0',
+                    lineHeight: '20px',
+                }}>
+                    <span style={{
+                        color: '#222',
+                        marginRight: '0.5ex',
+                        marginLeft: '0.5ex',
+                    }}>{key}:</span>
+                    <input
+                        style={{
+                            float: 'right',
+                            width: 20,
+                            height: 20,
+                            border: 'none',
+                            padding: 0,
+                            margin: 0,
+                            marginRight: '1ex'
+                        }}
+                        type="color"
+                        value={value}
+                        onChange={_this.colorChanged(key)}
+                    />
+                    {(defaultValues[key] !== value) ? <i className="fa fa-trash-o" style={{float: 'right', marginRight: 5}} onClick={_this.clearKey(key)} /> : null}
+                </div>;
+            })}
+        </div>);
+
         return (
             <div style={{
                 position: 'fixed',
