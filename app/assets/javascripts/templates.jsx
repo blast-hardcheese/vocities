@@ -124,7 +124,7 @@ var ColorPicker = React.createClass({
     render: function() {
         // If we can't save and we're not in a sandbox, don't even show the save buttons
         if (!this.props.saveUrl && !this.props.sandbox) return null;
-        if ($('style#dynamic').length === 0) return null;
+        if (typeof $ === 'undefined' || $('style#dynamic').length === 0) return null;
 
         var _this = this;
 
