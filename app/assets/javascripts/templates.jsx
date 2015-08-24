@@ -60,20 +60,67 @@ var Main = React.createClass({
     },
 });
 
+var TemplateHelperMixin = {
+        getDynamicTemplateContent: function() {
+            var values = this.getCssValues();
+
+            return this.getDynamicTemplate()(values);
+        },
+        getDefaultCssValues: function() {
+            var cssBase = this.getDynamicTemplateValues().css.values;
+            var selectedScheme = this.getSchemes()[this.getSchemeIdx()];
+
+            return _.extend({}, cssBase, selectedScheme);
+        },
+        getCssValues: function() {
+            return _.extend(this.getDefaultCssValues(), this.propAtPath('css.values'));
+        },
+
+        getDynamicTemplate: _.memoize(function() {
+            return _.template($('#dynamic-tpl').text());
+        }),
+        getDynamicTemplateValues: _.memoize(function() {
+            return dynamicTplValues('#dynamic-tpl-values');
+        }),
+
+        getSchemeIdx: function() {
+            var defaultSchemeIdx = this.getDynamicTemplateValues().scheme || 0;
+            return this.propAtPath('css.scheme') !== undefined ? this.propAtPath('css.scheme') : defaultSchemeIdx;
+        },
+        getSchemes: function() {
+            return this.getDynamicTemplateValues().css.schemes;
+        }
+};
+
 var ColorPicker = React.createClass({
-    getSchemes: function () {
-        return dynamicTplValues('#dynamic-tpl-values').css.schemes || [];
-    },
+    mixins: [Utils, Updatable, TemplateHelperMixin],
+
     update: function (idx) {
-        this.props.updated({
-            css: {
-                scheme: idx
-            }
+        this.deepUpdated('css', {
+            scheme: idx
         });
     },
     select: function (idx) {
         this.update(idx);
     },
+
+    colorChanged: function(key) {
+        var _this = this;
+        return function(event) {
+            var data = {};
+            data[key] = event.target.value;
+            _this.deepUpdated('css.values', data);
+        };
+    },
+    clearKey: function(key) {
+        var _this = this;
+        return function() {
+            var values = _.extend({}, _this.props.css.values);
+            values[key] = '__clear__';
+            _this.deepUpdated('css.values', values);
+        };
+    },
+
     render: function() {
         // If we can't save and we're not in a sandbox, don't even show the save buttons
         if (!this.props.saveUrl && !this.props.sandbox) return null;
@@ -295,26 +342,15 @@ var AddWidgetPopup = React.createClass({
 
 var sharedTemplateRenderers = [
     function(vm) {
-        var dynamicCss = _.template($('#dynamic-tpl').text());
-        var dynamicCssValues = dynamicTplValues('#dynamic-tpl-values').css;
-
-        var cssBase = dynamicCssValues.values;
-        var defaultSchemeIdx = dynamicCssValues.scheme || 0;
-
-        var setDynamicTemplate = function(selectedSchemeIdx, userValues) {
-            var schemeIdx = selectedSchemeIdx !== undefined ? selectedSchemeIdx : defaultSchemeIdx
-            var selectedScheme = dynamicCssValues.schemes[schemeIdx];
-            var values = _.extend({}, cssBase, selectedScheme, userValues);
-            $('style#dynamic').text(dynamicCss(values));
-        };
-
-        return {
+        return _.extend({
+            props: null,
             setProps: function(newProps) {
                 var _props = _.extend({css: {}}, newProps);
+                this.props = _props;
 
-                setDynamicTemplate(_props.css.scheme, _props.css.values);
+                $('style#dynamic').text(this.getDynamicTemplateContent());
             },
-        };
+        }, Utils, TemplateHelperMixin);
     },
     function(vm) {
         var target = $('html');
