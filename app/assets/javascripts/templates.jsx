@@ -1,5 +1,5 @@
 var dynamicTplValues = function(selector) {
-    var values = $(selector).text()
+    var values = $(selector).text();
     return JSON.parse(values || '{}');
 };
 
@@ -80,18 +80,18 @@ var ColorPicker = React.createClass({
 
         var _this = this;
 
-        var choices = this.getSchemes().map(function(o, idx) {
-            var build = function (color) {
-                return (
-                    <div style={{
-                        width: 20,
-                        height: 20,
-                        float: 'left',
-                        backgroundColor: color,
-                    }} />
-                );
-            };
+        var build = function (color) {
+            return (
+                <div style={{
+                    width: 20,
+                    height: 20,
+                    float: 'left',
+                    backgroundColor: color,
+                }} />
+            );
+        };
 
+        var choices = this.getSchemes().map(function(o, idx) {
             return (
                 <div style={{
                     marginTop: 5,
