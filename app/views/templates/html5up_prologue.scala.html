@@ -110,6 +110,9 @@ jQuery(function($) {
         }
 });
         </script>
+
+        @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#metadata'], _.extend({editable: false}, $pageData)));").toString)
+
 }
 
 @main(renderModel.title)(header, afterBody) {

@@ -376,6 +376,11 @@ var AddWidgetPopup = React.createClass({
     },
 });
 
+var Metadata = React.createClass({
+    render: function() {
+        return <script type="text/javascript" dangerouslySetInnerHTML={{__html: 'console.log("hey");'}} />;
+    },
+});
 
 var sharedTemplateRenderers = [
     function(vm) {
@@ -455,7 +460,9 @@ var renderComponent = function(sel, data, clazz) {
 };
 
 var buildClassRenderers = function (classes) {
-    return _.map(classes, function(reactClass, id) {
+    var filteredClasses = _.extend({}, classes);
+    delete filteredClasses['#metadata'];
+    return _.map(filteredClasses, function(reactClass, id) {
         return function(vm) {
             return renderComponent(id, vm, reactClass);
         };
@@ -470,6 +477,7 @@ var Templates = {
             '#footer': Footer,
             '#admin-buttons': AdminButtons,
             '#add-popup': AddWidgetPopup,
+            '#metadata': Metadata,
         };
 
         var sequences = buildClassRenderers(classes).concat(sharedTemplateRenderers);
@@ -488,6 +496,7 @@ var Templates = {
             '#footer': Footer,
             '#admin-buttons': AdminButtons,
             '#add-popup': AddWidgetPopup,
+            '#metadata': Metadata,
         };
 
         var sequences = buildClassRenderers(classes).concat(sharedTemplateRenderers);
@@ -506,6 +515,7 @@ var Templates = {
             '#footer': Footer,
             '#admin-buttons': AdminButtons,
             '#add-popup': AddWidgetPopup,
+            '#metadata': Metadata,
         };
 
         var sequences = buildClassRenderers(classes).concat(sharedTemplateRenderers);
