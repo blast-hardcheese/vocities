@@ -2,6 +2,7 @@
 /// <reference path="jquery/jquery.d.ts" />
 /// <reference path="react/react.d.ts" />
 /// <reference path="reflux/reflux.d.ts" />
+/// <reference path="toastr/toastr.d.ts" />
 /// <reference path="underscore/underscore.d.ts" />
 
 /// <reference path="../events.ts" />

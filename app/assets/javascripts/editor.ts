@@ -51,8 +51,10 @@ jQuery(function($) {
             data: JSON.stringify(PageData),
         }).then(function() {
                 console.info('Success!');
+                toastr.success('Success!');
             }, function() {
                 console.info('Failure!');
+                toastr.success('Failed, please make sure data is valid');
             });
     });
 
