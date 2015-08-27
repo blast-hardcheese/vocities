@@ -224,9 +224,16 @@ var EditButtons = React.createClass({
         $.ajax({
             contentType: 'application/json',
             data: JSON.stringify(data),
-            dataType: 'json',
             method: 'PUT',
             url: this.props.saveUrl + '?templateId=' + templateId,
+            error: function() {
+                console.error('Unable to save');
+                toastr.error('Unable to save');
+            },
+            success: function() {
+                console.info('Success');
+                toastr.success('Saved!');
+            }
         });
     },
 
@@ -266,7 +273,8 @@ var AdminButtons = React.createClass({
         return <div style={{
             position: 'fixed',
             top: 5,
-            left: 5
+            left: 5,
+            zIndex: 1
         }}>
             {editButtons}
             {colorPicker}
@@ -376,6 +384,35 @@ var AddWidgetPopup = React.createClass({
     },
 });
 
+var Metadata = React.createClass({
+    googleAnalytics: function() {
+        var tpl = _.template([
+            "<script type='text/javascript'>",
+            "(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){",
+            "(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),",
+            "m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)",
+            "})(window,document,'script','//www.google-analytics.com/analytics.js','ga');",
+
+            "ga('create', '<%= trackingId %>', 'auto');",
+            "ga('send', 'pageview');",
+            "</script>"
+        ].join('\n'));
+
+        return this.props.metadata.ga ? tpl(this.props.metadata.ga) : '';
+    },
+
+    customCode: function() {
+        return this.props.metadata.custom ? this.props.metadata.custom : '';
+    },
+
+    render: function() {
+        var chunks = [
+            this.googleAnalytics(),
+            this.customCode(),
+        ];
+        return <div style={{ display: 'none' }} dangerouslySetInnerHTML={{__html: chunks.join('\n\n')}} />;
+    },
+});
 
 var sharedTemplateRenderers = [
     function(vm) {
@@ -446,33 +483,38 @@ var sharedTemplateRenderers = [
     },
 ];
 
+var renderComponent = function(sel, data, clazz) {
+    var factory = React.createFactory(clazz)(data);
+    var target = $(sel)[0];
+    var react = React.render(factory, target);
+    react.setProps(data);
+    return react;
+};
+
+var buildClassRenderers = function (classes) {
+    var filteredClasses = _.extend({}, classes);
+    delete filteredClasses['#metadata'];
+    return _.map(filteredClasses, function(reactClass, id) {
+        return function(vm) {
+            return renderComponent(id, vm, reactClass);
+        };
+    });
+};
+
 var Templates = {
     "html5up_read_only": (function(self) {
-        var render = function(sel, data, clazz) {
-            var factory = React.createFactory(clazz)(data);
-            var target = $(sel)[0];
-            var react = React.render(factory, target);
-            react.setProps(data);
-            return react;
-        };
-
         var classes = {
             '#header-wrapper': Sidebar,
             '#main-wrapper': Main,
             '#footer': Footer,
             '#admin-buttons': AdminButtons,
             '#add-popup': AddWidgetPopup,
+            '#metadata': Metadata,
         };
 
-        var classRenderers = _.map(classes, function(reactClass, id) {
-            return function(vm) {
-                return render(id, vm, reactClass);
-            };
-        })
+        var sequences = buildClassRenderers(classes).concat(sharedTemplateRenderers);
 
-        var sequences = classRenderers.concat(sharedTemplateRenderers);
-
-        self.render = render;
+        self.render = renderComponent;
         self.sequences = sequences;
         self.classes = classes;
 
@@ -480,31 +522,18 @@ var Templates = {
     })({}),
 
     "html5up_prologue": (function(self) {
-        var render = function(sel, data, clazz) {
-            var factory = React.createFactory(clazz)(data);
-            var target = $(sel)[0];
-            var react = React.render(factory, target);
-            react.setProps(data);
-            return react;
-        };
-
         var classes = {
             '#header-wrapper': Sidebar,
             '#main-wrapper': Main,
             '#footer': Footer,
             '#admin-buttons': AdminButtons,
             '#add-popup': AddWidgetPopup,
+            '#metadata': Metadata,
         };
 
-        var classRenderers = _.map(classes, function(reactClass, id) {
-            return function(vm) {
-                return render(id, vm, reactClass);
-            };
-        })
+        var sequences = buildClassRenderers(classes).concat(sharedTemplateRenderers);
 
-        var sequences = classRenderers.concat(sharedTemplateRenderers);
-
-        self.render = render;
+        self.render = renderComponent;
         self.sequences = sequences;
         self.classes = classes;
 
@@ -512,31 +541,18 @@ var Templates = {
     })({}),
 
     "plain": (function(self) {
-        var render = function(sel, data, clazz) {
-            var factory = React.createFactory(clazz)(data);
-            var target = $(sel)[0];
-            var react = React.render(factory, target);
-            react.setProps(data);
-            return react;
-        };
-
         var classes = {
             '#sidebar': Sidebar,
             '#main-content': Main,
             '#footer': Footer,
             '#admin-buttons': AdminButtons,
             '#add-popup': AddWidgetPopup,
+            '#metadata': Metadata,
         };
 
-        var classRenderers = _.map(classes, function(reactClass, id) {
-            return function(vm) {
-                return render(id, vm, reactClass);
-            };
-        })
+        var sequences = buildClassRenderers(classes).concat(sharedTemplateRenderers);
 
-        var sequences = classRenderers.concat(sharedTemplateRenderers);
-
-        self.render = render;
+        self.render = renderComponent;
         self.sequences = sequences;
         self.classes = classes;
 

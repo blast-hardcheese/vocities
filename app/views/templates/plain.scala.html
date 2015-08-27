@@ -15,6 +15,9 @@
     <meta name="keywords" content="" />
 
     <style id="dynamic" type="text/css"></style>
+}
+
+@afterBody = {
 
     <script type="text/javascript">
 var PageData = _.extend({saveUrl: @Html(Json.stringify(jsSaveUrl)), title: @Html(Json.stringify(JsString(renderModel.title)))}, @Html(Json.stringify(pageData)));
@@ -38,9 +41,12 @@ jQuery(function($) {
 
 });
         </script>
+
+        @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#metadata'], _.extend({editable: false}, $pageData)));").toString)
+
 }
 
-@main(renderModel.title)(header) {
+@main(renderModel.title)(header, afterBody) {
     <div id="sidebar">
         @Html(engine.eval(s"React.renderToString(React.createElement(Templates['$templateId'].classes['#sidebar'], _.extend({editable: false}, $pageData)));").toString)
     </div>
