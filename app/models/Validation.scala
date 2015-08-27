@@ -1,22 +1,23 @@
 package models
 
 import play.api.Logger
-import play.api.libs.json.{ Json, JsValue, Reads, Writes }
+import play.api.libs.json.{ Json, JsValue, JsResult }
 
-trait ValidatableTemplateData {
-  val log = Logger("application")
+trait ValidatableTemplateData { self =>
+  val log = Logger(self.getClass.getName)
 
   type UnpackTarget
 
-  def validate(data: JsValue)(implicit reads: Reads[UnpackTarget], writes: Writes[UnpackTarget]): Option[(String, JsValue)] = {
-    data.validate[UnpackTarget].fold(
+  def validate(data: JsValue): Option[(String, JsValue)] = {
+    fromJson(data).fold(
       { e => log.error(s"Unable to unpack template body: $e"); None },
       Some.apply _
     )
-    .map(unpack)
+    .map(unpackResult)
   }
 
-  def unpack(data: UnpackTarget): (String, JsValue)
+  def fromJson(data: JsValue): JsResult[UnpackTarget]
+  def unpackResult(data: UnpackTarget): (String, JsValue)
 }
 
 trait HasDefaultTemplateData {
@@ -48,7 +49,8 @@ object TemplateData {
 
     type UnpackTarget = PostResult
 
-    def unpack(data: PostResult): (String, JsValue) = data match {
+    def fromJson(data: JsValue) = data.validate[PostResult]
+    def unpackResult(data: PostResult) = data match {
       case PostResult(title, data) => (title, Json.toJson(data))
     }
 
@@ -83,7 +85,7 @@ object TemplateData {
     )
   }
 
-  def byName(x: String) = x match {
+  def byName(x: String): HasDefaultTemplateData with ValidatableTemplateData = x match {
     case "html5up_read_only" => Html5Up__sections
     case "html5up_prologue" => Html5Up__sections
   }
