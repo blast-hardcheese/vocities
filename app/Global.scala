@@ -14,7 +14,7 @@ import service.PostgresUserService
 import models.UserModel
 
 object Global extends WithFilters() {
-  var enabledProviders: MutableSet[String] = MutableSet.empty
+  val enabledProviders: MutableSet[String] = MutableSet.empty
 
   override def onLoadConfig(config: Configuration, path: File, classloader: ClassLoader, mode: Mode.Mode): Configuration = {
     import collection.JavaConversions._
