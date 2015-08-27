@@ -387,6 +387,7 @@ var AddWidgetPopup = React.createClass({
 var Metadata = React.createClass({
     googleAnalytics: function() {
         var tpl = _.template([
+            "<script type='text/javascript'>",
             "(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){",
             "(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),",
             "m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)",
@@ -394,6 +395,7 @@ var Metadata = React.createClass({
 
             "ga('create', '<%= trackingId %>', 'auto');",
             "ga('send', 'pageview');",
+            "</script>"
         ].join('\n'));
 
         return this.props.metadata.ga ? tpl(this.props.metadata.ga) : '';
@@ -408,7 +410,7 @@ var Metadata = React.createClass({
             this.googleAnalytics(),
             this.customCode(),
         ];
-        return <script type="text/javascript" dangerouslySetInnerHTML={{__html: chunks.join('\n\n')}} />;
+        return <div style={{ display: 'none' }} dangerouslySetInnerHTML={{__html: chunks.join('\n\n')}} />;
     },
 });
 

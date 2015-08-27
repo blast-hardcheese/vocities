@@ -35,8 +35,8 @@
 @afterBody = {
 
     <script type="text/javascript">
-var PageData = _.extend({saveUrl: @Html(Json.stringify(jsSaveUrl)), title: @Html(Json.stringify(JsString(renderModel.title)))}, @Html(Json.stringify(renderModel.pageData)));
-window.CloudinarySettings = @{
+    var PageData = _.extend({saveUrl: @Html(Json.stringify(jsSaveUrl)), title: @Html(Json.stringify(JsString(renderModel.title)))}, @Html(Json.stringify(renderModel.pageData).replace("</script>", "<\\/script>")));
+    window.CloudinarySettings = @{
     val config = play.api.Play.current.configuration
     val maybeCloudinary = for {
         cloud_name <- config.getString("cloudinary.cloud_name")
