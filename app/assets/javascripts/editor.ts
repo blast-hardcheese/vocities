@@ -53,4 +53,20 @@ jQuery(function($) {
                 console.info('Failure!');
             });
     });
+
+    $('#ga-trackingId')
+        .val(deepGet(PageData, 'data', 'metadata', 'ga', 'trackingId'))
+        .typeWatch({
+        callback: function (value) {
+            if (value.length === 0) {
+                var metadata = deepGet(PageData, 'data', 'metadata');
+                delete metadata['ga'];
+            } else {
+                deepSet(PageData, value, 'data', 'metadata', 'ga', 'trackingId');
+            }
+        },
+        wait: 750,
+        highlight: true,
+        captureLength: 0
+    });
 });
