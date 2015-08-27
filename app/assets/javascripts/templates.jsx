@@ -266,7 +266,8 @@ var AdminButtons = React.createClass({
         return <div style={{
             position: 'fixed',
             top: 5,
-            left: 5
+            left: 5,
+            zIndex: 1
         }}>
             {editButtons}
             {colorPicker}
