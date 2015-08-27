@@ -70,13 +70,13 @@ object TemplateData {
         social=Social(None, None, None, None, None),
         sidebar=Sidebar(
           header=Header(
-            src="http://photos3.meetupstatic.com/photos/member/3/9/a/7/member_243074759.jpeg",
-            name="Devon Stewart",
+            src="http://lorempixel.com/600/600/people/",
+            name="Test User",
             flavortext=None
           )
         ),
         footer=Footer(
-          copyright="Devon Stewart"
+          copyright="VOCities"
         ),
         css=None
       )
