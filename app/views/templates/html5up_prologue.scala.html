@@ -30,6 +30,9 @@
     display: none; // Why is this necessary?!
 }
         </style>
+}
+
+@afterBody = {
 
     <script type="text/javascript">
 var PageData = _.extend({saveUrl: @Html(Json.stringify(jsSaveUrl)), title: @Html(Json.stringify(JsString(renderModel.title)))}, @Html(Json.stringify(renderModel.pageData)));
@@ -113,7 +116,7 @@ jQuery(function($) {
         </script>
 }
 
-@main(renderModel.title)(header) {
+@main(renderModel.title)(header, afterBody) {
         <div id="add-popup">
             @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#add-popup'], _.extend({editable: false}, $pageData)));").toString)
         </div>

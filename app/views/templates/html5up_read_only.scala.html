@@ -94,6 +94,10 @@ body, input, select, textarea {
     .widget.w-youtube[data-size="normal"] > .wrapper { height: 19em; }
 }
         </style>
+}
+
+@afterBody = {
+
         <script id="dynamic-tpl-values" type="text/json">
 {
     "css": {
@@ -225,7 +229,7 @@ jQuery(function($) {
         </script>
 }
 
-@main(renderModel.title)(header) {
+@main(renderModel.title)(header, afterBody) {
         <div id="add-popup">
             @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#add-popup'], _.extend({editable: false}, $pageData)));").toString)
         </div>
