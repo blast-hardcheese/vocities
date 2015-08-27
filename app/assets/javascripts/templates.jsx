@@ -377,8 +377,25 @@ var AddWidgetPopup = React.createClass({
 });
 
 var Metadata = React.createClass({
+    googleAnalytics: function() {
+        var tpl = _.template([
+            "(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){",
+            "(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),",
+            "m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)",
+            "})(window,document,'script','//www.google-analytics.com/analytics.js','ga');",
+
+            "ga('create', '<%= trackingId %>', 'auto');",
+            "ga('send', 'pageview');",
+        ].join('\n'));
+
+        return this.props.metadata.ga ? tpl(this.props.metadata.ga) : '';
+    },
+
     render: function() {
-        return <script type="text/javascript" dangerouslySetInnerHTML={{__html: 'console.log("hey");'}} />;
+        var chunks = [
+            this.googleAnalytics(),
+        ];
+        return <script type="text/javascript" dangerouslySetInnerHTML={{__html: chunks.join('\n\n')}} />;
     },
 });
 
