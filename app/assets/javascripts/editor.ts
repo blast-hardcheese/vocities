@@ -6,31 +6,30 @@ interface PageInfo {
     saveUrl: string;
 }
 
+interface PageData {
+    data: any;
+    title: string;
+}
+
 declare var PageInfo: PageInfo;
+declare var PageData: PageData;
 
 jQuery(function($) {
     var $f = $('form'),
         $textarea = $f.find('textarea'),
         $save = $f.find('button[name=save]');
 
-    $textarea.val(JSON.stringify(JSON.parse($textarea.val()), undefined, '    '));
+    $textarea.val(JSON.stringify(PageData, undefined, '    '));
 
     $save.click(function(e) {
         e.preventDefault();
         e.stopPropagation();
 
-        var data = JSON.parse($textarea.val());
-
-        var body = {
-            data: data,
-            title: $f.find('input[name=title]').val(),
-        };
-
         $.ajax({
             type: 'PUT',
             url: PageInfo.saveUrl,
             contentType: 'application/json',
-            data: JSON.stringify(body),
+            data: JSON.stringify(PageData),
         }).then(function() {
                 console.info('Success!');
             }, function() {
