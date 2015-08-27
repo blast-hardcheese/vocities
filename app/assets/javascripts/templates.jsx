@@ -224,9 +224,16 @@ var EditButtons = React.createClass({
         $.ajax({
             contentType: 'application/json',
             data: JSON.stringify(data),
-            dataType: 'json',
             method: 'PUT',
             url: this.props.saveUrl + '?templateId=' + templateId,
+            error: function() {
+                console.error('Unable to save');
+                toastr.error('Unable to save');
+            },
+            success: function() {
+                console.info('Success');
+                toastr.success('Saved!');
+            }
         });
     },
 

@@ -17,6 +17,10 @@
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")" />
         <!--[if lte IE 8]><script src="@routes.Assets.at("stylesheets/ie/html5shiv.js")"></script><![endif]-->
 
+        <!-- Edit Only below here -->
+        <link rel="stylesheet" media="screen" href='@routes.WebJarAssets.at(WebJarAssets.locate("2.1.2/build/toastr.css"))' />
+        <!-- End edit only section -->
+
         @header
     </head>
     <body>
@@ -29,6 +33,10 @@
     <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("tinymce.min.js"))'></script>
     <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("reflux.min.js"))'></script>
     <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("tinycolor.js"))'></script>
+
+    <!-- Edit Only below here -->
+    <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("2.1.2/toastr.js"))'></script>
+    <!-- End edit only section -->
 
     <script src="@routes.Assets.at("javascripts/skel.min.js")" type="text/javascript"></script>
     <script src="@routes.Assets.at("javascripts/skel-layers.min.js")" type="text/javascript"></script>
