@@ -14,6 +14,23 @@ interface PageData {
 declare var PageInfo: PageInfo;
 declare var PageData: PageData;
 
+function deepGet(object: any, ...keys: string[]): any {
+    return _.foldl(keys, function (retval, key: string) {
+        return (retval !== undefined && retval !== null) ? retval[key] : undefined;
+    }, object);
+}
+
+function deepSet(object: any, value: any, ...keys: string[]): void {
+    var target = _.foldl(_.take(keys, keys.length - 1), function (retval, key: string) {
+        if (retval[key] === undefined) {
+            retval[key] = {};
+        }
+        return retval[key];
+    }, object);
+
+    target[_.last(keys)] = value;
+}
+
 jQuery(function($) {
     var $f = $('form'),
         $textarea = $f.find('textarea'),
