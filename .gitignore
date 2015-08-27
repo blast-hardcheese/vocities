@@ -92,3 +92,6 @@ flow
 sbt-reactjs
 soundcloud-custom-player
 tags
+
+# TSD
+/typings
