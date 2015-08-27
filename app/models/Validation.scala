@@ -24,6 +24,16 @@ trait HasDefaultTemplateData {
   def default: JsValue
 }
 
+case class GoogleAnalytics(trackingId: String)
+object GoogleAnalytics {
+  implicit val jsonFormatGoogleAnalytics = Json.format[GoogleAnalytics]
+}
+
+case class Metadata(ga: Option[GoogleAnalytics])
+object Metadata {
+  implicit val jsonFormatMetadata = Json.format[Metadata]
+}
+
 object TemplateData {
   object Html5Up__sections extends ValidatableTemplateData with HasDefaultTemplateData {
     case class Header(src: String, name: String, flavortext: Option[String])
@@ -33,7 +43,15 @@ object TemplateData {
     case class Section(tag: String, title: String, bannerImage: Option[String], content: Widget)
     case class Social(twitter: Option[String], facebook: Option[String], instagram: Option[String], github: Option[String], email: Option[String])
     case class Css(scheme: Int, values: Map[String, String])
-    case class PageData(sandbox: Option[Boolean]=Option.empty, sections: List[Section], social: Social, sidebar: Sidebar, footer: Footer, css: Option[Css])
+    case class PageData(
+      sandbox: Option[Boolean]=Option.empty,
+      sections: List[Section],
+      social: Social,
+      sidebar: Sidebar,
+      footer: Footer,
+      css: Option[Css],
+      metadata: Option[Metadata] = None
+    )
 
     implicit val jsonFormatHeader = Json.format[Header]
     implicit val jsonFormatFooter = Json.format[Footer]
