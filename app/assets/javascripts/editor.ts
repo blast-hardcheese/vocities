@@ -56,6 +56,19 @@ jQuery(function($) {
             });
     });
 
+    $('#title')
+        .val(deepGet(PageData, 'title'))
+        .typeWatch({
+            callback: function (value) {
+                deepSet(PageData, value, 'title');
+
+                updateTextArea();
+            },
+            wait: 750,
+            highlight: true,
+            captureLength: 0
+        });
+
     $('#ga-trackingId')
         .val(deepGet(PageData, 'data', 'metadata', 'ga', 'trackingId'))
         .typeWatch({

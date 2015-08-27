@@ -33,12 +33,15 @@ PageData = {
     </head>
     <body>
         <h3>Info</h3>
+        <div class="title">
+            <label for="title">Page title</label>
+            <input id="title" name="title" value="" />
+        </div>
         <div class="analytics ga">
             <label for="ga-trackingId">Google Analytics</label>
             <input id="ga-trackingId" />
         </div>
         <form class="container">
-            <input name="title" value="" />
             <textarea name="data" class="col-xs-12" style="display: none; height: 500px"></textarea>
             <button type="submit" name="save" style="float: right;">Save</button>
         </form>
