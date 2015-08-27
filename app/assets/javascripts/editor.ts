@@ -36,7 +36,9 @@ jQuery(function($) {
         $textarea = $f.find('textarea'),
         $save = $f.find('button[name=save]');
 
-    $textarea.val(JSON.stringify(PageData, undefined, '    '));
+    function updateTextArea() {
+        $textarea.val(JSON.stringify(PageData, undefined, '    '));
+    }
 
     $save.click(function(e) {
         e.preventDefault();
@@ -64,9 +66,13 @@ jQuery(function($) {
             } else {
                 deepSet(PageData, value, 'data', 'metadata', 'ga', 'trackingId');
             }
+
+            updateTextArea();
         },
         wait: 750,
         highlight: true,
         captureLength: 0
     });
+
+    updateTextArea();
 });
