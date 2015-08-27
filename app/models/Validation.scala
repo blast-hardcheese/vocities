@@ -29,7 +29,7 @@ object GoogleAnalytics {
   implicit val jsonFormatGoogleAnalytics = Json.format[GoogleAnalytics]
 }
 
-case class Metadata(ga: Option[GoogleAnalytics])
+case class Metadata(ga: Option[GoogleAnalytics], custom: Option[String])
 object Metadata {
   implicit val jsonFormatMetadata = Json.format[Metadata]
 }

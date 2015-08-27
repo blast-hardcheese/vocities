@@ -399,9 +399,14 @@ var Metadata = React.createClass({
         return this.props.metadata.ga ? tpl(this.props.metadata.ga) : '';
     },
 
+    customCode: function() {
+        return this.props.metadata.custom ? this.props.metadata.custom : '';
+    },
+
     render: function() {
         var chunks = [
             this.googleAnalytics(),
+            this.customCode(),
         ];
         return <script type="text/javascript" dangerouslySetInnerHTML={{__html: chunks.join('\n\n')}} />;
     },

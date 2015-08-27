@@ -71,6 +71,25 @@ jQuery(function($) {
             captureLength: 0
         });
 
+    $('#custom-code')
+        .val(deepGet(PageData, 'data', 'metadata', 'custom'))
+        .typeWatch({
+            callback: function (value) {
+                if (value.length === 0) {
+                    var metadata = deepGet(PageData, 'data', 'metadata');
+                    delete metadata['custom'];
+                } else {
+                    deepSet(PageData, value, 'data', 'metadata', 'custom');
+                }
+
+
+                updateTextArea();
+            },
+            wait: 750,
+            highlight: true,
+            captureLength: 0
+        });
+
     $('#ga-trackingId')
         .val(deepGet(PageData, 'data', 'metadata', 'ga', 'trackingId'))
         .typeWatch({
