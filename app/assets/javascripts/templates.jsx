@@ -446,16 +446,24 @@ var sharedTemplateRenderers = [
     },
 ];
 
+var renderComponent = function(sel, data, clazz) {
+    var factory = React.createFactory(clazz)(data);
+    var target = $(sel)[0];
+    var react = React.render(factory, target);
+    react.setProps(data);
+    return react;
+};
+
+var buildClassRenderers = function (classes) {
+    return _.map(classes, function(reactClass, id) {
+        return function(vm) {
+            return renderComponent(id, vm, reactClass);
+        };
+    });
+};
+
 var Templates = {
     "html5up_read_only": (function(self) {
-        var render = function(sel, data, clazz) {
-            var factory = React.createFactory(clazz)(data);
-            var target = $(sel)[0];
-            var react = React.render(factory, target);
-            react.setProps(data);
-            return react;
-        };
-
         var classes = {
             '#header-wrapper': Sidebar,
             '#main-wrapper': Main,
@@ -464,15 +472,9 @@ var Templates = {
             '#add-popup': AddWidgetPopup,
         };
 
-        var classRenderers = _.map(classes, function(reactClass, id) {
-            return function(vm) {
-                return render(id, vm, reactClass);
-            };
-        })
+        var sequences = buildClassRenderers(classes).concat(sharedTemplateRenderers);
 
-        var sequences = classRenderers.concat(sharedTemplateRenderers);
-
-        self.render = render;
+        self.render = renderComponent;
         self.sequences = sequences;
         self.classes = classes;
 
@@ -480,14 +482,6 @@ var Templates = {
     })({}),
 
     "html5up_prologue": (function(self) {
-        var render = function(sel, data, clazz) {
-            var factory = React.createFactory(clazz)(data);
-            var target = $(sel)[0];
-            var react = React.render(factory, target);
-            react.setProps(data);
-            return react;
-        };
-
         var classes = {
             '#header-wrapper': Sidebar,
             '#main-wrapper': Main,
@@ -496,15 +490,9 @@ var Templates = {
             '#add-popup': AddWidgetPopup,
         };
 
-        var classRenderers = _.map(classes, function(reactClass, id) {
-            return function(vm) {
-                return render(id, vm, reactClass);
-            };
-        })
+        var sequences = buildClassRenderers(classes).concat(sharedTemplateRenderers);
 
-        var sequences = classRenderers.concat(sharedTemplateRenderers);
-
-        self.render = render;
+        self.render = renderComponent;
         self.sequences = sequences;
         self.classes = classes;
 
@@ -512,14 +500,6 @@ var Templates = {
     })({}),
 
     "plain": (function(self) {
-        var render = function(sel, data, clazz) {
-            var factory = React.createFactory(clazz)(data);
-            var target = $(sel)[0];
-            var react = React.render(factory, target);
-            react.setProps(data);
-            return react;
-        };
-
         var classes = {
             '#sidebar': Sidebar,
             '#main-content': Main,
@@ -528,15 +508,9 @@ var Templates = {
             '#add-popup': AddWidgetPopup,
         };
 
-        var classRenderers = _.map(classes, function(reactClass, id) {
-            return function(vm) {
-                return render(id, vm, reactClass);
-            };
-        })
+        var sequences = buildClassRenderers(classes).concat(sharedTemplateRenderers);
 
-        var sequences = classRenderers.concat(sharedTemplateRenderers);
-
-        self.render = render;
+        self.render = renderComponent;
         self.sequences = sequences;
         self.classes = classes;
 
