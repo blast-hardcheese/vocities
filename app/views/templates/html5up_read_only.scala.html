@@ -136,25 +136,7 @@ window.CloudinarySettings = @utils.views.cloudinaryData;
 
 jQuery(function($) {
 
-    var mgr = window.mgr = new TemplateManager(@templateIdJson, PageData);
-
-    window.adjust = function (x, y) {
-        x = x || 165;
-        y = y || 0.7921568627450981;
-
-        mgr.refresh({css: {values: {
-            "primary_bg":    '#' + tinycolor({h: x, s: 0.6336633663366337, v: y, a: 1}).toHex(),
-            "primary_fg":    '#' + tinycolor({h: x, s: 0.1327800829875518, v: y, a: 1}).toHex(),
-            "secondary_fg":  '#' + tinycolor({h: x, s: 0.2188841201716737, v: y, a: 1}).toHex(),
-            "accent":        '#' + tinycolor({h: x, s: 0.5555555555555556, v: y, a: 1}).toHex(),
-            "nav_active_bg": '#ffffff',
-            "nav_active_fg": '#' + tinycolor({h: x, s: 0.6336633663366337, v: y, a: 1}).toHex(),
-        }}});
-    }
-
-//    $(document).on('mousemove', function (event) {
-//        adjust( event.pageX / window.innerWidth * 255, (event.pageY - window.scrollY) / window.innerHeight);
-//    });
+    new TemplateManager(@templateIdJson, PageData);
 
     skel.init({
         reset: 'full',
