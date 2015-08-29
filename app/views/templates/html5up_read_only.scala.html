@@ -132,18 +132,7 @@ body, input, select, textarea {
 
     <script type="text/javascript">
 var PageData = @utils.views.encodePageData(saveUrl, renderModel.title, renderModel.pageData);
-window.CloudinarySettings = @{
-    val config = play.api.Play.current.configuration
-    val maybeCloudinary = for {
-        cloud_name <- config.getString("cloudinary.cloud_name")
-        upload_preset <- config.getString("cloudinary.upload_preset")
-    } yield Json.obj(
-        "cloud_name" -> cloud_name,
-        "upload_preset" -> upload_preset
-    )
-
-    Html(Json.stringify(maybeCloudinary getOrElse Json.obj()))
-};
+window.CloudinarySettings = @utils.views.cloudinaryData;
 
 jQuery(function($) {
 
