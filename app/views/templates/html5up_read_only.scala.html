@@ -131,7 +131,7 @@ body, input, select, textarea {
         </script>
 
     <script type="text/javascript">
-var PageData = _.extend({saveUrl: @Html(Json.stringify(jsSaveUrl)), title: @Html(Json.stringify(JsString(renderModel.title)))}, @Html(Json.stringify(pageData)));
+var PageData = @utils.views.encodePageData(saveUrl, renderModel.title, renderModel.pageData);
 window.CloudinarySettings = @{
     val config = play.api.Play.current.configuration
     val maybeCloudinary = for {
