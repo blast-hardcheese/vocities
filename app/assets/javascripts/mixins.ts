@@ -51,6 +51,18 @@ var Utils = {
         }
         return newprops;
     },
+
+    buildToggleState: function(...keys: string[]) {
+        return function() {
+            var _this = this;
+            var newState = _.foldl<string, any>(keys, function(a, key) {
+                a[key] = ! _this.state[key];
+                return a;
+            }, {});
+
+            this.setState(newState);
+        };
+    },
 };
 
 var Updatable = {
