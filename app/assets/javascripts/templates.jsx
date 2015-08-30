@@ -95,6 +95,12 @@ var TemplateHelperMixin = {
 var ColorPicker = React.createClass({
     mixins: [Utils, Updatable, TemplateHelperMixin],
 
+    getInitialState: function() {
+        return {
+            showCustom: false,
+        };
+    },
+
     update: function (idx) {
         this.deepUpdated('css', {
             scheme: idx
@@ -119,6 +125,12 @@ var ColorPicker = React.createClass({
             values[key] = '__clear__';
             _this.deepUpdated('css.values', values);
         };
+    },
+
+    toggleCustom: function() {
+        this.setState({
+            showCustom: ! this.state.showCustom,
+        });
     },
 
     render: function() {
@@ -152,10 +164,18 @@ var ColorPicker = React.createClass({
             );
         });
 
+        var showCustom: boolean = this.state.showCustom;
+
+        var toggleCustomLabel: string = (showCustom ? 'Hide' : 'Show') + ' Color Customizer';
+        choices.push(<button style={{
+            display: 'block',
+        }} onClick={this.toggleCustom}>{toggleCustomLabel}</button>);
+
         var defaultValues = this.getDefaultCssValues();
         choices.push(<div className='color-customizer' style={{
             border: '1px solid black',
             overflow: 'auto',
+            display: showCustom ? 'block' : 'none',
         }} key={-1}>
             {_.map(this.getCssValues(), function(value, key) {
                 return <div key={key} style={{
