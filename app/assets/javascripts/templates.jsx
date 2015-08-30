@@ -97,6 +97,7 @@ var ColorPicker = React.createClass({
 
     getInitialState: function() {
         return {
+            showColors: false,
             showCustom: false,
         };
     },
@@ -127,11 +128,8 @@ var ColorPicker = React.createClass({
         };
     },
 
-    toggleCustom: function() {
-        this.setState({
-            showCustom: ! this.state.showCustom,
-        });
-    },
+    toggleColors: Utils.buildToggleState('showColors'),
+    toggleCustom: Utils.buildToggleState('showCustom'),
 
     render: function() {
         // If we can't save and we're not in a sandbox, don't even show the save buttons
@@ -206,9 +204,14 @@ var ColorPicker = React.createClass({
             })}
         </div>);
 
+        var showColors: boolean = this.state.showColors;
+        var toggleColorLabel = (showColors ? 'Hide' : 'Show') + ' Color Schemes';
         return (
             <div className='color-picker' style={{float: 'left'}}>
-                {choices}
+                <button style={{
+                    display: 'block',
+                }} onClick={this.toggleColors}>{toggleColorLabel}</button>
+                {showColors ? choices : []}
             </div>
         );
     },
