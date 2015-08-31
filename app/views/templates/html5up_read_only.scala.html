@@ -7,8 +7,6 @@
 
 @import play.api.libs.json.Json
 
-@jsSaveUrl = @{ saveUrl.map(JsString.apply _).getOrElse(JsNull) }
-
 @sharedCssPath(path: String) = @{ routes.Assets.at("stylesheets/html5up/" + path) }
 @cssPath(path: String) = @{ routes.Assets.at(s"stylesheets/$templateId/" + path) }
 
