@@ -32,37 +32,37 @@
         <style id="dynamic" type="text/css"></style>
         <style id="dynamic-tpl" type="text/underscore">
 #header {
-    background: <%= primary_bg %>;
-    color: <%= primary_fg %>;
+    background: <%= primary_bg %> !important;
+    color: <%= primary_fg %> !important;
 }
 
 #header > nav ul li a.active {
-    background: <%= nav_active_bg %>;
+    background: <%= nav_active_bg %> !important;
     color: <%= nav_active_fg %> !important;
 }
 
 #header > footer .icons li a {
-    color: <%= secondary_fg %>;
+    color: <%= secondary_fg %> !important;
 }
 
 #header > nav ul li {
-    border-top: solid 2px <%= accent %>;
+    border-top: solid 2px <%= accent %> !important;
 }
 
 #header > header p {
-    color: <%= primary_fg %>;
+    color: <%= primary_fg %> !important;
 }
 
 header.major h2 {
-    color: <%= primary_bg %>;
+    color: <%= primary_bg %> !important;
 }
 
 header.major h2 + p {
-    color: <%= dark_text %>;
+    color: <%= dark_text %> !important;
 }
 
 body, input, select, textarea {
-    color: <%= normal_text %>;
+    color: <%= normal_text %> !important;
 }
 
 .widget.w-youtube .wrapper { width: 100%; height: 33em; }
@@ -75,13 +75,13 @@ body, input, select, textarea {
     .widget.w-youtube[data-size="normal"] > .wrapper { height: 31em; }
 
     #titleBar > span.toggle::before {
-        background-color: <%= primary_bg %>;
+        background-color: <%= primary_bg %> !important;
     }
 }
 
 @@media (max-width: 1024px) {
     .widget.w-youtube[data-size="normal"] > .wrapper { height: 40em; }
-    #sidePanel { background-color: <%= primary_bg %>; }
+    #sidePanel { background-color: <%= primary_bg %> !important; }
 }
 
 @@media (max-width: 736px) {
