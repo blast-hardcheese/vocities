@@ -385,6 +385,10 @@ var AddWidgetPopup = React.createClass({
 });
 
 var Metadata = React.createClass({
+    metadata: function() {
+        return this.props.metadata || {};
+    },
+
     googleAnalytics: function() {
         var tpl = _.template([
             "<script type='text/javascript'>",
@@ -398,11 +402,11 @@ var Metadata = React.createClass({
             "</script>"
         ].join('\n'));
 
-        return this.props.metadata.ga ? tpl(this.props.metadata.ga) : '';
+        return this.metadata().ga ? tpl(this.metadata().ga) : '';
     },
 
     customCode: function() {
-        return this.props.metadata.custom ? this.props.metadata.custom : '';
+        return this.metadata().custom ? this.metadata().custom : '';
     },
 
     render: function() {
