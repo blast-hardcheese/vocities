@@ -13,7 +13,7 @@ object PageData {
 package object views {
   def encodePageData(saveUrl: Option[String], title: String, data: JsValue): Html = {
     val newData: JsObject = (
-      Json.toJson(PageData(saveUrl, title)).asInstanceOf[JsObject] ++
+      Json.obj("_meta" -> Json.toJson(PageData(saveUrl, title)).asInstanceOf[JsObject]) ++
       data.asInstanceOf[JsObject]
     )
 
@@ -34,7 +34,7 @@ package object views {
   }
 
   def createElement(templateId: Html, key: String, pageData: JsValue)(engine: ScriptEngine): Html = {
-    Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes[${JsString(key)}], _.extend({editable: false}, $pageData)));").toString)
+    Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes[${JsString(key)}], _.extend({editable: false, _meta: {}}, $pageData)));").toString)
   }
 }
 

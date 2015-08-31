@@ -7,7 +7,7 @@ function TemplateManager(key, data) {
     var _this = this;
 
     data = _.extend({templateId: key}, data, {
-        editable: Boolean(data.sandbox || data.saveUrl),
+        editable: Boolean(data.sandbox || data._meta.saveUrl),
         updated: function (newData) {
             _this.refresh(newData);
         }
@@ -133,7 +133,7 @@ var ColorPicker = React.createClass({
 
     render: function() {
         // If we can't save and we're not in a sandbox, don't even show the save buttons
-        if (!this.props.saveUrl && !this.props.sandbox) return null;
+        if (!this.props._meta.saveUrl && !this.props.sandbox) return null;
         if (typeof $ === 'undefined' || $('style#dynamic').length === 0) return null;
 
         var _this = this;
@@ -233,12 +233,12 @@ var EditButtons = React.createClass({
         var templateId = pageData.templateId;
 
         delete pageData.editable;
-        delete pageData.saveUrl;
+        delete pageData._meta;
         delete pageData.title;
         delete pageData.updated;
         delete pageData.templateId;
 
-        var title = this.props.title;
+        var title = this.props._meta.title;
 
         var data = {
             title: title,
@@ -249,7 +249,7 @@ var EditButtons = React.createClass({
             contentType: 'application/json',
             data: JSON.stringify(data),
             method: 'PUT',
-            url: this.props.saveUrl + '?templateId=' + templateId,
+            url: this.props._meta.saveUrl + '?templateId=' + templateId,
             error: function() {
                 console.error('Unable to save');
                 toastr.error('Unable to save');
@@ -263,7 +263,7 @@ var EditButtons = React.createClass({
 
     render: function() {
         // If we can't save and we're not in a sandbox, don't even show the save buttons
-        if (!this.props.saveUrl && !this.props.sandbox) return null;
+        if (!this.props._meta.saveUrl && !this.props.sandbox) return null;
 
         var toggleEditButton = null;
         var saveButton = null;
@@ -278,7 +278,7 @@ var EditButtons = React.createClass({
             toggleEditButton = <button style={buttonStyle} onClick={this.setEditable.bind(this, true)}>Enable Editing</button>;
         }
 
-        if (this.props.saveUrl) {
+        if (this.props._meta.saveUrl) {
             saveButton = <button style={buttonStyle} onClick={this.performSave}>Save</button>;
         }
 
@@ -378,7 +378,7 @@ var AddWidgetPopup = React.createClass({
 
     render: function() {
         // If we can't save and we're not in a sandbox, don't even show the save buttons
-        if (!this.props.saveUrl && !this.props.sandbox) return null;
+        if (!this.props._meta.saveUrl && !this.props.sandbox) return null;
 
         var _this = this;
 
