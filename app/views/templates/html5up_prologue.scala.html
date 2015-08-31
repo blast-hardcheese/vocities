@@ -97,33 +97,33 @@ jQuery(function($) {
 });
         </script>
 
-        @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#metadata'], _.extend({editable: false}, $pageData)));").toString)
+        @utils.views.createElement(templateIdJson, "#metadata", pageData)(engine)
 
 }
 
 @main(renderModel.title)(header, afterBody) {
         <div id="add-popup">
-            @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#add-popup'], _.extend({editable: false}, $pageData)));").toString)
+            @utils.views.createElement(templateIdJson, "#add-popup", pageData)(engine)
         </div>
 
         <div id="wrapper">
             <!-- Header -->
                 <div id="header-wrapper" class="skel-layers-fixed">
-                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#header-wrapper'], _.extend({editable: false}, $pageData)));").toString)
+                    @utils.views.createElement(templateIdJson, "#header-wrapper", pageData)(engine)
                 </div>
 
             <!-- Main -->
                 <div id="main-wrapper">
-                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#main-wrapper'], _.extend({editable: false}, $pageData)));").toString)
+                    @utils.views.createElement(templateIdJson, "#main-wrapper", pageData)(engine)
                 </div>
 
             <!-- Footer -->
                 <section id="footer">
-                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#footer'], _.extend({editable: false}, $pageData)));").toString)
+                    @utils.views.createElement(templateIdJson, "#footer", pageData)(engine)
                 </section>
 
                 <div id="admin-buttons">
-                    @Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateIdJson].classes['#admin-buttons'], _.extend({editable: false}, $pageData)));").toString)
+                    @utils.views.createElement(templateIdJson, "#admin-buttons", pageData)(engine)
                 </div>
         </div>
 }

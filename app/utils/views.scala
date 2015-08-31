@@ -1,7 +1,9 @@
 package utils
 
 import play.twirl.api._
-import play.api.libs.json.{ Json, JsValue, JsObject }
+import play.api.libs.json.{ Json, JsValue, JsObject, JsString }
+
+import javax.script.ScriptEngine
 
 case class PageData(saveUrl: Option[String], title: String)
 object PageData {
@@ -29,6 +31,10 @@ package object views {
     )
 
     Html(Json.stringify(maybeCloudinary getOrElse Json.obj()))
+  }
+
+  def createElement(templateId: Html, key: String, pageData: JsValue)(engine: ScriptEngine): Html = {
+    Html(engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes[${JsString(key)}], _.extend({editable: false}, $pageData)));").toString)
   }
 }
 
