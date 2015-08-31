@@ -172,6 +172,7 @@ var ColorPicker = React.createClass({
         var defaultValues = this.getDefaultCssValues();
         choices.push(<div className='color-customizer' style={{
             border: '1px solid black',
+            backgroundColor: 'white',
             overflow: 'auto',
             display: showCustom ? 'block' : 'none',
         }} key={-1}>
