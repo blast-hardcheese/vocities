@@ -48,8 +48,10 @@ var PageData = @utils.views.encodePageData(None, vm.page.title, vm.page.data);
             <textarea name="data" class="col-xs-12" style="display: none; height: 500px"></textarea>
             <button type="submit" name="save" style="float: right;">Save</button>
         </form>
-        <a href="@routes.Application.edit(domain, vm.page.path)">Edit Page</a>
-        <a href="@routes.Users.index">Back</a>
+        <ul>
+            <li><a href="@routes.Application.edit(domain, vm.page.path)">Edit Page</a></li>
+            <li><a href="@routes.Users.index">Back</a></li>
+        </ul>
     </body>
 </html>
 
