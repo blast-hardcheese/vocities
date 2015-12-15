@@ -3,14 +3,14 @@ GET     /user/link                                                    controller
 GET     /user/link/:id                                                controllers.Users.associateResult(id: String)
 GET     /user/unlink/:id                                              controllers.Users.disassociate(id: String)
 
-GET     /edit/:domain/                                                controllers.Application.edit(domain: String, path="")
-GET     /edit/:domain/*path                                           controllers.Application.edit(domain: String, path)
+GET     /edit/:domain/                                                controllers.Application.edit(domain: String, path: Path = EmptyPath)
+GET     /edit/:domain/*path                                           controllers.Application.edit(domain: String, path: Path)
 
-PUT     /edit/:domain/                                                controllers.Application.save(domain: String, path="", templateId: String ?= "")
-PUT     /edit/:domain/*path                                           controllers.Application.save(domain: String, path, templateId: String ?= "")
+PUT     /edit/:domain/                                                controllers.Application.save(domain: String, path: Path = EmptyPath, templateId: String ?= "")
+PUT     /edit/:domain/*path                                           controllers.Application.save(domain: String, path: Path, templateId: String ?= "")
 
-GET     /account/edit/:domain/                                        controllers.Users.edit(domain: String, path="")
-GET     /account/edit/:domain/*path                                   controllers.Users.edit(domain: String, path)
+GET     /account/edit/:domain/                                        controllers.Users.edit(domain: String, path: Path = EmptyPath)
+GET     /account/edit/:domain/*path                                   controllers.Users.edit(domain: String, path: Path)
 
 POST    /account/new-domain                                           controllers.Users.newDomain
 POST    /account/new-page                                             controllers.Users.newPage
@@ -22,5 +22,5 @@ GET     /webjars/*file                                                controller
 
 GET     /admin/lookup/*path                                           controllers.Admin.lookup(path: String)
 
-GET     /                                                             controllers.Application.route(path = "")
-GET     /*path                                                        controllers.Application.route(path: String)
+GET     /                                                             controllers.Application.route(path: Path = EmptyPath)
+GET     /*path                                                        controllers.Application.route(path: Path)

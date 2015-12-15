@@ -22,7 +22,7 @@
         <script type="text/javascript">
             PageInfo = {
                 domain: @Html(Json.stringify(JsString(domain))),
-                path: @Html(Json.stringify(JsString(vm.page.path))),
+                path: @Html(Json.stringify(Json.toJson(vm.page.path))),
                 saveUrl: @Html(Json.stringify(JsString(routes.Application.save(domain, vm.page.path, templateId=vm.template_key).toString()))),
             };
 var PageData = @utils.views.encodePageData(None, vm.page.title, vm.page.data);

@@ -11,9 +11,10 @@ import play.twirl.api.Html
 import securesocial.core.utils._
 
 import models.{ Accounts, Page, Template, UserModel, Queries, AuthProfiles }
+import types._
 
 case class NewDomainForm(account_id: Long, domain: String, template: String)
-case class NewPageForm(account_id: Long, domain_id: Long, path: String, name: String, template: String)
+case class NewPageForm(account_id: Long, domain_id: Long, path: Path, name: String, template: String)
 
 object Users extends SecureController {
   def index = SecuredAction { implicit request =>
@@ -23,7 +24,7 @@ object Users extends SecureController {
     }
   }
 
-  def edit(domain: String, path: String) = SecuredAction { implicit request =>
+  def edit(domain: String, path: Path) = SecuredAction { implicit request =>
     DB.withSession { implicit s =>
       val userId = request.user.user.id
       Queries.pageEdit(userId, domain, path)

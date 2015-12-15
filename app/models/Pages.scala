@@ -5,13 +5,13 @@ import utils.ExtendedPostgresDriver.simple._
 
 import types._
 
-case class Page(account_id: Long, domain_id: Long, path: String, template_id: Long, title: String, data: JsValue)
-case class PageInfo(account_id: Long, domain_id: Long, path: String, template_id: Long, title: String)
+case class Page(account_id: Long, domain_id: Long, path: Path, template_id: Long, title: String, data: JsValue)
+case class PageInfo(account_id: Long, domain_id: Long, path: Path, template_id: Long, title: String)
 
 class PageTable(tag: Tag) extends Table[Page](tag, "pages") {
   def account_id = column[Long]("account_id")
   def domain_id = column[Long]("domain_id")
-  def path = column[String]("path")
+  def path = column[Path]("path")
   def template_id = column[Long]("template_id")
   def title = column[String]("title")
   def data = column[JsValue]("data")
@@ -30,7 +30,7 @@ object Pages {
   }
 
   type LookupResult = Option[(Option[PageTitle], Option[PageData], Option[TemplateKey])]
-  def lookup(maybeUserId: Option[UserId], domain: String, path: String)(implicit s: Session): LookupResult = {
+  def lookup(maybeUserId: Option[UserId], domain: String, path: Path)(implicit s: Session): LookupResult = {
     val domainQuery = maybeUserId.map { userId =>
       Accounts.accounts
         .filter { (userId: Long).bind === _.user_ids.any }

@@ -1,6 +1,8 @@
 package models
 
 import play.api.libs.json.JsValue
+
+import types._
 import utils.ExtendedPostgresDriver.simple._
 
 case class AccountViewModel(accounts: Seq[Account], domains: Seq[Domain], pages: Seq[PageInfo], templates: Seq[Template])
@@ -34,7 +36,7 @@ object Queries {
     AccountViewModel(accounts, domains, pages, templates)
   }
 
-  def pageEdit(user_id: Long, domain: String, path: String)(implicit s: Session): Option[PageEditViewModel] = {
+  def pageEdit(user_id: Long, domain: String, path: Path)(implicit s: Session): Option[PageEditViewModel] = {
     Accounts.accounts
       .innerJoin(Domains.domains)
       .innerJoin(Pages.pages)
@@ -57,7 +59,7 @@ object Queries {
       .map(PageEditViewModel.tupled)
   }
 
-  def pageSave(user_id: Long, domain: String, path: String)(title: String, data: JsValue)(implicit s: Session): Option[Boolean] = {
+  def pageSave(user_id: Long, domain: String, path: Path)(title: String, data: JsValue)(implicit s: Session): Option[Boolean] = {
     Accounts.accounts
       .innerJoin(Domains.domains)
       .innerJoin(Pages.pages)
@@ -99,14 +101,14 @@ object Queries {
           domain = domain
         ))
 
-        val page = newPage(user_id, account_id, _domain.id)("", "Empty page", template_key)
+        val page = newPage(user_id, account_id, _domain.id)(EmptyPath, "Empty page", template_key)
 
         _domain
       }
       .headOption
   }
 
-  def newPage(user_id: Long, account_id: Long, domain_id: Long)(path: String, name: String, template_key: String)(implicit s: Session): Option[Page] = {
+  def newPage(user_id: Long, account_id: Long, domain_id: Long)(path: Path, name: String, template_key: String)(implicit s: Session): Option[Page] = {
     Domains.domains
       .innerJoin(Accounts.accounts)
       .innerJoin(Templates.templates)

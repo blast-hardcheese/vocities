@@ -56,7 +56,7 @@ object Application extends SecureController {
     r
   }
 
-  private[this] def doRender(domain: String, path: String)(saveUrl: Option[String] = None)(renderModel: RenderModel): Option[Html] = {
+  private[this] def doRender(domain: String, path: Path)(saveUrl: Option[String] = None)(renderModel: RenderModel): Option[Html] = {
     if (Play.isDev) {
       reloadScripts(engine)
     }
@@ -69,7 +69,7 @@ object Application extends SecureController {
     }
   }
 
-  private[this] def render(domain: String, path: String)(saveUrl: Option[String] = None)(renderModel: RenderModel): Result = {
+  private[this] def render(domain: String, path: Path)(saveUrl: Option[String] = None)(renderModel: RenderModel): Result = {
     val templateId = renderModel.templateId
     val cacheKey = s"$templateId-$domain-$path"
 
@@ -99,7 +99,7 @@ object Application extends SecureController {
       }
   }
 
-  def lookup(maybeUserId: Option[UserId], domain: String, path: String)(handler: RenderModel => Result)(implicit request: Request[_]) = {
+  def lookup(maybeUserId: Option[UserId], domain: String, path: Path)(handler: RenderModel => Result)(implicit request: Request[_]) = {
     DB.withSession { implicit s =>
       models.Pages.lookup(maybeUserId, domain, path) map {
           case (Some(title), Some(data), Some(templateId)) => handler(RenderModel(title=title, templateId=templateId, pageData=data))
@@ -112,18 +112,18 @@ object Application extends SecureController {
     }
   }
 
-  def route(path: String) = Action { implicit request =>
+  def route(path: Path) = Action { implicit request =>
     lookup(None, request.domain, path)(render(request.domain, path)())
   }
 
-  def edit(domain: String, path: String) = SecuredAction { implicit request =>
+  def edit(domain: String, path: Path) = SecuredAction { implicit request =>
     val route = routes.Application.save(domain, path).toString
     val maybeUserId = Some(UserId(request.user.user.id))
 
     lookup(maybeUserId, domain, path)(render(domain, path)(saveUrl=Some(route)))
   }
 
-  def save(domain: String, path: String, templateId: String) = SecuredAction(parse.json) { implicit request =>
+  def save(domain: String, path: Path, templateId: String) = SecuredAction(parse.json) { implicit request =>
     val userId = request.user.user.id
 
     val parser = models.TemplateData.byName(templateId)
