@@ -6,12 +6,17 @@ var dynamicTplValues = function(selector) {
 function TemplateManager(key, data) {
     var _this = this;
 
-    data = _.extend({templateId: key}, data, {
+    data = _.extend({
+        templateId: key,
+        _meta: {
+            saveUrl: null,
+            title: null
+        },
         editable: Boolean(data.sandbox || data._meta.saveUrl),
         updated: function (newData) {
             _this.refresh(newData);
         }
-    });
+    }, data);
 
     var initComponents = function(key, data) {
         return _.map(Templates[key].sequences, function(func) {
