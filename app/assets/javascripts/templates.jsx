@@ -6,8 +6,16 @@ var dynamicTplValues = function(selector) {
 function TemplateManager(key, data) {
     var _this = this;
 
-    data = _.extend({templateId: key}, data, {
-        editable: Boolean(data.sandbox || data.saveUrl),
+    data = _.extend({
+        templateId: key,
+        _meta: {
+            saveUrl: null,
+            title: null
+        }
+    }, data);
+
+    data = _.extend(data, {
+        editable: Boolean(data.sandbox || data._meta.saveUrl),
         updated: function (newData) {
             _this.refresh(newData);
         }
@@ -95,6 +103,13 @@ var TemplateHelperMixin = {
 var ColorPicker = React.createClass({
     mixins: [Utils, Updatable, TemplateHelperMixin],
 
+    getInitialState: function() {
+        return {
+            showColors: false,
+            showCustom: false,
+        };
+    },
+
     update: function (idx) {
         this.deepUpdated('css', {
             scheme: idx
@@ -121,9 +136,12 @@ var ColorPicker = React.createClass({
         };
     },
 
+    toggleColors: Utils.buildToggleState('showColors'),
+    toggleCustom: Utils.buildToggleState('showCustom'),
+
     render: function() {
         // If we can't save and we're not in a sandbox, don't even show the save buttons
-        if (!this.props.saveUrl && !this.props.sandbox) return null;
+        if (!this.props._meta.saveUrl && !this.props.sandbox) return null;
         if (typeof $ === 'undefined' || $('style#dynamic').length === 0) return null;
 
         var _this = this;
@@ -152,10 +170,19 @@ var ColorPicker = React.createClass({
             );
         });
 
+        var showCustom: boolean = this.state.showCustom;
+
+        var toggleCustomLabel: string = (showCustom ? 'Hide' : 'Show') + ' Color Customizer';
+        choices.push(<button style={{
+            display: 'block',
+        }} onClick={this.toggleCustom}>{toggleCustomLabel}</button>);
+
         var defaultValues = this.getDefaultCssValues();
         choices.push(<div className='color-customizer' style={{
             border: '1px solid black',
+            backgroundColor: 'white',
             overflow: 'auto',
+            display: showCustom ? 'block' : 'none',
         }} key={-1}>
             {_.map(this.getCssValues(), function(value, key) {
                 return <div key={key} style={{
@@ -186,9 +213,14 @@ var ColorPicker = React.createClass({
             })}
         </div>);
 
+        var showColors: boolean = this.state.showColors;
+        var toggleColorLabel = (showColors ? 'Hide' : 'Show') + ' Color Schemes';
         return (
             <div className='color-picker' style={{float: 'left'}}>
-                {choices}
+                <button style={{
+                    display: 'block',
+                }} onClick={this.toggleColors}>{toggleColorLabel}</button>
+                {showColors ? choices : []}
             </div>
         );
     },
@@ -209,12 +241,12 @@ var EditButtons = React.createClass({
         var templateId = pageData.templateId;
 
         delete pageData.editable;
-        delete pageData.saveUrl;
+        delete pageData._meta;
         delete pageData.title;
         delete pageData.updated;
         delete pageData.templateId;
 
-        var title = this.props.title;
+        var title = this.props._meta.title;
 
         var data = {
             title: title,
@@ -225,7 +257,7 @@ var EditButtons = React.createClass({
             contentType: 'application/json',
             data: JSON.stringify(data),
             method: 'PUT',
-            url: this.props.saveUrl + '?templateId=' + templateId,
+            url: this.props._meta.saveUrl + '?templateId=' + templateId,
             error: function() {
                 console.error('Unable to save');
                 toastr.error('Unable to save');
@@ -239,7 +271,7 @@ var EditButtons = React.createClass({
 
     render: function() {
         // If we can't save and we're not in a sandbox, don't even show the save buttons
-        if (!this.props.saveUrl && !this.props.sandbox) return null;
+        if (!this.props._meta.saveUrl && !this.props.sandbox) return null;
 
         var toggleEditButton = null;
         var saveButton = null;
@@ -254,7 +286,7 @@ var EditButtons = React.createClass({
             toggleEditButton = <button style={buttonStyle} onClick={this.setEditable.bind(this, true)}>Enable Editing</button>;
         }
 
-        if (this.props.saveUrl) {
+        if (this.props._meta.saveUrl) {
             saveButton = <button style={buttonStyle} onClick={this.performSave}>Save</button>;
         }
 
@@ -354,7 +386,7 @@ var AddWidgetPopup = React.createClass({
 
     render: function() {
         // If we can't save and we're not in a sandbox, don't even show the save buttons
-        if (!this.props.saveUrl && !this.props.sandbox) return null;
+        if (!this.props._meta.saveUrl && !this.props.sandbox) return null;
 
         var _this = this;
 

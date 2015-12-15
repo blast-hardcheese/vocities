@@ -6,9 +6,13 @@ interface PageInfo {
     saveUrl: string;
 }
 
+interface PageMeta {
+    title: string;
+}
+
 interface PageData {
     data: any;
-    title: string;
+    _meta: PageMeta;
 }
 
 declare var PageInfo: PageInfo;
@@ -44,11 +48,20 @@ jQuery(function($) {
         e.preventDefault();
         e.stopPropagation();
 
+        var _pageData = _.extend({}, PageData);
+
+        delete _pageData['_meta'];
+
+        var postData = {
+            title: PageData._meta.title,
+            data: _pageData,
+        };
+
         $.ajax({
             type: 'PUT',
             url: PageInfo.saveUrl,
             contentType: 'application/json',
-            data: JSON.stringify(PageData),
+            data: JSON.stringify(postData),
         }).then(function() {
                 console.info('Success!');
                 toastr.success('Success!');
@@ -59,10 +72,10 @@ jQuery(function($) {
     });
 
     $('#title')
-        .val(deepGet(PageData, 'title'))
+        .val(deepGet(PageData, '_meta', 'title'))
         .typeWatch({
             callback: function (value) {
-                deepSet(PageData, value, 'title');
+                deepSet(PageData, value, '_meta', 'title');
 
                 updateTextArea();
             },
@@ -72,14 +85,14 @@ jQuery(function($) {
         });
 
     $('#custom-code')
-        .val(deepGet(PageData, 'data', 'metadata', 'custom'))
+        .val(deepGet(PageData, 'metadata', 'custom'))
         .typeWatch({
             callback: function (value) {
                 if (value.length === 0) {
-                    var metadata = deepGet(PageData, 'data', 'metadata');
+                    var metadata = deepGet(PageData, 'metadata');
                     delete metadata['custom'];
                 } else {
-                    deepSet(PageData, value, 'data', 'metadata', 'custom');
+                    deepSet(PageData, value, 'metadata', 'custom');
                 }
 
 
@@ -91,14 +104,14 @@ jQuery(function($) {
         });
 
     $('#ga-trackingId')
-        .val(deepGet(PageData, 'data', 'metadata', 'ga', 'trackingId'))
+        .val(deepGet(PageData, 'metadata', 'ga', 'trackingId'))
         .typeWatch({
             callback: function (value) {
                 if (value.length === 0) {
-                    var metadata = deepGet(PageData, 'data', 'metadata');
+                    var metadata = deepGet(PageData, 'metadata');
                     delete metadata['ga'];
                 } else {
-                    deepSet(PageData, value, 'data', 'metadata', 'ga', 'trackingId');
+                    deepSet(PageData, value, 'metadata', 'ga', 'trackingId');
                 }
 
                 updateTextArea();
