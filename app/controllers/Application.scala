@@ -4,20 +4,17 @@ import java.io.File
 import java.io.{ InputStreamReader, FileReader }
 import javax.script.{ ScriptEngineManager, ScriptEngine }
 
-import play.api._
-import play.api.mvc._
-import play.api.db.slick._
 import play.api.Play.current
+import play.api._
+import play.api.db.slick._
 import play.api.libs.json.{ Json, JsValue }
-
+import play.api.mvc._
 import play.twirl.api.Html
 
 import org.webjars.WebJarAssetLocator
 
 import models.{ Page, Template }
-
 import models.{ UserModel, Queries }
-
 import utils.ExtendedPostgresDriver.simple._
 
 class RichScriptEngine(val engine: ScriptEngine) {
