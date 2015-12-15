@@ -1,5 +1,6 @@
 package models
 
+import types._
 import utils.ExtendedPostgresDriver.simple._
 import utils.ExtendedPostgresDriver.createEnumListJdbcType
 
@@ -9,7 +10,7 @@ object UserRoles extends Enumeration {
 }
 
 case class User(
-  id: Long = -1,
+  id: UserId = EmptyUserId,
   username: String,
   roles: List[UserRoles.Value] = List.empty
 )
@@ -17,7 +18,7 @@ case class User(
 class UserTable(tag: Tag) extends Table[User](tag, "users") {
   implicit val listTypeMapper = createEnumListJdbcType("userRole", UserRoles)
 
-  def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+  def id = column[UserId]("id", O.PrimaryKey, O.AutoInc)
   def username = column[String]("username", O.NotNull)
   def roles = column[List[UserRoles.Value]]("roles", O.NotNull)
 

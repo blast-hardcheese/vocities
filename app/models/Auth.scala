@@ -2,6 +2,7 @@ package models
 
 import securesocial.core.{ BasicProfile, AuthenticationMethod, PasswordInfo, OAuth1Info, OAuth2Info }
 
+import types._
 import utils.ExtendedPostgresDriver.simple._
 
 case class UserModel(
@@ -11,7 +12,7 @@ case class UserModel(
 )
 
 case class AuthProfile(
-  userId: Long,
+  userId: UserId,
   providerId: String,
   providerUserId: String,
   firstName: Option[String],
@@ -26,7 +27,7 @@ case class AuthProfile(
 )
 
 class AuthProfiles(tag: Tag) extends Table[AuthProfile](tag, "auth_profile") {
-  def userId = column[Long]("userId", O.NotNull)
+  def userId = column[UserId]("userId", O.NotNull)
   def providerId = column[String]("providerId", O.NotNull)
   def providerUserId = column[String]("providerUserId", O.NotNull)
   def firstName = column[Option[String]]("firstName", O.Nullable)
@@ -147,7 +148,7 @@ object AuthProfiles extends AuthProfileConverters {
 }
 
 trait AuthProfileConverters {
-  def basicToAuth(userId: Long)(profile: BasicProfile): AuthProfile = {
+  def basicToAuth(userId: UserId)(profile: BasicProfile): AuthProfile = {
     AuthProfile(
       userId = userId,
       providerId = profile.providerId,

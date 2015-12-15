@@ -124,7 +124,7 @@ object Application extends SecureController {
   }
 
   def save(domain: String, path: Path, templateId: String) = SecuredAction(parse.json) { implicit request =>
-    val userId = request.user.user.id
+    val userId = UserId(request.user.user.id)
 
     val parser = models.TemplateData.byName(templateId)
 

@@ -33,7 +33,7 @@ object Pages {
   def lookup(maybeUserId: Option[UserId], domain: String, path: Path)(implicit s: Session): LookupResult = {
     val domainQuery = maybeUserId.map { userId =>
       Accounts.accounts
-        .filter { (userId: Long).bind === _.user_ids.any }
+        .filter { userId.bind === _.user_ids.any }
         .innerJoin(Domains.domains).on({ case (a, d) => d.account_id === a.id })
         .map { case (a, d) => d }
     } getOrElse {

@@ -9,7 +9,7 @@ case class AccountViewModel(accounts: Seq[Account], domains: Seq[Domain], pages:
 case class PageEditViewModel(page: Page, template_key: String)
 
 object Queries {
-  def accountsIndex(user_id: Long)(implicit s: Session) = {
+  def accountsIndex(user_id: UserId)(implicit s: Session) = {
     val accounts = Accounts.accounts
       .filter(_.user_ids @> List(user_id))
       .run
@@ -36,7 +36,7 @@ object Queries {
     AccountViewModel(accounts, domains, pages, templates)
   }
 
-  def pageEdit(user_id: Long, domain: String, path: Path)(implicit s: Session): Option[PageEditViewModel] = {
+  def pageEdit(user_id: UserId, domain: String, path: Path)(implicit s: Session): Option[PageEditViewModel] = {
     Accounts.accounts
       .innerJoin(Domains.domains)
       .innerJoin(Pages.pages)
@@ -59,7 +59,7 @@ object Queries {
       .map(PageEditViewModel.tupled)
   }
 
-  def pageSave(user_id: Long, domain: String, path: Path)(title: String, data: JsValue)(implicit s: Session): Option[Boolean] = {
+  def pageSave(user_id: UserId, domain: String, path: Path)(title: String, data: JsValue)(implicit s: Session): Option[Boolean] = {
     Accounts.accounts
       .innerJoin(Domains.domains)
       .innerJoin(Pages.pages)
@@ -86,7 +86,7 @@ object Queries {
       }
   }
 
-  def newDomain(user_id: Long, account_id: AccountId, domain: String)(template_key: String)(implicit s: Session): Option[Domain] = {
+  def newDomain(user_id: UserId, account_id: AccountId, domain: String)(template_key: String)(implicit s: Session): Option[Domain] = {
     Accounts.accounts
       .filter { a =>
         a.id === account_id &&
@@ -108,7 +108,7 @@ object Queries {
       .headOption
   }
 
-  def newPage(user_id: Long, account_id: AccountId, domain_id: Long)(path: Path, name: String, template_key: String)(implicit s: Session): Option[Page] = {
+  def newPage(user_id: UserId, account_id: AccountId, domain_id: Long)(path: Path, name: String, template_key: String)(implicit s: Session): Option[Page] = {
     Domains.domains
       .innerJoin(Accounts.accounts)
       .innerJoin(Templates.templates)

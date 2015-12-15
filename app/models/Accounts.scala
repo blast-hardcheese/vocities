@@ -8,14 +8,14 @@ import utils.ExtendedPostgresDriver.simple._
 case class Account(
   id: AccountId,
   name: String,
-  user_ids: List[Long],
+  user_ids: List[UserId],
   credits: Int = 0
 )
 
 class Accounts(tag: Tag) extends Table[Account](tag, "accounts") {
   def id = column[AccountId]("id", O.PrimaryKey, O.AutoInc)
   def name = column[String]("name")
-  def user_ids = column[List[Long]]("user_ids", O.NotNull)
+  def user_ids = column[List[UserId]]("user_ids", O.NotNull)
   def credits = column[Int]("credits", O.NotNull)
 
   def * = (id, name, user_ids, credits) <> (Account.tupled, Account.unapply _)

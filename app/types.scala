@@ -27,6 +27,7 @@ package types {
 
   trait Values {
     val EmptyPath = Path("")
+    val EmptyUserId = UserId(-1)
   }
 
   trait PlayBinders {
@@ -50,6 +51,8 @@ package types {
 
     implicit val accountIdColumnType = MappedColumnType.base[AccountId, Long]({ case AccountId(id) => id }, AccountId(_))
     implicit val pathColumnType = MappedColumnType.base[Path, String]({ case Path(path) => path }, Path(_))
+    implicit val userIdColumnType = MappedColumnType.base[UserId, Long](identity, UserId(_))
+    implicit val userIdListColumnType = MappedColumnType.base[List[UserId], List[Long]](identity, _.map(UserId(_)))
   }
 
   trait JsonTypes { self: Definitions =>
