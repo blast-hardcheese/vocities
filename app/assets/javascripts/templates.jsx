@@ -11,12 +11,15 @@ function TemplateManager(key, data) {
         _meta: {
             saveUrl: null,
             title: null
-        },
+        }
+    }, data);
+
+    data = _.extend(data, {
         editable: Boolean(data.sandbox || data._meta.saveUrl),
         updated: function (newData) {
             _this.refresh(newData);
         }
-    }, data);
+    });
 
     var initComponents = function(key, data) {
         return _.map(Templates[key].sequences, function(func) {
