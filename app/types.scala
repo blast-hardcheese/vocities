@@ -51,11 +51,12 @@ package types {
   }
 
   trait JsonTypes { self: Definitions =>
-
-    implicit val readPath = implicitly[Reads[String]].map(Path(_))
-    implicit object writePath extends Writes[Path] {
-      def writes(o: Path) = Json.toJson(o.path)
+    def simpleWrapper[Ours, Builtin : Reads : Writes](to: Ours => Builtin)(from: Builtin => Ours) = new Format[Ours] {
+      def reads(json: JsValue): JsResult[Ours] = json.validate[Ours](implicitly[Reads[Builtin]].map(from))
+      def writes(o: Ours) = Json.toJson(to(o))
     }
+
+    implicit val formatPath = simpleWrapper[Path, String](_.path)(Path(_))
   }
 }
 
