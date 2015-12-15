@@ -1,5 +1,6 @@
 package models
 
+import types._
 import utils.ExtendedPostgresDriver.simple._
 import utils.ExtendedPostgresDriver.createEnumJdbcType
 
@@ -15,7 +16,7 @@ import DomainClasses.{ Value => _, _ }
 
 case class Domain(
   id: Long,
-  account_id: Long,
+  account_id: AccountId,
   domain: String,
   domainClass: DomainClasses.Value = Basic
 ) {
@@ -29,7 +30,7 @@ case class Domain(
 
 class DomainTable(tag: Tag) extends Table[Domain](tag, "domains") {
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-  def account_id = column[Long]("account_id", O.NotNull)
+  def account_id = column[AccountId]("account_id", O.NotNull)
   def domain = column[String]("domain", O.NotNull)
   def domain_class = column[DomainClasses.Value]("class", O.NotNull)
 

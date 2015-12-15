@@ -2,6 +2,7 @@ import play.api.libs.json._
 import play.api.mvc.{ PathBindable, JavascriptLitteral }
 
 package types {
+  case class AccountId(id: Long)
   case class Path(path: String)
 
   trait Definitions {
@@ -47,6 +48,7 @@ package types {
   trait SlickTypes { self: Definitions =>
     import utils.ExtendedPostgresDriver.simple._
 
+    implicit val accountIdColumnType = MappedColumnType.base[AccountId, Long]({ case AccountId(id) => id }, AccountId(_))
     implicit val pathColumnType = MappedColumnType.base[Path, String]({ case Path(path) => path }, Path(_))
   }
 
@@ -56,6 +58,7 @@ package types {
       def writes(o: Ours) = Json.toJson(to(o))
     }
 
+    implicit val formatAccountId = simpleWrapper[AccountId, Long](_.id)(AccountId(_))
     implicit val formatPath = simpleWrapper[Path, String](_.path)(Path(_))
   }
 }

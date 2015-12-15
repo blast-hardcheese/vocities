@@ -1,17 +1,19 @@
 package models
 
 import play.api.libs.json.JsValue
+
+import types._
 import utils.ExtendedPostgresDriver.simple._
 
 case class Account(
-  id: Long,
+  id: AccountId,
   name: String,
   user_ids: List[Long],
   credits: Int = 0
 )
 
 class Accounts(tag: Tag) extends Table[Account](tag, "accounts") {
-  def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+  def id = column[AccountId]("id", O.PrimaryKey, O.AutoInc)
   def name = column[String]("name")
   def user_ids = column[List[Long]]("user_ids", O.NotNull)
   def credits = column[Int]("credits", O.NotNull)

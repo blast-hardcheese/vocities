@@ -5,11 +5,11 @@ import utils.ExtendedPostgresDriver.simple._
 
 import types._
 
-case class Page(account_id: Long, domain_id: Long, path: Path, template_id: Long, title: String, data: JsValue)
-case class PageInfo(account_id: Long, domain_id: Long, path: Path, template_id: Long, title: String)
+case class Page(account_id: AccountId, domain_id: Long, path: Path, template_id: Long, title: String, data: JsValue)
+case class PageInfo(account_id: AccountId, domain_id: Long, path: Path, template_id: Long, title: String)
 
 class PageTable(tag: Tag) extends Table[Page](tag, "pages") {
-  def account_id = column[Long]("account_id")
+  def account_id = column[AccountId]("account_id")
   def domain_id = column[Long]("domain_id")
   def path = column[Path]("path")
   def template_id = column[Long]("template_id")

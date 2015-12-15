@@ -13,8 +13,8 @@ import securesocial.core.utils._
 import models.{ Accounts, Page, Template, UserModel, Queries, AuthProfiles }
 import types._
 
-case class NewDomainForm(account_id: Long, domain: String, template: String)
-case class NewPageForm(account_id: Long, domain_id: Long, path: Path, name: String, template: String)
+case class NewDomainForm(account_id: AccountId, domain: String, template: String)
+case class NewPageForm(account_id: AccountId, domain_id: Long, path: Path, name: String, template: String)
 
 object Users extends SecureController {
   def index = SecuredAction { implicit request =>

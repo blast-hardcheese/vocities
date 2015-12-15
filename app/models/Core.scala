@@ -86,7 +86,7 @@ object Queries {
       }
   }
 
-  def newDomain(user_id: Long, account_id: Long, domain: String)(template_key: String)(implicit s: Session): Option[Domain] = {
+  def newDomain(user_id: Long, account_id: AccountId, domain: String)(template_key: String)(implicit s: Session): Option[Domain] = {
     Accounts.accounts
       .filter { a =>
         a.id === account_id &&
@@ -108,7 +108,7 @@ object Queries {
       .headOption
   }
 
-  def newPage(user_id: Long, account_id: Long, domain_id: Long)(path: Path, name: String, template_key: String)(implicit s: Session): Option[Page] = {
+  def newPage(user_id: Long, account_id: AccountId, domain_id: Long)(path: Path, name: String, template_key: String)(implicit s: Session): Option[Page] = {
     Domains.domains
       .innerJoin(Accounts.accounts)
       .innerJoin(Templates.templates)
