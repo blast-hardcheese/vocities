@@ -32,6 +32,13 @@ object Application extends SecureController {
   import scala.language.implicitConversions
   implicit def liftEngine(e: ScriptEngine): RichScriptEngine = new RichScriptEngine(e)
 
+  def reloadScripts(r: RichScriptEngine): Unit = {
+    r.evalResource("public/javascripts/mixins.js")
+    r.evalResource("public/javascripts/widgets.js")
+    r.evalResource("public/javascripts/components/structure.js")
+    r.evalResource("public/javascripts/templates.js")
+  }
+
   val engine = {
     log.info("[Core] Starting Javascript engine...")
     val engineManager = new ScriptEngineManager(null)
@@ -43,21 +50,15 @@ object Application extends SecureController {
     r.evalWebjar("underscore", "underscore.js")
     r.evalWebjar("react", "react-with-addons.js")
 
-    r.evalResource("public/javascripts/mixins.js")
-    r.evalResource("public/javascripts/widgets.js")
-    r.evalResource("public/javascripts/components/structure.js")
-    r.evalResource("public/javascripts/templates.js")
+    reloadScripts(r)
 
     r
   }
 
   private[this] def doRender(domain: String, path: String)(saveUrl: Option[String] = None)(renderModel: RenderModel): Option[Html] = {
-    // Only here temporarily
-    var r = new RichScriptEngine(engine)
-    r.evalResource("public/javascripts/mixins.js")
-    r.evalResource("public/javascripts/widgets.js")
-    r.evalResource("public/javascripts/components/structure.js")
-    r.evalResource("public/javascripts/templates.js")
+    if (Play.isDev) {
+      reloadScripts(engine)
+    }
 
     renderModel.templateId match {
       case "html5up_read_only" => Some(views.html.templates.html5up_read_only(engine, saveUrl)(renderModel))
