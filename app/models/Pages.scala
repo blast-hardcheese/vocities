@@ -30,10 +30,10 @@ object Pages {
   }
 
   type LookupResult = Option[(Option[PageTitle], Option[PageData], Option[TemplateKey])]
-  def lookup(maybeUserId: Option[Long], domain: String, path: String)(implicit s: Session): LookupResult = {
+  def lookup(maybeUserId: Option[UserId], domain: String, path: String)(implicit s: Session): LookupResult = {
     val domainQuery = maybeUserId.map { userId =>
       Accounts.accounts
-        .filter { userId.bind === _.user_ids.any }
+        .filter { (userId: Long).bind === _.user_ids.any }
         .innerJoin(Domains.domains).on({ case (a, d) => d.account_id === a.id })
         .map { case (a, d) => d }
     } getOrElse {

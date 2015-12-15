@@ -15,6 +15,7 @@ import org.webjars.WebJarAssetLocator
 
 import models.{ Page, Template }
 import models.{ UserModel, Queries }
+import types._
 import utils.ExtendedPostgresDriver.simple._
 
 class RichScriptEngine(val engine: ScriptEngine) {
@@ -98,7 +99,7 @@ object Application extends SecureController {
       }
   }
 
-  def lookup(maybeUserId: Option[Long], domain: String, path: String)(handler: RenderModel => Result)(implicit request: Request[_]) = {
+  def lookup(maybeUserId: Option[UserId], domain: String, path: String)(handler: RenderModel => Result)(implicit request: Request[_]) = {
     DB.withSession { implicit s =>
       models.Pages.lookup(maybeUserId, domain, path) map {
           case (Some(title), Some(data), Some(templateId)) => handler(RenderModel(title=title, templateId=templateId, pageData=data))
@@ -117,7 +118,7 @@ object Application extends SecureController {
 
   def edit(domain: String, path: String) = SecuredAction { implicit request =>
     val route = routes.Application.save(domain, path).toString
-    val maybeUserId = Some(request.user.user.id)
+    val maybeUserId = Some(UserId(request.user.user.id))
 
     lookup(maybeUserId, domain, path)(render(domain, path)(saveUrl=Some(route)))
   }
