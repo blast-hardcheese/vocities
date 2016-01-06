@@ -83,32 +83,50 @@
         </div>
         }
         <script type="text/javascript">
-            $('.new-domain-form')
-                .submit(function (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    var form = $(this);
+            function postFactory(selector, options) {
+                var options = _.extend({
+                    parseValue: _.identity
+                }, options);
 
-                    var data = _.foldl(form.serializeArray(), function(a, o) {
-                        a[o.name] = o.value;
-                        return a;
-                    }, {});
+                return $(selector)
+                    .submit(function (event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        var form = $(this);
 
-                    data.account_id = Number.parseInt(data.account_id);
+                        console.info(form);
+                        var data = _.foldl(form.serializeArray(), function(a, o) {
+                            a[o.name] = options.parseValue(o.value, o.name);
 
-                    $.ajax({
-                        url: form.attr('action'),
-                        data: JSON.stringify(data),
-                        type: 'POST',
-                        contentType: 'application/json',
-                        success: function(data){
-                            console.info('Success!', data);
-                        },
-                        error: function() {
-                            console.info('error:', arguments);
-                        }
+                            return a;
+                        }, {});
+
+                        $.ajax({
+                            url: form.attr('action'),
+                            data: JSON.stringify(data),
+                            type: 'POST',
+                            contentType: 'application/json',
+                            success: function(data){
+                                console.info('Success!', data);
+                                window.history.go();
+                            },
+                            error: function(jqxhr, status, err) {
+                                console.info('error:', status, err);
+                            }
+                        });
                     });
-                });
+            }
+
+            postFactory('.new-domain-form', {
+                parseValue: function (value, name) {
+                    var ret = value;
+                    if (name === 'account_id') {
+                        ret = Number.parseInt(ret);
+                    }
+                    return ret;
+                }
+            });
+
 @*
             $('.new-page-form')
                 .submit(function (event) {
