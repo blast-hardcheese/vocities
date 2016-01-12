@@ -132,29 +132,26 @@ object Application extends SecureController {
       .validate(request.body)
       .map { case (title, data) =>
         DB.withSession { implicit s =>
-          val result = {
-            Queries.pageSave(userId, domain, path)(title, data)
-              .map {
-                case true => Ok
-                case false => NotFound
+          Queries.pageSave(userId, domain, path)(title, data)
+            .map {
+              case true => {
+                val renderModel = RenderModel(
+                  title=title,
+                  templateId=templateId,
+                  pageData=data
+                )
+                doRender(domain, path)(None)(renderModel)
+                  .foreach { html =>
+                    cache.Cache.set(cacheKey, html.toString)
+                  }
+
+                Ok
               }
-              .getOrElse(Unauthorized)
-          }
-
-          val renderModel = RenderModel(
-            title=title,
-            templateId=templateId,
-            pageData=data
-          )
-          val cacheKey = s"$templateId-$domain-${path.path}"
-          doRender(domain, path)(None)(renderModel)
-            .foreach { html =>
-              cache.Cache.set(cacheKey, html.toString)
+              case false => NotFound
             }
-
-          result
-      }
-    } getOrElse { BadRequest }
+            .getOrElse(Unauthorized)
+        }
+      } getOrElse { BadRequest }
   }
 }
 
