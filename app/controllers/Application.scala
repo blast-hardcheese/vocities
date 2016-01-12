@@ -139,8 +139,8 @@ object Application extends SecureController {
       .map { case (title, data) =>
         DB.withSession { implicit s =>
           Queries.pageSave(userId, domain, path)(title, data)
-            .map {
-              case true => {
+            .map { success =>
+              if (true) {
                 val renderModel = RenderModel(
                   title=title,
                   templateId=templateId,
@@ -151,8 +151,9 @@ object Application extends SecureController {
                   .foreach(PageCache.set(templateId, domain, path)(_))
 
                 Ok
+              } else {
+                NotFound
               }
-              case false => NotFound
             }
             .getOrElse(Unauthorized)
         }
