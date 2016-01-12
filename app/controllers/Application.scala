@@ -71,7 +71,7 @@ object Application extends SecureController {
 
   private[this] def render(domain: String, path: Path)(saveUrl: Option[String] = None)(renderModel: RenderModel): Result = {
     val templateId = renderModel.templateId
-    val cacheKey = s"$templateId-$domain-$path"
+    val cacheKey = s"$templateId-$domain-${path.path}"
 
     val maybeHtml = if (saveUrl.isEmpty) {
       cache.Cache.getAs[String](cacheKey)
@@ -146,7 +146,7 @@ object Application extends SecureController {
             templateId=templateId,
             pageData=data
           )
-          val cacheKey = s"$templateId-$domain-$path"
+          val cacheKey = s"$templateId-$domain-${path.path}"
           doRender(domain, path)(None)(renderModel)
             .foreach { html =>
               cache.Cache.set(cacheKey, html.toString)
