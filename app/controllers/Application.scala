@@ -29,6 +29,24 @@ class RichScriptEngine(val engine: ScriptEngine) {
   }
 }
 
+object PageCache {
+  private[this] def cacheKey(templateId: String, domain: String, path: Path): String = s"$templateId-$domain-${path.path}"
+
+  def set(templateId: String, domain: String, path: Path)(html: Html): Unit = {
+    cache.Cache.set(cacheKey(templateId, domain, path), html.toString)
+  }
+
+  def get(templateId: String, domain: String, path: Path)(maybeHtml: => Option[Html]): Option[Html] = {
+    cache.Cache.getAs[String](cacheKey(templateId, domain, path))
+      .map(Html(_))
+      .orElse {
+        maybeHtml.foreach(set(templateId, domain, path)(_))
+
+        maybeHtml
+      }
+  }
+}
+
 object Application extends SecureController {
   import scala.language.implicitConversions
   implicit def liftEngine(e: ScriptEngine): RichScriptEngine = new RichScriptEngine(e)
@@ -71,21 +89,9 @@ object Application extends SecureController {
 
   private[this] def render(domain: String, path: Path)(saveUrl: Option[String] = None)(renderModel: RenderModel): Result = {
     val templateId = renderModel.templateId
-    val cacheKey = s"$templateId-$domain-$path"
 
     val maybeHtml = if (saveUrl.isEmpty) {
-      cache.Cache.getAs[String](cacheKey)
-        .map(Html(_))
-        .orElse {
-          val maybeRendered = doRender(domain, path)(saveUrl)(renderModel)
-
-          maybeRendered
-            .foreach { value =>
-              cache.Cache.set(cacheKey, value.toString)
-            }
-
-          maybeRendered
-        }
+      PageCache.get(templateId, domain, path)(doRender(domain, path)(saveUrl)(renderModel))
     } else {
       doRender(domain, path)(saveUrl)(renderModel)
     }
@@ -132,29 +138,26 @@ object Application extends SecureController {
       .validate(request.body)
       .map { case (title, data) =>
         DB.withSession { implicit s =>
-          val result = {
-            Queries.pageSave(userId, domain, path)(title, data)
-              .map {
-                case true => Ok
-                case false => NotFound
+          Queries.pageSave(userId, domain, path)(title, data)
+            .map { success =>
+              if (true) {
+                val renderModel = RenderModel(
+                  title=title,
+                  templateId=templateId,
+                  pageData=data
+                )
+
+                doRender(domain, path)(None)(renderModel)
+                  .foreach(PageCache.set(templateId, domain, path)(_))
+
+                Ok
+              } else {
+                NotFound
               }
-              .getOrElse(Unauthorized)
-          }
-
-          val renderModel = RenderModel(
-            title=title,
-            templateId=templateId,
-            pageData=data
-          )
-          val cacheKey = s"$templateId-$domain-$path"
-          doRender(domain, path)(None)(renderModel)
-            .foreach { html =>
-              cache.Cache.set(cacheKey, html.toString)
             }
-
-          result
-      }
-    } getOrElse { BadRequest }
+            .getOrElse(Unauthorized)
+        }
+      } getOrElse { BadRequest }
   }
 }
 
