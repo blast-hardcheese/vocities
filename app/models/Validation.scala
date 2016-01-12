@@ -42,7 +42,7 @@ object TemplateData {
     case class Widget(`type`: String, data: JsValue)
     case class Section(tag: String, title: String, bannerImage: Option[String], content: Widget)
     case class Social(twitter: Option[String], facebook: Option[String], instagram: Option[String], github: Option[String], email: Option[String])
-    case class Css(scheme: Int, values: Map[String, String])
+    case class Css(scheme: Int, values: Option[Map[String, String]])
     case class PageData(
       sandbox: Option[Boolean]=Option.empty,
       sections: List[Section],
