@@ -4,20 +4,18 @@ import java.io.File
 import java.io.{ InputStreamReader, FileReader }
 import javax.script.{ ScriptEngineManager, ScriptEngine }
 
-import play.api._
-import play.api.mvc._
-import play.api.db.slick._
 import play.api.Play.current
+import play.api._
+import play.api.db.slick._
 import play.api.libs.json.{ Json, JsValue }
-
+import play.api.mvc._
 import play.twirl.api.Html
 
 import org.webjars.WebJarAssetLocator
 
 import models.{ Page, Template }
-
 import models.{ UserModel, Queries }
-
+import types._
 import utils.ExtendedPostgresDriver.simple._
 
 class RichScriptEngine(val engine: ScriptEngine) {
@@ -35,6 +33,13 @@ object Application extends SecureController {
   import scala.language.implicitConversions
   implicit def liftEngine(e: ScriptEngine): RichScriptEngine = new RichScriptEngine(e)
 
+  def reloadScripts(r: RichScriptEngine): Unit = {
+    r.evalResource("public/javascripts/mixins.js")
+    r.evalResource("public/javascripts/widgets.js")
+    r.evalResource("public/javascripts/components/structure.js")
+    r.evalResource("public/javascripts/templates.js")
+  }
+
   val engine = {
     log.info("[Core] Starting Javascript engine...")
     val engineManager = new ScriptEngineManager(null)
@@ -46,21 +51,15 @@ object Application extends SecureController {
     r.evalWebjar("underscore", "underscore.js")
     r.evalWebjar("react", "react-with-addons.js")
 
-    r.evalResource("public/javascripts/mixins.js")
-    r.evalResource("public/javascripts/widgets.js")
-    r.evalResource("public/javascripts/components/structure.js")
-    r.evalResource("public/javascripts/templates.js")
+    reloadScripts(r)
 
     r
   }
 
-  private[this] def doRender(domain: String, path: String)(saveUrl: Option[String] = None)(renderModel: RenderModel): Option[Html] = {
-    // Only here temporarily
-    var r = new RichScriptEngine(engine)
-    r.evalResource("public/javascripts/mixins.js")
-    r.evalResource("public/javascripts/widgets.js")
-    r.evalResource("public/javascripts/components/structure.js")
-    r.evalResource("public/javascripts/templates.js")
+  private[this] def doRender(domain: String, path: Path)(saveUrl: Option[String] = None)(renderModel: RenderModel): Option[Html] = {
+    if (Play.isDev) {
+      reloadScripts(engine)
+    }
 
     renderModel.templateId match {
       case "html5up_read_only" => Some(views.html.templates.html5up_read_only(engine, saveUrl)(renderModel))
@@ -70,7 +69,7 @@ object Application extends SecureController {
     }
   }
 
-  private[this] def render(domain: String, path: String)(saveUrl: Option[String] = None)(renderModel: RenderModel): Result = {
+  private[this] def render(domain: String, path: Path)(saveUrl: Option[String] = None)(renderModel: RenderModel): Result = {
     val templateId = renderModel.templateId
     val cacheKey = s"$templateId-$domain-$path"
 
@@ -100,7 +99,7 @@ object Application extends SecureController {
       }
   }
 
-  def lookup(maybeUserId: Option[Long], domain: String, path: String)(handler: RenderModel => Result)(implicit request: Request[_]) = {
+  def lookup(maybeUserId: Option[UserId], domain: String, path: Path)(handler: RenderModel => Result)(implicit request: Request[_]) = {
     DB.withSession { implicit s =>
       models.Pages.lookup(maybeUserId, domain, path) map {
           case (Some(title), Some(data), Some(templateId)) => handler(RenderModel(title=title, templateId=templateId, pageData=data))
@@ -113,19 +112,19 @@ object Application extends SecureController {
     }
   }
 
-  def route(path: String) = Action { implicit request =>
+  def route(path: Path) = Action { implicit request =>
     lookup(None, request.domain, path)(render(request.domain, path)())
   }
 
-  def edit(domain: String, path: String) = SecuredAction { implicit request =>
+  def edit(domain: String, path: Path) = SecuredAction { implicit request =>
     val route = routes.Application.save(domain, path).toString
-    val maybeUserId = Some(request.user.user.id)
+    val maybeUserId = Some(UserId(request.user.user.id))
 
     lookup(maybeUserId, domain, path)(render(domain, path)(saveUrl=Some(route)))
   }
 
-  def save(domain: String, path: String, templateId: String) = SecuredAction(parse.json) { implicit request =>
-    val userId = request.user.user.id
+  def save(domain: String, path: Path, templateId: String) = SecuredAction(parse.json) { implicit request =>
+    val userId = UserId(request.user.user.id)
 
     val parser = models.TemplateData.byName(templateId)
 

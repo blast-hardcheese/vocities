@@ -3,13 +3,15 @@ package models
 import play.api.libs.json.JsValue
 import utils.ExtendedPostgresDriver.simple._
 
-case class Page(account_id: Long, domain_id: Long, path: String, template_id: Long, title: String, data: JsValue)
-case class PageInfo(account_id: Long, domain_id: Long, path: String, template_id: Long, title: String)
+import types._
+
+case class Page(account_id: AccountId, domain_id: Long, path: Path, template_id: Long, title: String, data: JsValue)
+case class PageInfo(account_id: AccountId, domain_id: Long, path: Path, template_id: Long, title: String)
 
 class PageTable(tag: Tag) extends Table[Page](tag, "pages") {
-  def account_id = column[Long]("account_id")
+  def account_id = column[AccountId]("account_id")
   def domain_id = column[Long]("domain_id")
-  def path = column[String]("path")
+  def path = column[Path]("path")
   def template_id = column[Long]("template_id")
   def title = column[String]("title")
   def data = column[JsValue]("data")
@@ -27,8 +29,8 @@ object Pages {
       .insert(p)
   }
 
-  type LookupResult = Option[(Option[String], Option[JsValue], Option[String])]
-  def lookup(maybeUserId: Option[Long], domain: String, path: String)(implicit s: Session): LookupResult = {
+  type LookupResult = Option[(Option[PageTitle], Option[PageData], Option[TemplateKey])]
+  def lookup(maybeUserId: Option[UserId], domain: String, path: Path)(implicit s: Session): LookupResult = {
     val domainQuery = maybeUserId.map { userId =>
       Accounts.accounts
         .filter { userId.bind === _.user_ids.any }
@@ -44,5 +46,6 @@ object Pages {
       .leftJoin(Templates.templates).on({ case ((d, p), t) => t.id === p.template_id })
       .map { case ((_, p), t) => (p.title.?, p.data.?, t.key.?) }
       .firstOption
+      .map(tag)
   }
 }

@@ -31,7 +31,7 @@
                                     @for(page <- pages) {
                                         <div class="row page">
                                             <div class="col-xs-5 name">@{page.title}</div>
-                                            <div class="col-xs-5 path">/@{page.path}</div>
+                                            <div class="col-xs-5 path">/@{page.path.path}</div>
                                             <div class="col-xs-2 edit"><a href="@routes.Users.edit(domain.domain, page.path)">Edit</a></div>
                                         </div>
                                     }
@@ -42,7 +42,7 @@
                             <div class="row">
                                 <form class="new-page-form" method="POST" action="@routes.Users.newPage">
                                     <input name="domain_id" type="hidden" value="@{domain.id}" />
-                                    <input name="account_id" type="hidden" value="@{account.id}" />
+                                    <input name="account_id" type="hidden" value="@{account.id.id}" />
                                     <input name="path" type="hidden" value="" />
                                     <input name="name" placeholder="Enter page name here" />
                                     <select name="template">
@@ -62,7 +62,7 @@
                 @if(account.credits > domains.length) {
                 <div class="row">
                     <form class="new-domain-form" method="POST" action="@routes.Users.newDomain">
-                        <input name="account_id" type="hidden" value="@{account.id}" />
+                        <input name="account_id" type="hidden" value="@{account.id.id}" />
                         <input name="domain" placeholder="Enter FQDN here" />
                         <select name="template">
                             <option disabled selected>Select a template</option>
