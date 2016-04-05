@@ -1,9 +1,0 @@
-[ignore]
-.*/vocities/deps/.*
-.*/target/.*
-
-[include]
-
-[libs]
-
-[options]
