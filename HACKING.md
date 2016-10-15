@@ -17,6 +17,13 @@ Services:
 Configuration
 -------------
 
+### Docker
+
+```
+$ docker run --name vocities-redis -d redis -p 6379:6379
+$ docker run --name vocities-postgres -e POSTGRES_PASSWORD= -p 5432:5432 -d postgres
+```
+
 ### Postgresql
 
 ```
