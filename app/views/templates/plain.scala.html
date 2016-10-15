@@ -29,28 +29,28 @@ jQuery(function($) {
 });
         </script>
 
-        @utils.views.createElement(templateIdJson, "#metadata", pageData)(engine)
+        @Html(utils.views.createElement(templateIdJson, "#metadata", pageData)(engine))
 
 }
 
 @main(renderModel.title)(header, afterBody) {
     <div id="sidebar">
-        @utils.views.createElement(templateIdJson, "#sidebar", pageData)(engine)
+        @Html(utils.views.createElement(templateIdJson, "#sidebar", pageData)(engine))
     </div>
 
     <div id="main-content">
-        @utils.views.createElement(templateIdJson, "#main-content", pageData)(engine)
+        @Html(utils.views.createElement(templateIdJson, "#main-content", pageData)(engine))
     </div>
 
     <section id="footer">
-        @utils.views.createElement(templateIdJson, "#footer", pageData)(engine)
+        @Html(utils.views.createElement(templateIdJson, "#footer", pageData)(engine))
     </section>
 
     <div id="add-popup">
-        @utils.views.createElement(templateIdJson, "#add-popup", pageData)(engine)
+        @Html(utils.views.createElement(templateIdJson, "#add-popup", pageData)(engine))
     </div>
 
     <div id="admin-buttons">
-        @utils.views.createElement(templateIdJson, "#admin-buttons", pageData)(engine)
+        @Html(utils.views.createElement(templateIdJson, "#admin-buttons", pageData)(engine))
     </div>
 }
