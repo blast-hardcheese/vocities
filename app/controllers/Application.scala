@@ -81,7 +81,7 @@ object Application extends SecureController {
 
     renderModel.templateId match {
       case "html5up_read_only" => Some(views.templates.html5up_read_only(engine, saveUrl)(renderModel))
-      case "html5up_prologue" => Some(views.html.templates.html5up_prologue(engine, saveUrl)(renderModel))
+      case "html5up_prologue" => Some(views.templates.html5up_prologue(engine, saveUrl)(renderModel))
       case "plain" => Some(views.html.templates.plain(engine, saveUrl)(renderModel))
       case _ => None
     }
