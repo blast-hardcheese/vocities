@@ -1,6 +1,5 @@
 package utils
 
-import play.twirl.api._
 import play.api.libs.json.{ Json, JsValue, JsObject, JsString }
 import scalatags.Text.all._
 
