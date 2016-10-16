@@ -27,6 +27,7 @@ libraryDependencies ++= Seq(
   "com.github.tminglei" % "slick-pg_2.11" % "0.8.4",
   "ws.securesocial" % "securesocial_2.11" % "3.0-M3",
   "org.postgresql" % "postgresql" % "9.3-1103-jdbc41",
+  "com.lihaoyi" %% "scalatags" % "0.6.1",
   "com.typesafe.play" %% "play-slick" % "0.8.1",
   jdbc,
   anorm,
