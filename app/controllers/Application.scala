@@ -12,6 +12,7 @@ import play.api.mvc._
 import play.twirl.api.Html
 
 import org.webjars.WebJarAssetLocator
+import scalatags.Text.all._
 
 import models.{ Page, Template }
 import models.{ UserModel, Queries }
@@ -32,13 +33,13 @@ class RichScriptEngine(val engine: ScriptEngine) {
 object PageCache {
   private[this] def cacheKey(templateId: String, domain: String, path: Path): String = s"$templateId-$domain-${path.path}"
 
-  def set(templateId: String, domain: String, path: Path)(html: Html): Unit = {
-    cache.Cache.set(cacheKey(templateId, domain, path), html.toString)
+  def set(templateId: String, domain: String, path: Path)(html: Frag): Unit = {
+    cache.Cache.set(cacheKey(templateId, domain, path), html.render)
   }
 
-  def get(templateId: String, domain: String, path: Path)(maybeHtml: => Option[Html]): Option[Html] = {
+  def get(templateId: String, domain: String, path: Path)(maybeHtml: => Option[Frag]): Option[Frag] = {
     cache.Cache.getAs[String](cacheKey(templateId, domain, path))
-      .map(Html(_))
+      .map(raw(_))
       .orElse {
         maybeHtml.foreach(set(templateId, domain, path)(_))
 
@@ -74,15 +75,15 @@ object Application extends SecureController {
     r
   }
 
-  private[this] def doRender(domain: String, path: Path)(saveUrl: Option[String] = None)(renderModel: RenderModel): Option[Html] = {
+  private[this] def doRender(domain: String, path: Path)(saveUrl: Option[String] = None)(renderModel: RenderModel): Option[Frag] = {
     if (Play.isDev) {
       reloadScripts(engine)
     }
 
     renderModel.templateId match {
-      case "html5up_read_only" => Some(views.html.templates.html5up_read_only(engine, saveUrl)(renderModel))
-      case "html5up_prologue" => Some(views.html.templates.html5up_prologue(engine, saveUrl)(renderModel))
-      case "plain" => Some(views.html.templates.plain(engine, saveUrl)(renderModel))
+      case "html5up_read_only" => Some(views.templates.html5up_read_only(engine, saveUrl)(renderModel))
+      case "html5up_prologue" => Some(views.templates.html5up_prologue(engine, saveUrl)(renderModel))
+      case "plain" => Some(views.templates.plain(engine, saveUrl)(renderModel))
       case _ => None
     }
   }
@@ -98,7 +99,7 @@ object Application extends SecureController {
 
     maybeHtml
       .map { value =>
-        Ok(value)
+        Ok(Html(value.render))
       }
       .getOrElse {
         InternalServerError

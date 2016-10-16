@@ -6,8 +6,6 @@ import play.api.db.slick._
 import play.api.Play.current
 import play.api.libs.json.{ Json, JsValue }
 
-import play.twirl.api.Html
-
 import securesocial.core.utils._
 
 import models.{ Accounts, Page, Template, UserModel, Queries, AuthProfiles }
