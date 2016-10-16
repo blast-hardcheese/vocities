@@ -27,7 +27,7 @@ object Users extends SecureController {
     DB.withSession { implicit s =>
       val userId = request.user.user.id
       Queries.pageEdit(userId, domain, path)
-        .map(vm => Ok(views.html.account.edit(domain, vm)))
+        .map(vm => Ok(Html(views.account.edit(domain, vm).render)))
         .getOrElse(NotFound)
     }
   }
