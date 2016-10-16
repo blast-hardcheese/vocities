@@ -5,6 +5,7 @@ import play.api.mvc._
 import play.api.db.slick._
 import play.api.Play.current
 import play.api.libs.json.{ Json, JsValue }
+import play.twirl.api.Html
 
 import securesocial.core.utils._
 
@@ -67,11 +68,11 @@ object Users extends SecureController {
   }
 
   def associate = SecuredAction { implicit request =>
-    Ok(views.html.account.associate())
+    Ok(Html(views.account.associate().render))
   }
 
   def associateResult(id: String) = SecuredAction { implicit request =>
-    Ok(views.html.account.associate())
+    Ok(Html(views.account.associate().render))
   }
 
   def disassociate(id: String) = SecuredAction(WithSecondaryProvider(id)).async { implicit request =>

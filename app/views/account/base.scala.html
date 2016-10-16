@@ -1,4 +1,4 @@
-@(title: String)(head: Html = Html(""))(body: Html)
+@(title: String)(head: Html = Html(""))(body: scalatags.Text.Frag)
 
 <html>
     <head>
@@ -6,6 +6,6 @@
 @head
     </head>
     <body>
-@body
+@{Html(body.render)}
     </body>
 </html>
