@@ -12,7 +12,7 @@ object html5up_read_only {
     val pageData = renderModel.pageData
     val templateId = "html5up_read_only"
 
-    val templateIdJson = Html(Json.stringify(JsString(templateId)))
+    val templateIdJson = JsString(templateId)
 
     def sharedCssPath(path: String): String = routes.Assets.at("stylesheets/html5up/" + path).toString
     def cssPath(path: String): String = routes.Assets.at(s"stylesheets/${templateId}/${path}").toString

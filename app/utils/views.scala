@@ -34,7 +34,7 @@ package object views {
     raw(Json.stringify(maybeCloudinary getOrElse Json.obj()))
   }
 
-  def createElement(templateId: Html, key: String, pageData: JsValue)(engine: ScriptEngine): String = {
+  def createElement(templateId: JsString, key: String, pageData: JsValue)(engine: ScriptEngine): String = {
     engine.eval(s"React.renderToString(React.createElement(Templates[$templateId].classes[${JsString(key)}], _.extend({editable: false, _meta: {}}, $pageData)));").toString
   }
 }

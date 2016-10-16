@@ -11,7 +11,7 @@ object plain {
     val pageData = renderModel.pageData
     val templateId = "plain"
 
-    val templateIdJson = Html(Json.stringify(JsString(templateId)))
+    val templateIdJson = JsString(templateId)
 
     val header: List[Frag] = List(
       meta(httpEquiv:="content-type", content:="text/html; charset=utf-8"),

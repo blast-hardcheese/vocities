@@ -11,7 +11,7 @@ object html5up_prologue {
     val pageData = renderModel.pageData
     val templateId = "html5up_prologue"
 
-    val templateIdJson = Html(Json.stringify(JsString(templateId)))
+    val templateIdJson = JsString(templateId)
 
     def sharedCssPath(path: String) = routes.Assets.at("stylesheets/html5up/" + path).toString
     def cssPath(path: String) = routes.Assets.at(s"stylesheets/$templateId/" + path).toString
