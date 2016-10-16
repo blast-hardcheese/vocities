@@ -25,7 +25,7 @@
                 path: @Html(Json.stringify(Json.toJson(vm.page.path))),
                 saveUrl: @Html(Json.stringify(JsString(routes.Application.save(domain, vm.page.path, templateId=vm.template_key).toString()))),
             };
-var PageData = @utils.views.encodePageData(None, vm.page.title, vm.page.data);
+var PageData = @{utils.views.encodePageData(None, vm.page.title, vm.page.data).render};
         </script>
 
         <script src="@routes.Assets.at("javascripts/editor.js")" type="text/javascript"></script>

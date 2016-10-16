@@ -43,7 +43,7 @@ object html5up_prologue {
       |}
       |""".stripMargin)),
       script(`type`:="text/javascript")(raw(s"""
-        |var PageData = ${utils.views.encodePageData(saveUrl, renderModel.title, renderModel.pageData)};
+        |var PageData = ${utils.views.encodePageData(saveUrl, renderModel.title, renderModel.pageData).render};
         |window.CloudinarySettings = ${utils.views.cloudinaryData};
         |
         |jQuery(function($$) {

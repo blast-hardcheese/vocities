@@ -2,6 +2,7 @@ package utils
 
 import play.twirl.api._
 import play.api.libs.json.{ Json, JsValue, JsObject, JsString }
+import scalatags.Text.all._
 
 import javax.script.ScriptEngine
 
@@ -11,13 +12,13 @@ object PageData {
 }
 
 package object views {
-  def encodePageData(saveUrl: Option[String], title: String, data: JsValue): Html = {
+  def encodePageData(saveUrl: Option[String], title: String, data: JsValue): Frag = {
     val newData: JsObject = (
       Json.obj("_meta" -> Json.toJson(PageData(saveUrl, title)).asInstanceOf[JsObject]) ++
       data.asInstanceOf[JsObject]
     )
 
-    Html(Json.stringify(newData).replace("</script>", "<\\/script>"))
+    raw(Json.stringify(newData).replace("</script>", "<\\/script>"))
   }
 
   val cloudinaryData: Html = {
