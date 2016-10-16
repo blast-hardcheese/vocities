@@ -19,7 +19,7 @@ object Users extends SecureController {
   def index = SecuredAction { implicit request =>
     DB.withSession { implicit s =>
       val vm = Queries.accountsIndex(request.user.user.id)
-      Ok(views.html.account.index(vm))
+      Ok(Html(views.account.index(vm).render))
     }
   }
 
