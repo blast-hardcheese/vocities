@@ -21,7 +21,7 @@ package object views {
     raw(Json.stringify(newData).replace("</script>", "<\\/script>"))
   }
 
-  val cloudinaryData: Html = {
+  val cloudinaryData: Frag = {
     val config = play.api.Play.current.configuration
     val maybeCloudinary = for {
         cloud_name <- config.getString("cloudinary.cloud_name")
@@ -31,7 +31,7 @@ package object views {
         "upload_preset" -> upload_preset
     )
 
-    Html(Json.stringify(maybeCloudinary getOrElse Json.obj()))
+    raw(Json.stringify(maybeCloudinary getOrElse Json.obj()))
   }
 
   def createElement(templateId: Html, key: String, pageData: JsValue)(engine: ScriptEngine): String = {

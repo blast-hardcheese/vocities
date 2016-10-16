@@ -23,7 +23,7 @@ object plain {
     val afterBody: List[Frag] = List(
       script(`type`:="text/javascript")(s"""
         |var PageData = ${utils.views.encodePageData(saveUrl, renderModel.title, renderModel.pageData).render};
-        |window.CloudinarySettings = ${utils.views.cloudinaryData};
+        |window.CloudinarySettings = ${utils.views.cloudinaryData.render};
         |
         |jQuery(function($$) {
         |
