@@ -1,13 +1,12 @@
 package views.templates
 import controllers.{ RenderModel, routes }
 import play.api.libs.json.{Json, JsValue, JsObject, JsNull, JsString}
-import play.twirl.api.Html
 
 import scalatags.Text.all._
 
 object html5up_read_only {
 
-  def apply(engine: javax.script.ScriptEngine, saveUrl: Option[String])(renderModel: RenderModel): Html = {
+  def apply(engine: javax.script.ScriptEngine, saveUrl: Option[String])(renderModel: RenderModel): Frag = {
 
     val pageData = renderModel.pageData
     val templateId = "html5up_read_only"

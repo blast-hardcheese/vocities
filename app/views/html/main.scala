@@ -1,14 +1,13 @@
 package views.templates
 import controllers.{ RenderModel, routes }
 import play.api.libs.json.{Json, JsValue, JsObject, JsNull, JsString}
-import play.twirl.api.Html
 import controllers.WebJarAssets
 import scalatags.Text.all._
 
 object main {
-  def apply(pageTitle: String)(header: List[Frag], afterBody: List[Frag])(bodyFrags: List[Frag]): Html = {
+  def apply(pageTitle: String)(header: List[Frag], afterBody: List[Frag])(bodyFrags: List[Frag]): Frag = {
 
-    Html(html(
+    html(
         head(
             tag("title")(pageTitle),
             meta(httpEquiv:="content-type", content:="text/html; charset=utf-8"),
@@ -56,6 +55,6 @@ object main {
 
             afterBody
         )
-    ).toString)
+    )
   }
 }
