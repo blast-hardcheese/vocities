@@ -5,6 +5,7 @@ import play.api.mvc._
 import play.api.db.slick._
 import play.api.Play.current
 import play.api.libs.json.{ Json, JsValue }
+import play.twirl.api.Html
 
 import securesocial.core.utils._
 
@@ -18,7 +19,7 @@ object Users extends SecureController {
   def index = SecuredAction { implicit request =>
     DB.withSession { implicit s =>
       val vm = Queries.accountsIndex(request.user.user.id)
-      Ok(views.html.account.index(vm))
+      Ok(Html(views.account.index(vm).render))
     }
   }
 
@@ -26,7 +27,7 @@ object Users extends SecureController {
     DB.withSession { implicit s =>
       val userId = request.user.user.id
       Queries.pageEdit(userId, domain, path)
-        .map(vm => Ok(views.html.account.edit(domain, vm)))
+        .map(vm => Ok(Html(views.account.edit(domain, vm).render)))
         .getOrElse(NotFound)
     }
   }
@@ -67,11 +68,11 @@ object Users extends SecureController {
   }
 
   def associate = SecuredAction { implicit request =>
-    Ok(views.html.account.associate())
+    Ok(Html(views.account.associate().render))
   }
 
   def associateResult(id: String) = SecuredAction { implicit request =>
-    Ok(views.html.account.associate())
+    Ok(Html(views.account.associate().render))
   }
 
   def disassociate(id: String) = SecuredAction(WithSecondaryProvider(id)).async { implicit request =>
