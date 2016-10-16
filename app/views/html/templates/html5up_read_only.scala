@@ -21,6 +21,8 @@ object html5up_read_only {
       meta(httpEquiv:="content-type", content:="text/html; charset=utf-8"),
       meta(name:="description", content:=""),
       meta(name:="keywords", content:=""),
+      raw(s"""<!--[if lte IE 8]><link rel="stylesheet" href="${cssPath("ie/v8.css")}" /><![endif]-->"""),
+
       link(rel:="stylesheet", href:=cssPath("style.css")),
       link(rel:="stylesheet", href:=cssPath("style-xlarge.css")),
       link(rel:="stylesheet", href:=cssPath("style-large.css")),
